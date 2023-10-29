@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-10-29T15:18:24.498Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="fD3Qy32q1FLutYH6lx6_" version="22.0.8" type="github">
+<mxfile host="app.diagrams.net" modified="2023-10-29T15:45:38.801Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="YUNCeZEOS9XBwufbyGFO" version="22.0.8" type="github">
   <diagram id="tlPU0n3_dSyVTQZ9mSz2" name="Страница — 1">
-    <mxGraphModel dx="3134" dy="2990" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
+    <mxGraphModel dx="3387" dy="3111" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1649,7 +1649,7 @@
             <mxRectangle width="30" height="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="mXZmPTMyJ8_rCeEjgEbs-309" value="рабочий день(int от 1 до 7)" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="mXZmPTMyJ8_rCeEjgEbs-307" vertex="1">
+        <mxCell id="mXZmPTMyJ8_rCeEjgEbs-309" value="день недели" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" parent="mXZmPTMyJ8_rCeEjgEbs-307" vertex="1">
           <mxGeometry x="30" width="150" height="30" as="geometry">
             <mxRectangle width="150" height="30" as="alternateBounds" />
           </mxGeometry>
@@ -1869,6 +1869,9 @@
         </mxCell>
         <mxCell id="mXZmPTMyJ8_rCeEjgEbs-351" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;endFill=0;" parent="1" source="mXZmPTMyJ8_rCeEjgEbs-317" target="mXZmPTMyJ8_rCeEjgEbs-260" edge="1">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zGK1VF4QeWAhLq1bsFm7-1" value="&lt;font style=&quot;font-size: 17px;&quot;&gt;СВЯЗАТЬ ПРЕДМЕТ И ПРПОДА&lt;br&gt;ДОБАВИТЬ УЧЕТ ЧАСОВ ДЛЯ ПРЕПОДА И УЧЕТ ПО ПРЕДМЕТУ&lt;br&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="260" y="-1060" width="380" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
