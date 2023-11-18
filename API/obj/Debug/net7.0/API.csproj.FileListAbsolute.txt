@@ -38,3 +38,6 @@ C:\Users\user\Source\Repos\Viclouh\AKVT.Raspisanie\API\bin\Debug\net7.0\Microsof
 C:\Users\user\Source\Repos\Viclouh\AKVT.Raspisanie\API\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\user\Source\Repos\Viclouh\AKVT.Raspisanie\API\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\user\Source\Repos\Viclouh\AKVT.Raspisanie\API\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
+F:\Программы ДЗ\diplom\API\obj\Debug\net7.0\API.dll
+F:\Программы ДЗ\diplom\API\obj\Debug\net7.0\refint\API.dll
+F:\Программы ДЗ\diplom\API\obj\Debug\net7.0\API.pdb
