@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Программы ДЗ\\diplom\\API\\API.csproj": {}
+    "F:\\Программы ДЗ\\raspisanie\\API\\API.csproj": {}
   },
   "projects": {
-    "F:\\Программы ДЗ\\diplom\\API\\API.csproj": {
+    "F:\\Программы ДЗ\\raspisanie\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Программы ДЗ\\diplom\\API\\API.csproj",
+        "projectUniqueName": "F:\\Программы ДЗ\\raspisanie\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "F:\\Программы ДЗ\\diplom\\API\\API.csproj",
+        "projectPath": "F:\\Программы ДЗ\\raspisanie\\API\\API.csproj",
         "packagesPath": "C:\\Users\\home\\.nuget\\packages\\",
-        "outputPath": "F:\\Программы ДЗ\\diplom\\API\\obj\\",
+        "outputPath": "F:\\Программы ДЗ\\raspisanie\\API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\home\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -48,9 +48,29 @@
               "target": "Package",
               "version": "[7.0.13, )"
             },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.14, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.14, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.14, )"
+            },
             "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
               "target": "Package",
               "version": "[1.19.4, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[7.0.11, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
