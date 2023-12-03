@@ -1,6 +1,6 @@
 # ERD диаграмма
 
-![ERD Diagram](ERD.png)
+![ERD Diagram](./../Images/Diagramms/ERD.png)
 
 > Описать таблицы
 - Таблица "Группы"

@@ -5,18 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="147decd6-1389-46d0-9af1-9d4ccfddf7c5" name="Changes" comment="123">
-      <change afterPath="$PROJECT_DIR$/Writerside/Images/Diagramms/ERD.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Writerside/topics/ERD-диаграмма.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Writerside/topics/UseCase-диаграмма.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Writerside/topics/Web-Приложение.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Writerside/topics/Аналитика.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Writerside/topics/Диаграммы.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Writerside/topics/Мобильное-приложение.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Writerside/akvt-doc.tree" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/akvt-doc.tree" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Writerside/cfg/buildprofiles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/cfg/buildprofiles.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Writerside/redirection-rules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/redirection-rules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Writerside/topics/Ссылки.md" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/topics/Ссылки.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Writerside/topics/ERD-диаграмма.md" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/topics/ERD-диаграмма.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +94,7 @@
     "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/iliya/source/repos/Viclouh/AKVT.Raspisanie/Documentation/Writerside/Images/Diagramms",
     "settings.editor.selected.configurable": "preferences.pluginManager",
-    "writerside.last.selected.productDocumentation": "adoc"
+    "writerside.last.selected.productDocumentation": "akvt-doc"
   }
 }]]></component>
   <component name="RecentsManager">
