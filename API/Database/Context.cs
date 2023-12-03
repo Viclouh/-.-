@@ -6,7 +6,7 @@ namespace API.Database
 	public class Context : DbContext
 	{
 		private Context _instance;
-		private readonly string _connectionString = "";
+		private readonly string _connectionString = "Host=localhost;Port=5432;Database=zalupa;Username=postgres;Password=home";
         public DbSet<Speciality> Specialities { get; set; }
         public DbSet<CabinetType> CabinetTypes { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
@@ -16,7 +16,7 @@ namespace API.Database
         public DbSet<Group> Groups { get; set; }
         public DbSet<Teacher_Discipline> Teacher_Discipline { get; set; }
 
-        public Context Instance
+/*        public Context Instance
 		{
 			get
 			{
@@ -26,10 +26,11 @@ namespace API.Database
 				}
 				return _instance;
 			}
-		}
+		}*/
 
         public Context()
         {
+            Database.EnsureDeleted();
             Database.EnsureCreated();   // создаем базу данных при первом обращении
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

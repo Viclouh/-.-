@@ -1,4 +1,5 @@
 
+using API.Other;
 using API.Swagger;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using System.Text;
+using API.Database;
+using API.Models;
 
 namespace API
 {
@@ -15,6 +18,24 @@ namespace API
     {
         public static void Main(string[] args)
         {
+            Context context = new Context();
+            Parsing parsing= new Parsing();
+            if (context.Courses. Count() == 0 || context.Teachers.Count() == 0)
+            {
+                List<Task> tasks = parsing.ParseAllDataAsync();
+                Task.WaitAll(tasks.ToArray());
+                if(context.Courses.Count() == 0)
+                {
+                    context.Courses.AddRange(parsing.Courses);
+                    context.Groups.AddRange(parsing.Groups);
+                }
+                if (context.Teachers.Count() == 0)
+                {
+                    context.Teachers.AddRange(parsing.Teachers);
+                }
+                context.SaveChanges();
+            }
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.

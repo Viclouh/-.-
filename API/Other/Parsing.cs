@@ -1,12 +1,13 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using Excel = Microsoft.Office.Interop.Excel;
 using API.Models;
+using API.Database;
 
 namespace API.Other
 {
     public class Parsing
     {
-        public string Path { get; set; }
+        public string Path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Other\raspisanie.xls");
         public List<Cabinet> Cabinets = new List<Cabinet>();
         public List<Course> Courses = new List<Course>();
         public List<Group> Groups = new List<Group>();
@@ -14,10 +15,7 @@ namespace API.Other
         public List<Teacher> Teachers = new List<Teacher>();
         public List<Teacher_Discipline> Teacher_Discipline = new List<Teacher_Discipline>();
         Excel.Range UsedRange = null;
-        public Parsing(string path)
-        {
-            Path = path;
-        }
+
 
         public void ParseAllData()
         {
@@ -77,85 +75,79 @@ namespace API.Other
             }
             return null;
         }
-        //вывод всех данных
-        public void OutputAllData()
-        {
-            CoursesPasport();
-            GroupsPasport();
-            TeachersPassport();
-            CabinetsPassport();
-        }
+
         //парсинг направлений и групп
         public void ParseCoursesAndGroups()
         {
-            int CourseId = 1;
-            int GroupId = 1;
-            for (int i = 3; ; i++)
-            {
-                Excel.Range CellRange = UsedRange[9, i];
-                string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
-                    (CellRange as Excel.Range).Value2.ToString();
-                if (CellText != null)
+                int CourseId = 1;
+                int GroupId = 1;
+                for (int i = 3; ; i++)
                 {
-                    string[] group = CellText.Split(new char[] { '-' });
-                    if (Courses.Where(x => x.Shortname == group[0]).FirstOrDefault() == null)
-                    {
-                        Courses.Add(new Course
-                        {
-                            Id = CourseId,
-                            Name = group[0],
-                            Shortname = group[0]
-                        });
-                        CourseId++;
-                    }
-                    Course CurrentCourse = Courses.Where(x => x.Name == group[0]).FirstOrDefault();
-                    Groups.Add(new Group
-                    {
-                        Id = GroupId,
-                        Course = CurrentCourse,
-                        CourseId = CurrentCourse.Id,
-                        Code = group[1]
-                    });
-                    GroupId++;
-                }
-                else break;
-            }
-        }
-        //парсинг преподов
-        public void ParseTeachers()
-        {
-            int teacherId = 1;
-            for (int x = 3; x < 36; x++)
-            {
-                for (int y = 10; y < 159; y++)
-                {
-                    Excel.Range CellRange = UsedRange.Cells[x, y];
+                    Excel.Range CellRange = UsedRange[9, i];
                     string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
                         (CellRange as Excel.Range).Value2.ToString();
                     if (CellText != null)
                     {
-                        if (CellText.Contains(" ") && CellText.Contains("."))
+                        string[] group = CellText.Split(new char[] { '-' });
+                        if (Courses.Where(x => x.Shortname == group[0]).FirstOrDefault() == null)
                         {
-                            string[] teacher = CellText.Split(new char[] { ' ', '.' }, StringSplitOptions.RemoveEmptyEntries);
-                            if (teacher.Length == 3 || teacher.Length == 5)
+                            Courses.Add(new Course
                             {
-                                if (Teachers.Where(t => t.Name == teacher[1] && t.Patronymic == teacher[2] && t.Surname == teacher[0]).FirstOrDefault() == null
-                                    && teacher[1].Length == 1 && teacher[2].Length == 1 && teacher[0].Length > 2)
+                                Name = group[0],
+                                Shortname = group[0],
+                                SpecialityId = group[0] == "ИБ" ? 5 : 1,
+                            });
+                            CourseId++;
+                        }
+                        Course CurrentCourse = Courses.Where(x => x.Name == group[0]).FirstOrDefault();
+                        Groups.Add(new Group
+                        {
+                            Id = GroupId,
+                            CourseId = CurrentCourse.Id,
+                            Course = CurrentCourse,
+                            Code = group[1]
+                        });
+                        GroupId++;
+                    }
+                    else break;
+                }
+        }
+        //парсинг преподов
+        public void ParseTeachers()
+        {
+ 
+                int teacherId = 1;
+                for (int x = 3; x < 36; x++)
+                {
+                    for (int y = 10; y < 159; y++)
+                    {
+                        Excel.Range CellRange = UsedRange.Cells[x, y];
+                        string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
+                            (CellRange as Excel.Range).Value2.ToString();
+                        if (CellText != null)
+                        {
+                            if (CellText.Contains(" ") && CellText.Contains("."))
+                            {
+                                string[] teacher = CellText.Split(new char[] { ' ', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                                if (teacher.Length == 3 || teacher.Length == 5)
                                 {
-                                    Teachers.Add(new Teacher
+                                    if (Teachers.Where(t => t.Name == teacher[1] && t.Patronymic == teacher[2] && t.Surname == teacher[0]).FirstOrDefault() == null
+                                        && teacher[1].Length == 1 && teacher[2].Length == 1 && teacher[0].Length > 2)
                                     {
-                                        Id = teacherId,
-                                        Name = teacher[1],
-                                        Surname = teacher[0],
-                                        Patronymic = teacher[2],
-                                    });
-                                    teacherId++;
+                                        Teachers.Add(new Teacher
+                                        {
+                                            Id = teacherId,
+                                            Name = teacher[1],
+                                            Surname = teacher[0],
+                                            Patronymic = teacher[2],
+                                        });
+                                        teacherId++;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
         }
         //парсинг кабинетов
         public void ParseCabinets()
@@ -198,34 +190,6 @@ namespace API.Other
                     }
                 }
             }
-        }
-        //вывод всех направлений
-        public void CoursesPasport()
-        {
-            Console.WriteLine("Направления");
-            foreach (Course course in Courses)
-                Console.WriteLine($"{course.Id.ToString()} {course.Name} {course.Shortname}");
-        }
-        //вывод всех групп
-        public void GroupsPasport()
-        {
-            Console.WriteLine("Группы");
-            foreach (Group group in Groups)
-                Console.WriteLine($"{group.Id.ToString()} {group.CourseId.ToString()} {group.Code}");
-        }
-        //вывод всех преподов
-        public void TeachersPassport()
-        {
-            Console.WriteLine("Преподаватели");
-            foreach (Teacher teacher in Teachers)
-                Console.WriteLine($"{teacher.Id} {teacher.Surname} {teacher.Name} {teacher.Patronymic}");
-        }
-        //вывод всех кабинетов
-        public void CabinetsPassport()
-        {
-            Console.WriteLine("Кабинеты");
-            foreach (Cabinet cabinet in Cabinets)
-                Console.WriteLine($"{cabinet.Id} {cabinet.Number}");
         }
     }
 }
