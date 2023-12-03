@@ -10,11 +10,11 @@ namespace API.Database
         public DbSet<Speciality> Specialities { get; set; }
         public DbSet<CabinetType> CabinetTypes { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Discipline> Disciplines { get; set; }
         public DbSet<Cabinet> Cabinets { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Group> Groups { get; set; }
-        public DbSet<Teacher_Subject> Teacher_Subjects { get; set; }
+        public DbSet<Teacher_Discipline> Teacher_Discipline { get; set; }
 
         public Context Instance
 		{
