@@ -1980,19 +1980,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\home\\.nuget\\packages\\": {}
+    "C:\\Users\\iliya\\.nuget\\packages\\": {},
+    "A:\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\Программы ДЗ\\raspisanie\\API\\API.csproj",
+      "projectUniqueName": "C:\\Users\\iliya\\source\\repos\\Viclouh\\AKVT.Raspisanie\\API\\API.csproj",
       "projectName": "API",
-      "projectPath": "F:\\Программы ДЗ\\raspisanie\\API\\API.csproj",
-      "packagesPath": "C:\\Users\\home\\.nuget\\packages\\",
-      "outputPath": "F:\\Программы ДЗ\\raspisanie\\API\\obj\\",
+      "projectPath": "C:\\Users\\iliya\\source\\repos\\Viclouh\\AKVT.Raspisanie\\API\\API.csproj",
+      "packagesPath": "C:\\Users\\iliya\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\iliya\\source\\repos\\Viclouh\\AKVT.Raspisanie\\API\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "A:\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\home\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\iliya\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2078,7 +2083,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

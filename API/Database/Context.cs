@@ -6,7 +6,7 @@ namespace API.Database
 	public class Context : DbContext
 	{
 		private Context _instance;
-		private readonly string _connectionString = "Host=localhost;Port=5432;Database=zalupa;Username=postgres;Password=home";
+		private readonly string _connectionString = "";
         public DbSet<Speciality> Specialities { get; set; }
         public DbSet<CabinetType> CabinetTypes { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
