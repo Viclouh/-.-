@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="147decd6-1389-46d0-9af1-9d4ccfddf7c5" name="Changes" comment="123" />
+    <list default="true" id="147decd6-1389-46d0-9af1-9d4ccfddf7c5" name="Changes" comment="123">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -84,15 +86,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "writerside.last.selected.productDocumentation": "akvt-doc"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;writerside.last.selected.productDocumentation&quot;: &quot;akvt-doc&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: [
+      &quot;C:/Users/iliya/source/repos/Viclouh/AKVT.Raspisanie/Documentation/Writerside/topics/documentation.md&quot;,
+      &quot;C:/Users/iliya/source/repos/Viclouh/AKVT.Raspisanie/Documentation/Writerside/topics/Ссылки.md&quot;
+    ]
   }
-}]]></component>
+}</component>
+  <component name="RunManager">
+    <configuration name="Build Documentation (akvt-doc)" type="StardustRunConfiguration" factoryName="save-as-zip">
+      <option name="folderPath" value="$PROJECT_DIR$" />
+      <option name="instanceId" value="akvt-doc" />
+      <option name="instanceName" value="Documentation" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="VcsManagerConfiguration">
     <MESSAGE value="123" />
