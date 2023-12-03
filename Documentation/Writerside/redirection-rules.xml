@@ -26,4 +26,8 @@
         <description>Created after removal of "Changes" from API Docs</description>
         <accepts>Changes-XML.html</accepts>
     </rule>
+    <rule id="45265b24">
+        <description>Created after removal of "Ссылки" from API Docs</description>
+        <accepts>Ссылки.html</accepts>
+    </rule>
 </rules>
