@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="147decd6-1389-46d0-9af1-9d4ccfddf7c5" name="Changes" comment="123">
-      <change afterPath="$PROJECT_DIR$/Writerside/akvt-doc.tree" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Writerside/cfg/buildprofiles.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Writerside/topics/documentation.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Writerside/topics/Ссылки.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Writerside/redirection-rules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/redirection-rules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Writerside/writerside.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/writerside.cfg" afterDir="false" />
-    </list>
+    <list default="true" id="147decd6-1389-46d0-9af1-9d4ccfddf7c5" name="Changes" comment="123" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
