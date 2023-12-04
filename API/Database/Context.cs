@@ -16,7 +16,7 @@ namespace API.Database
         public DbSet<Group> Groups { get; set; }
         public DbSet<Teacher_Discipline> Teacher_Discipline { get; set; }
 
-/*        public Context Instance
+        public Context Instance
 		{
 			get
 			{
@@ -26,13 +26,12 @@ namespace API.Database
 				}
 				return _instance;
 			}
-		}*/
+		}
 
-        public Context()
+/*        public Context()
         {
-            Database.EnsureDeleted();
             Database.EnsureCreated();   // создаем базу данных при первом обращении
-        }
+        }*/
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql(_connectionString);
