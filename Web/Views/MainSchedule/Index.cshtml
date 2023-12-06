@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Speciality>
+@{
+	ViewData["Title"] = "Main Schedule";
+}
+<div class="row vh-100">
+	<div class="col p-1">
+		<ul id="treeviewContainer" class="list-group">
+			@foreach(var item in Model)
+			{
+				<li>
+					<span class="caret">@item.Name</span>
+					<ul class="nested">
+						@foreach(var course in item.Courses)
+						{
+							<li><span class="caret">@course.Shortname</span>
+								<ul class="nested">
+									@foreach(var group in course.Groups)
+									{
+										<li>@group.Course.Name - @group.Code</li>
+									}
+								</ul>
+							</li>
+						}
+					</ul>
+				</li>
+			}
+		</ul>
+	</div>
+	<div class="col-8 p-1">
+	</div>
+	<div class="col p-1">
+	</div>
+</div>

@@ -38,6 +38,16 @@ namespace API.Database
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Course>()
+                .HasOne(x => x.Speciality)
+                .WithMany(x => x.Courses)
+                .HasForeignKey(x=>x.SpecialityId)
+                .HasPrincipalKey(x=>x.Id);
+            modelBuilder.Entity<Group>()
+                .HasOne(x => x.Course)
+                .WithMany(x=>x.Groups)
+                .HasForeignKey(x=>x.CourseId)
+                .HasPrincipalKey(x=>x.Id);
             modelBuilder.Entity<Speciality>().HasData(
                 new Speciality[]
                 {
