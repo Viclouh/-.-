@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="akvt-doc"
+                 name="Documentation"
+                 start-page="documentation.md">
+
+    <toc-element topic="documentation.md"/>
+    <toc-element topic="Ссылки.md"/>
+    <toc-element topic="Мобильное-приложение.md"/>
+    <toc-element topic="Web-Приложение.md"/>
+    <toc-element toc-title="Диаграммы">
+        <toc-element topic="ERD-диаграмма.md"/>
+        <toc-element topic="UseCase-диаграмма.md"/>
+    </toc-element>
+</instance-profile>
