@@ -10,11 +10,12 @@ namespace API.Controllers
     public class SpecialitiesController : ControllerBase
     {
         [HttpGet]
-        public IEnumerable<Group> Get()
+        public IEnumerable<Speciality> Get()
         {
             Context context = new Context();
-            return context.Groups.Include(x => x.Course)
-                .ThenInclude(x => x.Speciality).ToList();
+            return context.Specialities
+                .Include(x=>x.Courses)
+                .ThenInclude(x=>x.Groups).ToList();
         }
     }
 }

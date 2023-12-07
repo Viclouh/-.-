@@ -11,15 +11,10 @@ namespace Web.Controllers
 		public async Task<IActionResult> Index()
 		{
 			Context context = new Context();
-			List<TreeviewViewModel> treeviews = new List<TreeviewViewModel>();
-			foreach (Speciality speciality in context.Specialities.ToList())
-			{
-				treeviews.Add(new TreeviewViewModel
-				{
-					Speciality = speciality,
-				});
-			}
-			return View(context.Specialities.ToList());
+			return View(context.Specialities
+				.Include(x=>x.Courses)
+				.ThenInclude(x=>x.Groups).ToList()
+				);
 		}
 	}
 }

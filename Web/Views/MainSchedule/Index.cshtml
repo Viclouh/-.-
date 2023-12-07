@@ -7,19 +7,23 @@
 		<ul id="treeviewContainer" class="list-group">
 			@foreach(var item in Model)
 			{
-				<li>
+				<li class="list-group-item">
 					<span class="caret">@item.Name</span>
 					<ul class="nested">
-						@foreach(var course in item.Courses)
+						@if (item.Courses != null)
 						{
-							<li><span class="caret">@course.Shortname</span>
-								<ul class="nested">
-									@foreach(var group in course.Groups)
-									{
-										<li>@group.Course.Name - @group.Code</li>
-									}
-								</ul>
-							</li>
+							@foreach (var course in item.Courses)
+							{
+								<li class="list-group-item">
+									<span class="caret">@course.Shortname</span>
+									<ul class="nested">
+										@foreach (var group in course.Groups)
+										{
+											<li class="list-group-item">@group.Course.Name - @group.Code</li>
+										}
+									</ul>
+								</li>
+							}
 						}
 					</ul>
 				</li>

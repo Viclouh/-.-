@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using API.Database;
 using API.Models;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 
 namespace API
 {
@@ -64,6 +65,12 @@ namespace API
 
 
             builder.Services.AddControllers();
+
+            builder.Services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
