@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:akvt_raspisanie/pages/home.dart';
+import 'package:akvt_raspisanie/pages/splash_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
 
 void main() => runApp(MaterialApp(
   theme: ThemeData(
@@ -14,7 +16,8 @@ void main() => runApp(MaterialApp(
     Locale('ru', ''), //
   ],
   debugShowCheckedModeBanner: false,
-  home: Home(),
+  home:Home(),
+  // home:SplashScreen(),
 ));
 
 
