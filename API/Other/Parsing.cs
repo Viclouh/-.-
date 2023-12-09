@@ -2,6 +2,8 @@
 using Excel = Microsoft.Office.Interop.Excel;
 using API.Models;
 using API.Database;
+using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
 
 namespace API.Other
 {
@@ -10,11 +12,31 @@ namespace API.Other
         public string Path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Other\raspisanie.xls");
         public List<Cabinet> Cabinets = new List<Cabinet>();
         public List<Course> Courses = new List<Course>();
-        public List<Group> Groups = new List<Group>();
-        public List<Discipline> Discipline = new List<Discipline>();
+        public List<Models.Group> Groups = new List<Models.Group>();
+        public List<Discipline> Disciplines = new List<Discipline>();
         public List<Teacher> Teachers = new List<Teacher>();
         public List<Teacher_Discipline> Teacher_Discipline = new List<Teacher_Discipline>();
         Excel.Range UsedRange = null;
+
+		public Parsing()
+		{
+			object rOnly = true;
+			object SaveChanges = false;
+			object MissingObj = System.Reflection.Missing.Value;
+
+			Excel.Application app = new Excel.Application();
+			Excel.Workbooks workbooks = app.Workbooks;
+			Excel.Workbook workbook = workbooks.Open(Path, MissingObj, rOnly, MissingObj, MissingObj,
+										MissingObj, MissingObj, MissingObj, MissingObj, MissingObj,
+										MissingObj, MissingObj, MissingObj, MissingObj, MissingObj);
+
+			// Получение всех страниц докуента
+			Excel.Sheets sheets = workbook.Sheets;
+			foreach (Excel.Worksheet worksheet in sheets)
+			{
+				UsedRange = worksheet.UsedRange;
+			}
+		}
 
 
         public void ParseAllData()
@@ -62,11 +84,11 @@ namespace API.Other
 
                 List<Task> tasks = new List<Task>()
                 {
-                    new Task(ParseCabinets),
-                    new Task(ParseCoursesAndGroups),
-                    new Task(ParseTeachers),
-                    new Task(ParseCabinets)
-                };
+					new Task(ParseCabinets),
+					new Task(ParseCoursesAndGroups),
+					new Task(ParseTeachers),
+					new Task(ParseDisciplines),
+				};
                 foreach (Task task in tasks)
                 {
                     task.Start();
@@ -100,7 +122,7 @@ namespace API.Other
                             CourseId++;
                         }
                         Course CurrentCourse = Courses.Where(x => x.Name == group[0]).FirstOrDefault();
-                        Groups.Add(new Group
+                        Groups.Add(new Models.Group
                         {
                             Id = GroupId,
                             CourseId = CurrentCourse.Id,
@@ -115,81 +137,125 @@ namespace API.Other
         //парсинг преподов
         public void ParseTeachers()
         {
- 
-                int teacherId = 1;
-                for (int x = 3; x < 36; x++)
-                {
-                    for (int y = 10; y < 159; y++)
-                    {
-                        Excel.Range CellRange = UsedRange.Cells[x, y];
-                        string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
-                            (CellRange as Excel.Range).Value2.ToString();
-                        if (CellText != null)
-                        {
-                            if (CellText.Contains(" ") && CellText.Contains("."))
-                            {
-                                string[] teacher = CellText.Split(new char[] { ' ', '.' }, StringSplitOptions.RemoveEmptyEntries);
-                                if (teacher.Length == 3 || teacher.Length == 5)
-                                {
-                                    if (Teachers.Where(t => t.Name == teacher[1] && t.Patronymic == teacher[2] && t.Surname == teacher[0]).FirstOrDefault() == null
-                                        && teacher[1].Length == 1 && teacher[2].Length == 1 && teacher[0].Length > 2)
-                                    {
-                                        Teachers.Add(new Teacher
-                                        {
-                                            Id = teacherId,
-                                            Name = teacher[1],
-                                            Surname = teacher[0],
-                                            Patronymic = teacher[2],
-                                        });
-                                        teacherId++;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-        }
+			int teacherId = 1;
+			Regex regex = new Regex(@"[А-ЯЁа-яё\-]+ [А-ЯЁ]\.\s*[А-ЯЁ]\.*");
+
+			for (int x = 3; x < 36; x++)
+			{
+				for (int y = 10; y < 159; y++)
+				{
+					Excel.Range CellRange = UsedRange.Cells[y, x];
+					string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
+						(CellRange as Excel.Range).Value2.ToString();
+					if (CellText != null)
+					{
+						MatchCollection matches = regex.Matches(CellText);
+						if (matches.Count > 0)
+						{
+							foreach (Match match in matches)
+							{
+								string[] s = match.ToString().Trim().Split(' ', '.');
+								if (Teachers.Where(z => z.Surname == s[0] && z.Name == s[1] && z.Patronymic == s[2]).Count() == 0)
+								{
+									Teachers.Add(new Teacher
+									{
+										Id = teacherId,
+										Surname = s[0],
+										Name = s[1],
+										Patronymic = s[2]
+									});
+									teacherId++;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
         //парсинг кабинетов
         public void ParseCabinets()
         {
-            int cabinetId = 1;
-            for (int x = 3; x < 36; x++)
-            {
-                for (int y = 10; y < 159; y++)
-                {
-                    Excel.Range CellRange = UsedRange.Cells[x, y];
-                    string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
-                        (CellRange as Excel.Range).Value2.ToString();
-                    if (CellText != null)
-                    {
-                        if (CellText.Contains("ауд."))
-                        {
-                            if (Cabinets.Where(c => c.Number == Convert.ToInt32(CellText.Remove(0, CellText.Length - 3))).FirstOrDefault() == null)
-                            {
-                                Cabinets.Add(new Cabinet { Id = cabinetId, Number = Convert.ToInt32(CellText.Remove(0, CellText.Length - 3)) });
-                                cabinetId++;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        public void ParseObjects()
-        {
-            int subjectId = 1;
-            for (int x = 3; x < 36; x++)
-            {
-                for (int y = 10; y < 159; y++)
-                {
-                    Excel.Range CellRange = UsedRange.Cells[x, y];
-                    string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
-                        (CellRange as Excel.Range).Value2.ToString();
-                    if (CellText != null)
-                    {
+			int cabinetId = 1;
+			Regex regex = new Regex(@"ауд\.\s*\d+");
+			for (int x = 3; x < 36; x++)
+			{
+				for (int y = 10; y < 159; y++)
+				{
+					Excel.Range CellRange = UsedRange.Cells[y, x];
+					string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
+						(CellRange as Excel.Range).Value2.ToString();
+					if (CellText != null)
+					{
+						MatchCollection matches = regex.Matches(CellText);
+						if (matches.Count > 0)
+						{
+							foreach (Match match in matches)
+							{
+								string[] s = match.ToString().Trim().Split(' ');
+								if (Cabinets.Where(z => z.Number.ToString() == s[1]).Count() == 0)
+								{
+									Cabinets.Add(new Cabinet
+									{
+										Id = cabinetId,
+										Number = Convert.ToInt32(s[1]),
+										CabinetTypeId = 1,
+									}) ;
+									cabinetId++;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		public void ParseDisciplines()
+		{
+			int subjectId = 1;
+			Regex regCab = new Regex(@"ауд\.\s*\d+");
+			Regex regTeacher = new Regex(@"[А-ЯЁа-яё\-]+ [А-ЯЁ]\.\s*[А-ЯЁ]\.*");
+			for (int x = 3; x < 36; x++)
+			{
+				for (int y = 10; y < 159; y += 2)
+				{
+					if (y == 34 || y == 59 || y == 84 || y == 109 || y == 134)
+						y++;
+					Excel.Range CellRange = UsedRange.Cells[y, x];
+					Excel.Range NextCellRange = UsedRange.Cells[y + 1, x];
+					string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
+						(CellRange as Excel.Range).Value2.ToString();
+					string NextCellText = (NextCellRange == null || NextCellRange.Value2 == null) ? null :
+						(NextCellRange as Excel.Range).Value2.ToString();
 
-                    }
-                }
-            }
-        }
-    }
+					string s = String.Concat(CellText, " ", NextCellText);
+					MatchCollection cabMatches = regCab.Matches(s);
+					MatchCollection teacherMatches = regTeacher.Matches(s);
+					foreach (Match m in cabMatches)
+					{
+						s = s.Replace(m.ToString(), "");
+					}
+					foreach (Match m in teacherMatches)
+					{
+						s = s.Replace(m.ToString(), "");
+					}
+					s = s.Contains("Космонавта Комарова 55") ? s.Replace("Космонавта Комарова 55", "") : s;
+					foreach (Match m in new Regex(@"\d{3}").Matches(s))
+						s = s.Replace(m.ToString(), "");
+					s = s.Trim();
+					if (!String.IsNullOrEmpty(s))
+					{
+						if (Disciplines.Where(z => z.Name == s && z.Shortname == s).Count() == 0)
+						{
+							Disciplines.Add(new Discipline
+							{
+								Id = subjectId,
+								Name = s,
+								Shortname = s,
+							});
+							subjectId++;
+						}
+					}
+				}
+			}
+		}
+	}
 }

@@ -21,19 +21,47 @@ namespace API
         {
             Context context = new Context();
             Parsing parsing= new Parsing();
-            if (context.Courses. Count() == 0 || context.Teachers.Count() == 0)
+            if (context.Courses. Count() == 0 || context.Teachers.Count() == 0 || context.Disciplines.Count() == 0 
+                || context.Cabinets.Count() == 0)
             {
-                List<Task> tasks = parsing.ParseAllDataAsync();
-                Task.WaitAll(tasks.ToArray());
+                List<Task> tasks = new List<Task>();
+                /*List<Task> tasks = parsing.ParseAllDataAsync();
+                Task.WaitAll(tasks.ToArray());*/
                 if(context.Courses.Count() == 0)
                 {
+                    Task CGTask = new Task(() => parsing.ParseCoursesAndGroups());
+                    CGTask.Start();
+                    tasks.Add(CGTask);
+                    Task.WaitAny(CGTask);
                     context.Courses.AddRange(parsing.Courses);
                     context.Groups.AddRange(parsing.Groups);
                 }
                 if (context.Teachers.Count() == 0)
                 {
+                    Task TeacherTask = new Task(() => parsing.ParseTeachers());
+                    TeacherTask.Start();
+                    tasks.Add(TeacherTask);
+                    Task.WaitAny(TeacherTask);
                     context.Teachers.AddRange(parsing.Teachers);
                 }
+				if (context.Cabinets.Count() == 0)
+				{
+					Task CabinetTask = new Task(() => parsing.ParseCabinets());
+                    CabinetTask.Start();
+					tasks.Add(CabinetTask);
+					Task.WaitAny(CabinetTask);
+					context.Cabinets.AddRange(parsing.Cabinets);
+				}
+				if (context.Disciplines.Count() == 0)
+                {
+					Task DisciplineTask = new Task(() => parsing.ParseDisciplines());
+                    DisciplineTask.Start();
+					tasks.Add(DisciplineTask);
+					Task.WaitAny(DisciplineTask);
+					context.Disciplines.AddRange(parsing.Disciplines);
+                }
+
+                Task.WaitAll(tasks.ToArray());
                 context.SaveChanges();
             }
 

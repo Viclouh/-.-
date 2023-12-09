@@ -15,6 +15,7 @@ namespace API.Database
         public DbSet<Course> Courses { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Teacher_Discipline> Teacher_Discipline { get; set; }
+        public DbSet<Main_Lesson> Main_Lessons { get; set; }
 
         public Context Instance
 		{
@@ -62,6 +63,13 @@ namespace API.Database
                     new Speciality{Id = 9, Name="08.01.18"},
                     new Speciality{Id = 10, Name="15.01.31"},
                 });
+            modelBuilder.Entity<CabinetType>().HasData(
+                new CabinetType[]
+                {
+                    new CabinetType{Id = 1, Name = "Обычный"},
+					new CabinetType{Id = 2, Name = "Лаборатория"},
+					new CabinetType{Id = 3, Name = "С интерактивной доской"}
+				});
         }
     }
 }

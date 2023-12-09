@@ -155,6 +155,54 @@ namespace API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Main_Lessons",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    LessonNumber = table.Column<int>(type: "integer", nullable: false),
+                    SubjectId = table.Column<int>(type: "integer", nullable: false),
+                    DisciplineId = table.Column<int>(type: "integer", nullable: false),
+                    CabinetId = table.Column<int>(type: "integer", nullable: false),
+                    GroupId = table.Column<int>(type: "integer", nullable: false),
+                    isDistantсe = table.Column<bool>(type: "boolean", nullable: false),
+                    Weekday = table.Column<int>(type: "integer", nullable: false),
+                    WeekNumber = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Main_Lessons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Main_Lessons_Cabinets_CabinetId",
+                        column: x => x.CabinetId,
+                        principalTable: "Cabinets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Main_Lessons_Disciplines_DisciplineId",
+                        column: x => x.DisciplineId,
+                        principalTable: "Disciplines",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Main_Lessons_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "CabinetTypes",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Обычный" },
+                    { 2, "Лаборатория" },
+                    { 3, "С интерактивной доской" }
+                });
+
             migrationBuilder.InsertData(
                 table: "Specialities",
                 columns: new[] { "Id", "Name" },
@@ -188,6 +236,21 @@ namespace API.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Main_Lessons_CabinetId",
+                table: "Main_Lessons",
+                column: "CabinetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Main_Lessons_DisciplineId",
+                table: "Main_Lessons",
+                column: "DisciplineId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Main_Lessons_GroupId",
+                table: "Main_Lessons",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Teacher_Discipline_SubjectId",
                 table: "Teacher_Discipline",
                 column: "SubjectId");
@@ -202,25 +265,28 @@ namespace API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Main_Lessons");
+
+            migrationBuilder.DropTable(
+                name: "Teacher_Discipline");
+
+            migrationBuilder.DropTable(
                 name: "Cabinets");
 
             migrationBuilder.DropTable(
                 name: "Groups");
 
             migrationBuilder.DropTable(
-                name: "Teacher_Discipline");
+                name: "Disciplines");
+
+            migrationBuilder.DropTable(
+                name: "Teachers");
 
             migrationBuilder.DropTable(
                 name: "CabinetTypes");
 
             migrationBuilder.DropTable(
                 name: "Courses");
-
-            migrationBuilder.DropTable(
-                name: "Disciplines");
-
-            migrationBuilder.DropTable(
-                name: "Teachers");
 
             migrationBuilder.DropTable(
                 name: "Specialities");
