@@ -2,7 +2,50 @@
 @{
 	ViewData["Title"] = "Main Schedule";
 }
-<div class="row vh-100">
+<div class="vh-100">
+	<div class="navbar container-fluid">
+		<select class="form-select container-fluid" style="width:auto;">
+			<option selected disabled hidden>Специальность</option>
+			<option>Все</option>
+			@foreach(Speciality speciality in Model)
+			{
+				<option>@speciality.Name</option>
+			}
+		</select>
+	</div>
+	<div>
+		@Html.Partial("Schedule")
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<div class="row vh-100">
 	<div class="col p-1">
 		<ul id="treeviewContainer" class="list-group">
 			@foreach(var item in Model)
@@ -34,4 +77,4 @@
 	</div>
 	<div class="col p-1">
 	</div>
-</div>
+</div>*@
