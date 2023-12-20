@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Speciality>
+﻿@model MainScheduleViewModel
 @{
 	ViewData["Title"] = "Main Schedule";
 }
@@ -7,13 +7,13 @@
 		<select class="form-select container-fluid" style="width:auto;">
 			<option selected disabled hidden>Специальность</option>
 			<option>Все</option>
-			@foreach(Speciality speciality in Model)
+			@foreach(Speciality speciality in Model.Specialities)
 			{
 				<option>@speciality.Name</option>
 			}
 		</select>
 	</div>
-	<div class="container-fluid h-auto vh-100">
+	<div class="container-fluid">
 		@Html.Partial("Schedule")
 	</div>
 </div>

@@ -12,21 +12,23 @@ namespace Web.Controllers
 		{
 			Context context = new Context();
 
+			MainScheduleViewModel model = new MainScheduleViewModel
+			{
+				Specialities = context.Specialities.ToList(),
+				Groups = context.Groups.Include(x=>x.Course).ToList(),
+				Teachers = context.Teachers.ToList(),
+			};
 
-			return View(context.Specialities
+/*			return View(context.Specialities
 				.Include(x=>x.Courses)
 				.ThenInclude(x=>x.Groups).ToList()
-				);
+				);*/
+
+			return View(model);
 		}
 		public async Task<IActionResult> Schedule()
 		{
 			Context context = new Context();
-			MainScheduleViewModel model = new MainScheduleViewModel
-			{
-				Specialities = context.Specialities.ToList(),
-				Groups = context.Groups.ToList(),
-				Teachers = context.Teachers.ToList(),
-			};
 			return PartialView();
 		}
 	}
