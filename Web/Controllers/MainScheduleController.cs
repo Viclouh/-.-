@@ -19,10 +19,7 @@ namespace Web.Controllers
 				Teachers = context.Teachers.ToList(),
 			};
 
-/*			return View(context.Specialities
-				.Include(x=>x.Courses)
-				.ThenInclude(x=>x.Groups).ToList()
-				);*/
+
 
 			return View(model);
 		}
@@ -30,6 +27,17 @@ namespace Web.Controllers
 		{
 			Context context = new Context();
 			return PartialView();
+		}
+
+		public ActionResult Lesson(int weekday, int lessonNumber, int groupId)
+		{
+
+			return PartialView( new Main_Lesson
+			{
+				GroupId = groupId,
+				LessonNumber = lessonNumber,
+				Weekday = weekday
+			});
 		}
 	}
 }

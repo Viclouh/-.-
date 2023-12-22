@@ -2,34 +2,11 @@
 @{
 	ViewData["Title"] = "Schedule";
 }
-@*	<div class="container-fluid m-0 vh-100">
-		<div class="row">
-			<div class="col-1"></div>
-			@foreach (Group group in Model.Groups)
-			{
-				<div class="col-2">
-					<h6 class="text-center">@group.Course.Shortname-@group.Code</h6>
-				</div>
-			}
+
+<div class="modal fade" id="modDialog">
+		<div class="modal-dialog" id="dialogContent">
 		</div>
-		@foreach (string weekday in Model.Weekdays)
-		{
-		<div class="row container-fluid" style="height:50%">
-			<div class="col-1">
-				<h6 class="m-0 text-center" style="writing-mode:vertical-lr; text-orientation:upright; vertical-align:middle">@weekday</h6>
-			</div>
-			<div class="col-2 p-0">
-				@for(int i = 1; i < 7; i++)
-				{
-					<div class="row border m-1" style="height:15.5%">
-					
-					</div>
-				}
-			</div>
-		</div>
-		}
-		<hr class="w-100"/>
-	</div>*@
+</div>
 
 <div>
 		<div class="row flex-nowrap">
@@ -42,19 +19,20 @@
 			}
 		</div>
 		
-	@foreach (string weekday in Model.Weekdays)
+	@for (int weekdayId = 1; weekdayId < 7; weekdayId++)
 	{
 		<div class="row flex-nowrap" style="height:550px">
 			<div class="col-1" style="display:flex; align-items:center; justify-content:center;">
-				<h6 class="m-0" style="width:1px; word-wrap:break-word; vertical-align:middle;">@weekday</h6>
+				<h6 class="m-0" style="width:1px; word-wrap:break-word; vertical-align:middle;">@Model.Weekdays[weekdayId-1]</h6>
 			</div>
 			@foreach (Group group in Model.Groups)
 			{
 				<div class="col-2 p-0">
 					@for (int i = 1; i < 7; i++)
 					{
-						<div class="row border m-1" style="height:15.5%">
-						</div>
+							<div class="row border m-1" style="height:15.5%">
+								@Html.ActionLink(group.Course.Name, "Lesson", new {groupId = group.Id, lessonNumber = i, weekday = weekdayId }, new {@class = "selectedLesson"})
+							</div>
 					}
 				</div>
 			}
@@ -62,3 +40,4 @@
 		<hr class="w-100"/>
 	}
 </div>
+

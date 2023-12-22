@@ -10,4 +10,15 @@ for (i = 0; i < toggler.length; i++) {
         this.parentElement.querySelector(".nested").classList.toggle("active");
         this.classList.toggle("caret-down");
     });
+};
+function () {
+    $.ajaxSetup({ cache: false });
+    $(".selectedLesson").click(function (e) {
+
+        e.preventDefault();
+        $.get(this.href, function (data) {
+            $('#dialogContent').html(data);
+            $('#modDialog').modal('show');
+        });
+    });
 }
