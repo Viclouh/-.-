@@ -8,4 +8,10 @@
 
     <toc-element topic="documentation.md"/>
     <toc-element topic="Ссылки.md"/>
+    <toc-element topic="Мобильное-приложение.md"/>
+    <toc-element topic="Web-Приложение.md"/>
+    <toc-element toc-title="Диаграммы">
+        <toc-element topic="ERD-диаграмма.md"/>
+        <toc-element topic="UseCase-диаграмма.md"/>
+    </toc-element>
 </instance-profile>

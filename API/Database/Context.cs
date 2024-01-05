@@ -8,7 +8,7 @@ namespace API.Database
 		private Context _instance;
 		private readonly string _connectionString = "Host=localhost;Port=5432;Database=zalupa;Username=postgres;Password=home";
         public DbSet<Speciality> Specialities { get; set; }
-        public DbSet<CabinetType> CabinetTypes { get; set; }
+        public DbSet<AudienceType> CabinetTypes { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Discipline> Disciplines { get; set; }
         public DbSet<Cabinet> Cabinets { get; set; }

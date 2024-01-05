@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="147decd6-1389-46d0-9af1-9d4ccfddf7c5" name="Changes" comment="123">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Writerside/topics/documentation.md" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/topics/documentation.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Writerside/topics/Ссылки.md" beforeDir="false" afterPath="$PROJECT_DIR$/Writerside/topics/Ссылки.md" afterDir="false" />
-    </list>
+    <list default="true" id="147decd6-1389-46d0-9af1-9d4ccfddf7c5" name="Changes" comment="123" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -88,21 +84,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;writerside.last.selected.productDocumentation&quot;: &quot;akvt-doc&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/iliya/source/repos/Viclouh/AKVT.Raspisanie/Documentation/Writerside/Images/Diagramms",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "writerside.last.selected.productDocumentation": "akvt-doc"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: [
-      &quot;C:/Users/iliya/source/repos/Viclouh/AKVT.Raspisanie/Documentation/Writerside/topics/documentation.md&quot;,
-      &quot;C:/Users/iliya/source/repos/Viclouh/AKVT.Raspisanie/Documentation/Writerside/topics/Ссылки.md&quot;
+  "keyToStringList": {
+    "stardust.markdown.MarkdownSplitEditorSuppressor:keyList": [
+      "C:/Users/iliya/source/repos/Viclouh/AKVT.Raspisanie/Documentation/Writerside/topics/ERD-диаграмма.md",
+      "C:/Users/iliya/source/repos/Viclouh/AKVT.Raspisanie/Documentation/Writerside/topics/documentation.md",
+      "C:/Users/iliya/source/repos/Viclouh/AKVT.Raspisanie/Documentation/Writerside/topics/Ссылки.md"
     ]
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\iliya\source\repos\Viclouh\AKVT.Raspisanie\Documentation\Writerside\Images\Diagramms" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\iliya\source\repos\Viclouh\AKVT.Raspisanie\Documentation\Writerside\Images\Diagramms" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Build Documentation (akvt-doc)" type="StardustRunConfiguration" factoryName="save-as-zip">
       <option name="folderPath" value="$PROJECT_DIR$" />

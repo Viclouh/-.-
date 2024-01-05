@@ -30,4 +30,12 @@
         <description>Created after removal of "Ссылки" from API Docs</description>
         <accepts>Ссылки.html</accepts>
     </rule>
+    <rule id="7b08a27c">
+        <description>Created after removal of "Диаграммы" from Documentation</description>
+        <accepts>Диаграммы.html</accepts>
+    </rule>
+    <rule id="54177c8a">
+        <description>Created after removal of "Аналитика" from Documentation</description>
+        <accepts>Аналитика.html</accepts>
+    </rule>
 </rules>

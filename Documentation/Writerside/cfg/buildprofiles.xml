@@ -7,6 +7,8 @@
         <variables>
             <noindex-content>true</noindex-content>
         </variables>
+        <footer>
+        </footer>
     </build-profile>
 
 </buildprofiles>
