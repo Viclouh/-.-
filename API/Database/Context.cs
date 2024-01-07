@@ -1,20 +1,27 @@
 ﻿using API.Models;
 using Microsoft.EntityFrameworkCore;
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace API.Database
 {
 	public class Context : DbContext
 	{
 		private Context _instance;
-		private readonly string _connectionString = "";
-        public DbSet<Speciality> Specialities { get; set; }
-        public DbSet<AudienceType> CabinetTypes { get; set; }
-        public DbSet<Teacher> Teachers { get; set; }
+
+        public DbSet<AudienceType> AudienceTypes { get; set; }
+        public DbSet<Audience> Audiences { get; set; }
+
         public DbSet<Subject> Subjects { get; set; }
-        public DbSet<Audience> Cabinets { get; set; }
-        public DbSet<Speciality> Courses { get; set; }
+
+        public DbSet<Speciality> Specialitys { get; set; }
         public DbSet<Group> Groups { get; set; }
-        public DbSet<TeacherSubject> Teacher_Subjects { get; set; }
+
+        public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<TeacherSubject> TeacherSubjects { get; set; }
+
+        public DbSet<LessonPlan> LessonPlans { get; set; }
+        public DbSet<LessonTeacher> LessonTeachers { get; set; }
 
         public Context Instance
 		{
@@ -38,7 +45,7 @@ namespace API.Database
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(_connectionString);
+            optionsBuilder.UseNpgsql("");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

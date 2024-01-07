@@ -17,12 +17,12 @@ namespace API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add services to the container.
             builder.Services.AddDbContext<Database.Context>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetSection("Database").GetConnectionString("DefaultConnection"));
             });
 
-            // Add services to the container.
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
