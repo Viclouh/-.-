@@ -17,6 +17,11 @@ namespace API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddDbContext<Database.Context>(options =>
+            {
+                options.UseNpgsql(builder.Configuration.GetSection("Database").GetConnectionString("DefaultConnection"));
+            });
+
             // Add services to the container.
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -62,7 +67,7 @@ namespace API
                 });
 
 
-                // Добавьте политику безопасности
+                // политика безопасности
                 c.OperationFilter<AuthorizationOperationFilter>();
             });
 
@@ -87,8 +92,8 @@ namespace API
     }
     public class AuthOptions
     {
-        public const string ISSUER = "localhost"; // издатель токена
-        public const string AUDIENCE = "localhost"; // потребитель токена
+        public const string ISSUER = "AKVT.Raspisanie API"; // издатель токена
+        public const string AUDIENCE = "AKVT.Raspisanie Client"; // потребитель токена
         const string KEY = "mysupersecret_secretkey!123";   // ключ для шифрации
         public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));

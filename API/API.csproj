@@ -49,7 +49,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DTO\Новая папка\" />
     <Folder Include="Services\" />
+    <Folder Include="Repository\" />
   </ItemGroup>
 
 </Project>
