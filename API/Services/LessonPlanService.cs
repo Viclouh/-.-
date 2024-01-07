@@ -1,5 +1,7 @@
 ﻿using API.Models;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace API.Services
 {
     public class LessonPlanService 
@@ -11,7 +13,11 @@ namespace API.Services
         }
         public IEnumerable<LessonPlan> GetAll()
         {
-            return Da
+            return _context.LessonPlan
+                .Include(ls => ls.Subject)
+                .Include(ls => ls.Audience)
+                .Include(ls => ls.Group)
+                .Include(ls => ls.LessonTeachers);
         }
 
     }

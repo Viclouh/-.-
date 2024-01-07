@@ -7,46 +7,26 @@ namespace API.Database
 {
 	public class Context : DbContext
 	{
-		private Context _instance;
+        public DbSet<AudienceType> AudienceType { get; set; }
+        public DbSet<Audience> Audience { get; set; }
 
-        public DbSet<AudienceType> AudienceTypes { get; set; }
-        public DbSet<Audience> Audiences { get; set; }
+        public DbSet<Subject> Subject { get; set; }
 
-        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Speciality> Speciality { get; set; }
+        public DbSet<Group> Group { get; set; }
 
-        public DbSet<Speciality> Specialitys { get; set; }
-        public DbSet<Group> Groups { get; set; }
+        public DbSet<Teacher> Teacher { get; set; }
+        public DbSet<TeacherSubject> TeacherSubject { get; set; }
 
-        public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<TeacherSubject> TeacherSubjects { get; set; }
+        public DbSet<LessonPlan> LessonPlan { get; set; }
+        public DbSet<LessonTeacher> LessonTeacher { get; set; }
 
-        public DbSet<LessonPlan> LessonPlans { get; set; }
-        public DbSet<LessonTeacher> LessonTeachers { get; set; }
-
-        public Context Instance
-		{
-			get
-			{
-				if (_instance == null)
-				{
-					_instance = new Context();
-				}
-				return _instance;
-			}
-		}
+        
         public Context(DbContextOptions<Context> options) : base(options)
         {
             Database.EnsureCreated();
         }
 
-        public Context()
-        {
-            Database.EnsureCreated();   // создаем базу данных при первом обращении
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql("");
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<Speciality>().HasData(

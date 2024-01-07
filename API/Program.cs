@@ -1,4 +1,5 @@
 
+using API.Services;
 using API.Swagger;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,6 +23,11 @@ namespace API
             {
                 options.UseNpgsql(builder.Configuration.GetSection("Database").GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            builder.Services.AddScoped<LessonPlanService>();
+
 
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

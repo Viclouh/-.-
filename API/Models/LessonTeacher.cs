@@ -1,6 +1,4 @@
-﻿using excel_parcing.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-
+﻿
 namespace API.Models
 {
     public class LessonTeacher
