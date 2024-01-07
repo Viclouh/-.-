@@ -12,9 +12,9 @@ namespace API.Database
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Cabinet> Cabinets { get; set; }
-        public DbSet<Course> Courses { get; set; }
+        public DbSet<Speciality> Courses { get; set; }
         public DbSet<Group> Groups { get; set; }
-        public DbSet<Teacher_Subject> Teacher_Subjects { get; set; }
+        public DbSet<TeacherSubject> Teacher_Subjects { get; set; }
 
         public Context Instance
 		{
