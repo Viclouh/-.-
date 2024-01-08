@@ -3,7 +3,8 @@
     public class Audience
     {
         public int Id { get; set; }
-        public int Number { get; set; }
-        public AudienceType AudienceType { get;set; }
+        public string Number { get; set; }
+        public int? AudienceTypeId { get;set; }
+        public AudienceType? AudienceType { get;set; }
     }
 }

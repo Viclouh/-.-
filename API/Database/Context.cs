@@ -1,75 +1,48 @@
 ﻿using API.Models;
 using Microsoft.EntityFrameworkCore;
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace API.Database
 {
 	public class Context : DbContext
 	{
-		private Context _instance;
-		private readonly string _connectionString = "Host=localhost;Port=5432;Database=zalupa;Username=postgres;Password=home";
-        public DbSet<Speciality> Specialities { get; set; }
-        public DbSet<AudienceType> CabinetTypes { get; set; }
-        public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<Discipline> Disciplines { get; set; }
-        public DbSet<Cabinet> Cabinets { get; set; }
-        public DbSet<Course> Courses { get; set; }
-        public DbSet<Group> Groups { get; set; }
-        public DbSet<Teacher_Discipline> Teacher_Discipline { get; set; }
-        public DbSet<Main_Lesson> Main_Lessons { get; set; }
+        public DbSet<AudienceType> AudienceType { get; set; }
+        public DbSet<Audience> Audience { get; set; }
 
-        public Context Instance
-		{
-			get
-			{
-				if (_instance == null)
-				{
-					_instance = new Context();
-				}
-				return _instance;
-			}
-		}
+        public DbSet<Subject> Subject { get; set; }
 
-/*        public Context()
+        public DbSet<Speciality> Speciality { get; set; }
+        public DbSet<Group> Group { get; set; }
+
+        public DbSet<Teacher> Teacher { get; set; }
+        public DbSet<TeacherSubject> TeacherSubject { get; set; }
+
+        public DbSet<LessonPlan> LessonPlan { get; set; }
+        public DbSet<LessonTeacher> LessonTeacher { get; set; }
+
+        
+        public Context(DbContextOptions<Context> options) : base(options)
         {
-            Database.EnsureCreated();   // создаем базу данных при первом обращении
-        }*/
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql(_connectionString);
+            Database.EnsureCreated();
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Course>()
-                .HasOne(x => x.Speciality)
-                .WithMany(x => x.Courses)
-                .HasForeignKey(x=>x.SpecialityId)
-                .HasPrincipalKey(x=>x.Id);
-            modelBuilder.Entity<Group>()
-                .HasOne(x => x.Course)
-                .WithMany(x=>x.Groups)
-                .HasForeignKey(x=>x.CourseId)
-                .HasPrincipalKey(x=>x.Id);
-            modelBuilder.Entity<Speciality>().HasData(
-                new Speciality[]
-                {
-                    new Speciality{Id = 1, Name="09.02.07"},
-                    new Speciality{Id = 2, Name="09.02.01"},
-                    new Speciality{Id = 3, Name="09.02.06"},
-                    new Speciality{Id = 4, Name="09.02.07"},
-                    new Speciality{Id = 5, Name="10.02.05"},
-                    new Speciality{Id = 6, Name="13.02.11"},
-                    new Speciality{Id = 7, Name="15.02.14"},
-                    new Speciality{Id = 8, Name="15.01.17"},
-                    new Speciality{Id = 9, Name="08.01.18"},
-                    new Speciality{Id = 10, Name="15.01.31"},
-                });
-            modelBuilder.Entity<CabinetType>().HasData(
-                new CabinetType[]
-                {
-                    new CabinetType{Id = 1, Name = "Обычный"},
-					new CabinetType{Id = 2, Name = "Лаборатория"},
-					new CabinetType{Id = 3, Name = "С интерактивной доской"}
-				});
+            //modelBuilder.Entity<Speciality>().HasData(
+            //    new Speciality[]
+            //    {
+            //        new Speciality{Id = 1, Name="09.02.07"},
+            //        new Speciality{Id = 2, Name="09.02.01"},
+            //        new Speciality{Id = 3, Name="09.02.06"},
+            //        new Speciality{Id = 4, Name="09.02.07"},
+            //        new Speciality{Id = 5, Name="10.02.05"},
+            //        new Speciality{Id = 6, Name="13.02.11"},
+            //        new Speciality{Id = 7, Name="15.02.14"},
+            //        new Speciality{Id = 8, Name="15.01.17"},
+            //        new Speciality{Id = 9, Name="08.01.18"},
+            //        new Speciality{Id = 10, Name="15.01.31"},
+            //    });
         }
     }
 }
