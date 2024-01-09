@@ -16,8 +16,11 @@ namespace API.Services
             return _context.LessonPlan
                 .Include(ls => ls.Subject)
                 .Include(ls => ls.Audience)
+                    .ThenInclude(a => a.AudienceType)
                 .Include(ls => ls.Group)
-                .Include(ls => ls.LessonTeachers);
+                    .ThenInclude(g=>g.Speciality)
+                .Include(ls => ls.LessonTeachers)
+                    .ThenInclude(lt => lt.Teacher);
         }
 
     }
