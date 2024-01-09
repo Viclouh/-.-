@@ -20,7 +20,7 @@ class SearchBox extends StatelessWidget {
             Expanded(
               child: TextFormField(
                   style: const TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 16.0,
                     fontFamily: 'Ubuntu',
                     color: Colors.black
                   ),

@@ -1,4 +1,5 @@
-import 'package:akvt_raspisanie/models/Direction.dart';
+
+import 'package:akvt_raspisanie/models/test/Direction.dart';
 
 class Group{
    int id;

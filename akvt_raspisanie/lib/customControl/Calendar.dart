@@ -37,11 +37,11 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
         locale: Localizations.localeOf(context).languageCode,
         headerStyle: const HeaderStyle(
           formatButtonVisible: false,
-          titleTextStyle: TextStyle(fontSize: 20.0,fontFamily: 'Ubuntu'),
+          titleTextStyle: TextStyle(fontSize: 18.0,fontFamily: 'Ubuntu'),
         ),
         daysOfWeekHeight: 24.0,
         calendarStyle: const CalendarStyle(
-          outsideTextStyle: TextStyle(fontFamily: "Ubuntu",fontSize: 20,color: Color.fromRGBO(227, 228, 232, 1))
+          outsideTextStyle: TextStyle(fontFamily: "Ubuntu",fontSize: 18,color: Color.fromRGBO(227, 228, 232, 1))
         ),
         calendarBuilders: CalendarBuilders(
           dowBuilder:(context, date) {
@@ -50,7 +50,7 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
               height: 1000.0,
               child: Text(
                     DateFormat.E('ru').format(date),
-                style: const TextStyle(fontSize: 20.0,fontFamily: 'Ubuntu'),
+                style: const TextStyle(fontSize: 18.0,fontFamily: 'Ubuntu'),
               ),
             );
           },
@@ -59,7 +59,7 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
               alignment: Alignment.center,
               child: Text(
                   '${date.day}',
-                  style: const TextStyle(fontSize: 20.0,fontFamily: 'Ubuntu'),
+                  style: const TextStyle(fontSize: 18.0,fontFamily: 'Ubuntu'),
                 ),
               );
           },
@@ -68,7 +68,7 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
               alignment: Alignment.center,
               child: Text(
                 '${date.day}',
-                style: const TextStyle(fontSize: 20.0,fontFamily: 'Ubuntu'),
+                style: const TextStyle(fontSize: 18.0,fontFamily: 'Ubuntu'),
               ),
             );
           },
@@ -86,7 +86,7 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
                   ),
                   child: Text(
                     '${date.day}',
-                    style: const TextStyle(fontSize: 20.0,fontFamily: 'Ubuntu'),
+                    style: const TextStyle(fontSize: 18.0,fontFamily: 'Ubuntu'),
                 ),
               )
               ,);

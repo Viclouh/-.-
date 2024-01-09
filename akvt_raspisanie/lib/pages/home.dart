@@ -2,14 +2,7 @@ import 'package:akvt_raspisanie/customControl/Calendar.dart';
 import 'package:akvt_raspisanie/customControl/Card.dart';
 import 'package:akvt_raspisanie/customControl/CustomTitle.dart';
 import 'package:akvt_raspisanie/customControl/SearchBox.dart';
-import 'package:akvt_raspisanie/models/Cabinet.dart';
-import 'package:akvt_raspisanie/models/Corpus.dart';
-import 'package:akvt_raspisanie/models/Direction.dart';
-import 'package:akvt_raspisanie/models/Group.dart';
-import 'package:akvt_raspisanie/models/Para.dart';
-import 'package:akvt_raspisanie/models/Speciality.dart';
-import 'package:akvt_raspisanie/models/Subject.dart';
-import 'package:akvt_raspisanie/models/TypeCabinet.dart';
+
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -37,8 +30,8 @@ class _HomeState extends State<Home> {
           const Align(
               alignment: Alignment.topLeft,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(18, 12, 0, 0),
-                child: CustomTitle(text: 'Группа - ПБ-11'),
+                padding: EdgeInsets.fromLTRB(18, 30, 0, 0),
+                child: CustomTitle(text: 'Группа - ПБ-11', isVisible: false),
               )),
           const Padding(
             padding: EdgeInsets.fromLTRB(8, 10, 8, 0),
