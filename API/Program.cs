@@ -26,10 +26,7 @@ namespace API
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            builder.Services.AddScoped<LessonPlanService>();
-
-
-
+            
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -54,6 +51,9 @@ namespace API
 
 
             builder.Services.AddControllers();
+            builder.Services.AddScoped<LessonPlanService>();
+
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -82,9 +82,10 @@ namespace API
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                
             }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 
@@ -96,11 +97,12 @@ namespace API
             app.Run();
         }
     }
+
     public class AuthOptions
     {
         public const string ISSUER = "AKVT.Raspisanie API"; // издатель токена
         public const string AUDIENCE = "AKVT.Raspisanie Client"; // потребитель токена
-        const string KEY = "mysupersecret_secretkey!123";   // ключ для шифрации
+        const string KEY = "mysupersecret_secretkey!1233";   // ключ для шифрации
         public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
     }

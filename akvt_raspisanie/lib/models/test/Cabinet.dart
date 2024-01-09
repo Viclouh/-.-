@@ -1,5 +1,6 @@
-import 'package:akvt_raspisanie/models/TypeCabinet.dart';
-import 'package:akvt_raspisanie/models/Corpus.dart';
+import 'package:akvt_raspisanie/models/test/Corpus.dart';
+import 'package:akvt_raspisanie/models/test/TypeCabinet.dart';
+
 
 class Cabinet{
   late int id;

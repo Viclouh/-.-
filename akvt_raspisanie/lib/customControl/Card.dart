@@ -52,51 +52,53 @@ class _LessonCardState extends State<LessonCard> {
                   alignment: Alignment.topLeft,
                   child: Padding(
                       padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(173, 38, 185, 1),
-                            border: Border.all(style: BorderStyle.none),
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(16.0),
-                                bottomLeft: Radius.circular(4.0),
-                                bottomRight: Radius.circular(16.0))),
-                        height: 32,
-                        width: 200,
-                        child: Row(
-                          children: [
-                            Center(
-                                child: Padding(
-                              padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                              child: Text('$num_lesson',
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontFamily: 'Inter',
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal)),
-                            )),
-                            Center(
-                                child: Padding(
-                              padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
-                              child: SvgPicture.asset('lib/res/icons/clock.svg',
-                                  color: Colors.white,
-                                  width: 16.0,
-                                  height: 16.0),
-                            )),
-                            Center(
-                                child: Padding(
-                              padding: EdgeInsets.fromLTRB(8, 0, 26, 0),
-                              child: Text(
-                                  '${DateFormat.Hm().format(start)}-${DateFormat.Hm().format(end)}',
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontFamily: 'Ubuntu',
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.normal)),
-                            )),
-                          ],
+                      child: UnconstrainedBox(
+                        child:  Container(
+                          decoration: BoxDecoration(
+                              color: const Color.fromRGBO(173, 38, 185, 1),
+                              border: Border.all(style: BorderStyle.none),
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(4.0),
+                                  topRight: Radius.circular(16.0),
+                                  bottomLeft: Radius.circular(4.0),
+                                  bottomRight: Radius.circular(16.0))),
+                          height: 32,
+                          child: Row(
+                            children: [
+                              Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                    child: Text('$num_lesson',
+                                        style: const TextStyle(
+                                            fontSize: 16.0,
+                                            fontFamily: 'Inter',
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.normal)),
+                                  )),
+                              Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                    child: SvgPicture.asset('lib/res/icons/clock.svg',
+                                        color: Colors.white,
+                                        width: 16.0,
+                                        height: 16.0),
+                                  )),
+                              Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(8, 0, 26, 0),
+                                    child: Text(
+                                        '${DateFormat.Hm().format(start)}-${DateFormat.Hm().format(end)}',
+                                        style: const TextStyle(
+                                            fontSize: 16.0,
+                                            fontFamily: 'Ubuntu',
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.normal)),
+                                  )),
+                            ],
+                          ),
                         ),
-                      )),
+                      )
+                  ),
                 ),
                 Align(
                     alignment: Alignment.topLeft,
@@ -104,8 +106,8 @@ class _LessonCardState extends State<LessonCard> {
                         padding: const EdgeInsets.fromLTRB(17, 16, 0, 0),
                         child: Expanded(
                           child: Text('$lesson',
-                              style: TextStyle(
-                                  fontSize: 20.0,
+                              style: const TextStyle(
+                                  fontSize: 16.0,
                                   fontFamily: 'Ubuntu',
                                   color: Colors.black,
                                   fontWeight: FontWeight.normal)),
@@ -131,23 +133,26 @@ class _LessonCardState extends State<LessonCard> {
                                   children: [
                                     Center(
                                         child: Padding(
-                                      padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                      child: SvgPicture.asset(
-                                          'lib/res/icons/user.svg',
-                                          color: Color.fromRGBO(51, 51, 51, 1),
-                                          width: 24.0,
-                                          height: 24.0),
-                                    )),
+                                      padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                          child: SvgPicture.asset(
+                                            'lib/res/icons/user.svg',
+                                            color: const Color.fromRGBO(51, 51, 51, 1),
+                                            width: 24.0,
+                                            height: 24.0),
+                                      )
+                                    ),
                                     Center(
                                         child: Padding(
-                                      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                                      child: Text('$prepod',
-                                          style: TextStyle(
-                                              fontSize: 20.0,
-                                              fontFamily: 'Ubuntu',
-                                              color: Color.fromRGBO(51, 51, 51, 1),
-                                              fontWeight: FontWeight.normal)),
-                                    )),
+                                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                          child: Text('$prepod',
+                                              style: const TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontFamily: 'Ubuntu',
+                                                  color: Color.fromRGBO(51, 51, 51, 1),
+                                                  fontWeight: FontWeight.normal)
+                                          ),
+                                      )
+                                    ),
                                   ],
                                 )),
                           ),
@@ -164,19 +169,19 @@ class _LessonCardState extends State<LessonCard> {
                                   children: [
                                     Center(
                                         child: Padding(
-                                      padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                      padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                                       child: SvgPicture.asset(
                                           'lib/res/icons/marker.svg',
-                                          color:  Color.fromRGBO(51, 51, 51, 1),
+                                          color:  const Color.fromRGBO(51, 51, 51, 1),
                                           width: 24.0,
                                           height: 24.0),
                                     )),
                                     Center(
                                         child: Padding(
-                                      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                                       child: Text('$num_class',
-                                          style: TextStyle(
-                                              fontSize: 20.0,
+                                          style: const TextStyle(
+                                              fontSize: 16.0,
                                               fontFamily: 'Ubuntu',
                                               color:  Color.fromRGBO(51, 51, 51, 1),
                                               fontWeight: FontWeight.normal)),
@@ -195,10 +200,10 @@ class _LessonCardState extends State<LessonCard> {
                                 height: 47,
                                 child: Center(
                                     child: Padding(
-                                  padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                                   child: SvgPicture.asset(
                                       'lib/res/icons/bookmark_add.svg',
-                                      color:  Color.fromRGBO(51, 51, 51, 1),
+                                      color:  const Color.fromRGBO(51, 51, 51, 1),
                                       width: 24.0,
                                       height: 24.0),
                                 ))),

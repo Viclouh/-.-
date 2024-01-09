@@ -21,13 +21,32 @@ namespace API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IEnumerable<LessonPlanDTO> GetAll() {
-            List<LessonPlanDTO> lessons = new List<LessonPlanDTO>();
-            foreach (var item in _lessonPlanService.GetAll())
+        public IActionResult GetAll(string formatting = "Standard") {
+            switch (formatting)
             {
-                lessons.Add(_mapper.Map<LessonPlanDTO>(item));
+                case "Standard":
+                    {
+                        List<LessonPlanDTO> lessons = new List<LessonPlanDTO>();
+                        foreach (var item in _lessonPlanService.GetAll())
+                        {
+                            lessons.Add(_mapper.Map<LessonPlanDTO>(item));
+                        }
+                        return StatusCode(200, lessons);
+                        break;
+                    }
+                case "MobileApp":
+                    {
+                        List<LessonPlanForMobileDTO> lessons = new List<LessonPlanForMobileDTO>();
+                        foreach (var item in _lessonPlanService.GetAll())
+                        {
+                            lessons.Add(_mapper.Map<LessonPlanForMobileDTO>(item));
+                        }
+                        return StatusCode(200, lessons);
+                        break;
+                    }
             }
-            return lessons;
+            return StatusCode(400);
+            
         }
     }
 }

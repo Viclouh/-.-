@@ -1,4 +1,4 @@
-import 'package:akvt_raspisanie/models/Speciality.dart';
+import 'package:akvt_raspisanie/models/test/Speciality.dart';
 
 class Direction{
   late int id;
