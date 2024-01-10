@@ -13,9 +13,6 @@ pipeline {
 
     stages {
         stage('Build API') {
-            agent {
-                label 'agent-for-projectA'
-            }
             steps {
                 script {
                     // Шаги для сборки проекта API
@@ -27,9 +24,6 @@ pipeline {
         }
 
         stage('Build WEB') {
-            agent {
-                label 'agent-for-projectB'
-            }
             steps {
                 script {
                     // Шаги для сборки проекта WEB
