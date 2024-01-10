@@ -8,14 +8,14 @@ pipeline {
         dockerImageName_API = 'yomaya/akvt.raspisanie.api:dev'
         dockerImageName_WEB = 'yomaya/akvt.raspisanie.web:dev'
         PROJECT_API = './API/'
-        PROJECT_WEB = './WEB/'
+        PROJECT_WEB = './Web/'
     }
 
     stages {
         stage('Build API') {
             steps {
                 script {
-                    // Шаги для сборки проекта API
+                    // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ API
                     dir("${PROJECT_API}") {
                         sh 'docker build -t ${dockerImageName_API} .'
                     }
@@ -26,7 +26,7 @@ pipeline {
         stage('Build WEB') {
             steps {
                 script {
-                    // Шаги для сборки проекта WEB
+                    // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ WEB
                     dir("${PROJECT_WEB}") {
                         sh 'docker build -t ${dockerImageName_WEB} .'
                     }
@@ -37,13 +37,13 @@ pipeline {
         stage('Clean and Start Docker Compose') {
             steps {
                 script {
-                    // Остановка и удаление контейнеров по их именам
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                     sh "docker container stop ${dockerContainerName_API} || true"
                     sh "docker container stop ${dockerContainerName_WEB} || true"
                     sh "docker container rm ${dockerContainerName_API} || true"
                     sh "docker container rm ${dockerContainerName_WEB} || true"
 
-                    // Запуск Docker Compose
+                    // пїЅпїЅпїЅпїЅпїЅпїЅ Docker Compose
                     sh 'docker-compose -f ./docker-compose.yml up -d'
                 }
             }
