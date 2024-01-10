@@ -1,0 +1,43 @@
+﻿@model MainScheduleViewModel
+@{
+	ViewData["Title"] = "Schedule";
+}
+
+<div class="modal fade" id="modDialog">
+		<div class="modal-dialog" id="dialogContent">
+		</div>
+</div>
+
+<div>
+		<div class="row flex-nowrap">
+			<div class="col-1"></div>
+			@foreach(Group group in Model.Groups)
+			{
+			<div class="col-2">
+				<h6 class="text-center">@group.Speciality.Shortname-@group.Name</h6>
+			</div>
+			}
+		</div>
+		
+	@for (int weekdayId = 1; weekdayId < 7; weekdayId++)
+	{
+		<div class="row flex-nowrap" style="height:550px">
+			<div class="col-1" style="display:flex; align-items:center; justify-content:center;">
+				<h6 class="m-0" style="width:1px; word-wrap:break-word; vertical-align:middle;">@Model.Weekdays[weekdayId-1]</h6>
+			</div>
+			@foreach (Group group in Model.Groups)
+			{
+				<div class="col-2 p-0">
+					@for (int i = 1; i < 7; i++)
+					{
+							<div class="row border m-1" style="height:15.5%">
+								@Html.ActionLink(group.Speciality.Name, "Lesson", new {groupId = group.Id, lessonNumber = i, weekday = weekdayId }, new {@class = "selectedLesson"})
+							</div>
+					}
+				</div>
+			}
+		</div>
+		<hr class="w-100"/>
+	}
+</div>
+
