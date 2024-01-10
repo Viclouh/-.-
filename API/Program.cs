@@ -53,6 +53,7 @@ namespace API
             builder.Services.AddControllers();
             builder.Services.AddScoped<LessonPlanService>();
             builder.Services.AddScoped<SpecialityService>();
+            builder.Services.AddScoped<GroupService>();
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
