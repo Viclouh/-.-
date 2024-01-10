@@ -1,7 +1,13 @@
+using Web.Services.Interfaces;
+using Web.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+builder.Services.AddHttpClient<ISpecialityService, SpecialityService>(
+    c => c.BaseAddress = new Uri("http://hnt8.ru:1147"));
 
 var app = builder.Build();
 
