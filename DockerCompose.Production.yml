@@ -15,7 +15,7 @@ services:
 
   AKVT.Raspisanie-WEB-Dev:
     image: yomaya/akvt.raspisanie.web:dev
-    build: ./WEB
+    build: ./Web
     environment:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Production
