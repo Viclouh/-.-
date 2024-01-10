@@ -1,0 +1,27 @@
+version: '0.1'
+
+services:
+  AKVT.Raspisanie-API-Dev:
+    image: yomaya/akvt.raspisanie.api:dev
+    build: ./API
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - '1147:80'
+      - '1148:443'
+    container_name: AKVT.Raspisanie-API-Dev
+    restart: always
+
+  AKVT.Raspisanie-WEB-Dev:
+    image: yomaya/akvt.raspisanie.web:dev
+    build: ./WEB
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - '9090:80'
+      - '9091:443'
+    container_name: AKVT.Raspisanie-WEB-Dev
+    restart: always
+
