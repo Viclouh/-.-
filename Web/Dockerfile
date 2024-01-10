@@ -6,15 +6,15 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["API.csproj", "."]
-RUN dotnet restore "./././API.csproj"
+COPY ["Web.csproj", "."]
+RUN dotnet restore "./././Web.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "./API.csproj" -c $BUILD_CONFIGURATION -o /app/build
-RUN dotnet publish "./API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet build "./Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet publish "./Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "API.dll"]
+ENTRYPOINT ["dotnet", "Web.dll"]
