@@ -1,4 +1,4 @@
-﻿using API.Models;
+﻿using Web.Models;
 
 namespace Web.ViewModels
 {

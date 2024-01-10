@@ -1,23 +1,22 @@
-﻿using API.Database;
-using API.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
+using Web.Models;
 using Web.ViewModels;
-using Npgsql;
 
 namespace Web.Controllers
 {
 	public class MainScheduleController : Controller
 	{
-		private Context _context = new Context();
 		public async Task<IActionResult> Index()
 		{
 
 			MainScheduleViewModel model = new MainScheduleViewModel
 			{
-				Specialities = _context.Speciality.ToList(),
-				Groups = _context.Group.Include(x=>x.Speciality).ToList(),
-				Teachers = _context.Teacher.ToList(),
+				//TODO ещё заглушка
+				Specialities = new List<Speciality>(),
+				Groups = new List<Group>(),
+				Teachers = new List<Teacher>(),
 			};
 
 
@@ -31,7 +30,8 @@ namespace Web.Controllers
 
 		public ActionResult Lesson(int weekday, int lessonNumber, int groupId)
 		{
-			LessonPlan lp = _context.LessonPlan
+			//TODO: вот это заглушка
+			LessonPlan lp = new List<LessonPlan>()
 				.Where(x=>x.Weekday == weekday && x.LessonNumber == lessonNumber && x.GroupId == groupId).FirstOrDefault();
 			if (lp == null)
 			{
