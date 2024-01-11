@@ -22,7 +22,9 @@ pipeline {
         branch 'main'
     }
     steps{
+        script{
             env.projEnvironment = 'Production'
+            }
     }
     }
         stage('Build API') {
