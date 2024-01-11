@@ -21,9 +21,11 @@ pipeline {
     when {
         branch 'main'
     }
+    environment {        
+        projEnvironment = 'Production'
+    }
     steps{
         script{
-            set env.projEnvironment = 'Production'
             echo env.projEnvironment
             }
     }
