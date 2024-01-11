@@ -24,6 +24,7 @@ pipeline {
     steps{
         script{
             env.projEnvironment = 'Production'
+            echo env.projEnvironment
             }
     }
     }
