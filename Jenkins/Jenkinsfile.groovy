@@ -9,12 +9,22 @@ pipeline {
         dockerImageName_WEB = 'yomaya/akvt.raspisanie.web:dev'
         PROJECT_API = './API/'
         PROJECT_WEB = './Web/'
+        projEnvironment = 'Development'
     }
      parameters {
         string(name: "Enviroment", defaultValue: "Development", trim: true, description: "Введите окружение проекта")
     }
 
     stages {
+        stage ('Enviroment detecting')
+        {
+    when {
+        branch 'main'
+    }
+    steps{
+            env.projEnvironment = 'Production'
+    }
+    }
         stage('Build API') {
             steps {
                 script {
