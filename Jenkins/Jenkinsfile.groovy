@@ -4,16 +4,22 @@ def getProjEnv(branch){
     }
     return 'Development'
 }
+def getDockerVer(branch){
+    if(branch=='main'){
+        return 'prod'
+    }
+    return 'dev'
+}
 
 pipeline {
     agent any
   
     environment {
         registry = ""
-        dockerContainerName_API = 'AKVT.Raspisanie-API-Dev'
-        dockerContainerName_WEB = 'AKVT.Raspisanie-WEB-Dev'
-        dockerImageName_API = 'yomaya/akvt.raspisanie.api:dev'
-        dockerImageName_WEB = 'yomaya/akvt.raspisanie.web:dev'
+        dockerContainerName_API = 'AKVT.Raspisanie-API-${getDockerVer(env.BRANCH_NAME)}'
+        dockerContainerName_WEB = 'AKVT.Raspisanie-WEB-${getDockerVer(env.BRANCH_NAME)}'
+        dockerImageName_API = 'yomaya/akvt.raspisanie.api:${getDockerVer(env.BRANCH_NAME)}'
+        dockerImageName_WEB = 'yomaya/akvt.raspisanie.web:${getDockerVer(env.BRANCH_NAME)}'
         PROJECT_API = './API/'
         PROJECT_WEB = './Web/'
         projEnvironment = getProjEnv(env.BRANCH_NAME)
