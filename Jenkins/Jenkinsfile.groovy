@@ -23,7 +23,7 @@ pipeline {
     }
     steps{
         script{
-            env.projEnvironment = 'Production'
+            set env.projEnvironment = 'Production'
             echo env.projEnvironment
             }
     }
