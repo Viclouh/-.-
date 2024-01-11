@@ -10,6 +10,9 @@ pipeline {
         PROJECT_API = './API/'
         PROJECT_WEB = './Web/'
     }
+     parameters {
+        string(name: "Enviroment", defaultValue: "Development", trim: true, description: "Введите окружение проекта")
+    }
 
     stages {
         stage('Build API') {
@@ -44,7 +47,7 @@ pipeline {
                     sh "docker container rm ${dockerContainerName_WEB} || true"
 
                     // ������ Docker Compose
-                    sh 'docker compose -f ./DockerCompose.Development.yml up -d'
+                    sh 'docker compose -f ./DockerCompose.${Enviroment}.yml up -d'
                     
                 }
             }
