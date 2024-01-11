@@ -57,7 +57,7 @@ pipeline {
                     sh "docker container rm ${dockerContainerName_WEB} || true"
 
                     // ������ Docker Compose
-                    sh 'docker compose -f ./DockerCompose.${Enviroment}.yml up -d'
+                    sh 'docker compose -f ./DockerCompose.${projEnvironment}.yml up -d'
                     
                 }
             }
