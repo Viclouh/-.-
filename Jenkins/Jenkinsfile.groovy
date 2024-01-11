@@ -16,7 +16,7 @@ pipeline {
         dockerImageName_WEB = 'yomaya/akvt.raspisanie.web:dev'
         PROJECT_API = './API/'
         PROJECT_WEB = './Web/'
-        projEnvironment = getProjEnv(env.BRANCH_NAM)
+        projEnvironment = getProjEnv(env.BRANCH_NAME)
     }
     stages {
         
