@@ -1,3 +1,10 @@
+def getProjEnv(branch){
+    if(branch=='main'){
+        return 'Production'
+    }
+    return 'Development'
+}
+
 pipeline {
     agent any
   
@@ -9,27 +16,10 @@ pipeline {
         dockerImageName_WEB = 'yomaya/akvt.raspisanie.web:dev'
         PROJECT_API = './API/'
         PROJECT_WEB = './Web/'
-        projEnvironment = 'Development'
+        projEnvironment = getProjEnv(env.BRANCH_NAM)
     }
-     parameters {
-        string(name: "Enviroment", defaultValue: "Development", trim: true, description: "Введите окружение проекта")
-    }
-
     stages {
-        stage ('Enviroment detecting')
-        {
-    when {
-        branch 'main'
-    }
-    environment {        
-        projEnvironment = 'Production'
-    }
-    steps{
-        script{
-            echo env.projEnvironment
-            }
-    }
-    }
+        
         stage('Build API') {
             steps {
                 script {
