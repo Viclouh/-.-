@@ -16,10 +16,10 @@ pipeline {
   
     environment {
         registry = ""
-        dockerContainerName_API = 'AKVT.Raspisanie-API-getDockerVer(env.BRANCH_NAME)'
-        dockerContainerName_WEB = 'AKVT.Raspisanie-WEB-getDockerVer(env.BRANCH_NAME)'
-        dockerImageName_API = 'yomaya/akvt.raspisanie.api:getDockerVer(env.BRANCH_NAME)'
-        dockerImageName_WEB = 'yomaya/akvt.raspisanie.web:getDockerVer(env.BRANCH_NAME)'
+        dockerContainerName_API = 'AKVT.Raspisanie-API-' + getDockerVer(env.BRANCH_NAME)
+        dockerContainerName_WEB = 'AKVT.Raspisanie-WEB-' + getDockerVer(env.BRANCH_NAME)
+        dockerImageName_API = 'yomaya/akvt.raspisanie.api:' + getDockerVer(env.BRANCH_NAME)
+        dockerImageName_WEB = 'yomaya/akvt.raspisanie.web:' + getDockerVer(env.BRANCH_NAME)
         PROJECT_API = './API/'
         PROJECT_WEB = './Web/'
         projEnvironment = getProjEnv(env.BRANCH_NAME)
