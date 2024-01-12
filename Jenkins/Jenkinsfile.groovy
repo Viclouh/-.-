@@ -19,8 +19,8 @@ pipeline {
         projEnvironment = getProjEnv(env.BRANCH_NAME)
         shortProjEnvironment = getDockerVer(env.BRANCH_NAME)
 
-        dockerContainerName_API = 'AKVT.Raspisanie-API-'
-        dockerContainerName_WEB = 'AKVT.Raspisanie-WEB-'
+        dockerContainerName_API = "AKVT.Raspisanie-API-${env.shortProjEnvironment}"
+        dockerContainerName_WEB = "AKVT.Raspisanie-WEB-${env.shortProjEnvironment}"
         dockerImageName_API = "yomaya/akvt.raspisanie.api:${env.shortProjEnvironment}"
         dockerImageName_WEB = "yomaya/akvt.raspisanie.web:${env.shortProjEnvironment}"
 

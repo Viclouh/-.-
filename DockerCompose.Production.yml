@@ -20,8 +20,8 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Production
     ports:
-      - '9090:80'
-      - '9091:443'
+      - '9091:80'
+      - '9092:443'
     container_name: AKVT.Raspisanie-WEB-Dev
     restart: always
 
