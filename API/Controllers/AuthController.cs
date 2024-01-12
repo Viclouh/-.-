@@ -41,7 +41,7 @@ namespace API.Controllers
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
                     claims: claims,
-                    expires: DateTime.UtcNow.Add(TimeSpan.FromDays(2)), // время действия 2 дня
+                    expires: DateTime.Now.Add(TimeSpan.FromSeconds(20)), // время действия 2 дня
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
             return StatusCode(200, new JwtSecurityTokenHandler().WriteToken(jwt));
@@ -62,17 +62,6 @@ namespace API.Controllers
             };
 
             _authService.CreateUser(authData);
-
-            //var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
-
-            //var jwt = new JwtSecurityToken(
-            //        issuer: AuthOptions.ISSUER,
-            //        audience: AuthOptions.AUDIENCE,
-            //        claims: claims,
-            //        expires: DateTime.UtcNow.Add(TimeSpan.FromDays(2)), // время действия 2 дня
-            //        signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-            //return StatusCode(200, new JwtSecurityTokenHandler().WriteToken(jwt));
             return StatusCode(200);
         }
 
@@ -88,10 +77,10 @@ namespace API.Controllers
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = securityKey,
                     ValidateLifetime = true,
-                    ValidateAudience = false,
-                    //ValidAudience = "" //if ValidateAudience = true
-                    ValidateIssuer = false,
-                    //ValidIssuer = "" //if ValidateIssuer = true
+                    ValidateAudience = true,
+                    ValidAudience = AuthOptions.AUDIENCE, //if ValidateAudience = true
+                    ValidateIssuer = true,
+                    ValidIssuer = AuthOptions.ISSUER //if ValidateIssuer = true
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
