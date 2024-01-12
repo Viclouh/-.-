@@ -8,8 +8,8 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - '1147:80'
-      - '1148:443'
+      - '1149:80'
+      - '1150:443'
     container_name: AKVT.Raspisanie-API-Dev
     restart: always
 
