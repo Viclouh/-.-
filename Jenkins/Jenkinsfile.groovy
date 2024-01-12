@@ -1,32 +1,34 @@
+def getProjEnv(branch){
+    if(branch=='main'){
+        return 'Production'
+    }
+    return 'Development'
+}
+def getDockerVer(branch){
+    if(branch=='main'){
+        return 'prod'
+    }
+    return 'dev'
+}
+
 pipeline {
     agent any
   
     environment {
         registry = ""
-        dockerContainerName_API = 'AKVT.Raspisanie-API-Dev'
-        dockerContainerName_WEB = 'AKVT.Raspisanie-WEB-Dev'
-        dockerImageName_API = 'yomaya/akvt.raspisanie.api:dev'
-        dockerImageName_WEB = 'yomaya/akvt.raspisanie.web:dev'
-        PROJECT_API = './API/'
-        PROJECT_WEB = './Web/'
-        projEnvironment = 'Development'
-    }
-     parameters {
-        string(name: "Enviroment", defaultValue: "Development", trim: true, description: "Введите окружение проекта")
-    }
+        projEnvironment = getProjEnv(env.BRANCH_NAME)
+        shortProjEnvironment = getDockerVer(env.BRANCH_NAME)
 
+        dockerContainerName_API = "AKVT.Raspisanie-API-${env.shortProjEnvironment}"
+        dockerContainerName_WEB = "AKVT.Raspisanie-WEB-${env.shortProjEnvironment}"
+        dockerImageName_API = "yomaya/akvt.raspisanie.api:${env.shortProjEnvironment}"
+        dockerImageName_WEB = "yomaya/akvt.raspisanie.web:${env.shortProjEnvironment}"
+
+        PROJECT_API = './API/'
+        PROJECT_WEB = './Web/'        
+    }
     stages {
-        stage ('Enviroment detecting')
-        {
-    when {
-        branch 'main'
-    }
-    steps{
-        script{
-            env.projEnvironment = 'Production'
-            }
-    }
-    }
+        
         stage('Build API') {
             steps {
                 script {

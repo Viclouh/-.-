@@ -6,8 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
-builder.Services.AddHttpClient<ISpecialityService, SpecialityService>(
-    c => c.BaseAddress = new Uri("http://hnt8.ru:1147"));
+builder.Services.AddHttpClient<IScheduleService, ScheduleService>(
+    c => c.BaseAddress = new Uri("https://localhost:7293/"));
 
 var app = builder.Build();
 
