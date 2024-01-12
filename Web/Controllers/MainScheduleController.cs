@@ -9,9 +9,9 @@ namespace Web.Controllers
 {
 	public class MainScheduleController : Controller
 	{
-		private readonly ISpecialityService _service;
+		private readonly IScheduleService _service;
 
-		public MainScheduleController(ISpecialityService service)
+		public MainScheduleController(IScheduleService service)
 		{
 			_service = service ?? throw new ArgumentNullException(nameof(service));
 		}
@@ -21,8 +21,9 @@ namespace Web.Controllers
 			MainScheduleViewModel model = new MainScheduleViewModel
 			{
 				//TODO ещё заглушка
-				Specialities = await _service.Find(),
-				Groups = new List<Group>(),
+				Specialities = await _service.GetSpecialities(),
+				Groups = await _service.GetGroups(),
+				Lessons = await _service.GetLessons(),
 				Teachers = new List<Teacher>(),
 			};
 
