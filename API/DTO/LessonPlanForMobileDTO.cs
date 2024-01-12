@@ -11,7 +11,7 @@ namespace API.DTO
         public string ShortSubjectName { get; set; }
         public string Audiebce { get; set; }
         public string Group { get; set; }
-        public bool isDistantсe { get; set; }
+        public bool isDistantce { get; set; }
         public int Weekday { get; set; }
         public int WeekNumber { get; set; }
         public IEnumerable<Teacher> Teachers { get; set; }
