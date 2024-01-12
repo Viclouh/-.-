@@ -17,14 +17,20 @@ namespace API.Database
 
         public DbSet<Teacher> Teacher { get; set; }
         public DbSet<TeacherSubject> TeacherSubject { get; set; }
+        public DbSet<GroupTeacher> GroupTeacher { get; set; }
 
         public DbSet<LessonPlan> LessonPlan { get; set; }
         public DbSet<LessonTeacher> LessonTeacher { get; set; }
 
-        
+
+        //Auth
+        public DbSet<UserAuthData> UserAuthData { get; set; }
+        public DbSet<User> Users { get; set; }
+
+
         public Context(DbContextOptions<Context> options) : base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
