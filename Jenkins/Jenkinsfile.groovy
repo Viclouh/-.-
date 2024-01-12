@@ -21,8 +21,8 @@ pipeline {
 
         dockerContainerName_API = 'AKVT.Raspisanie-API-'
         dockerContainerName_WEB = 'AKVT.Raspisanie-WEB-'
-        dockerImageName_API = 'yomaya/akvt.raspisanie.api:${env.shortProjEnvironment}'
-        dockerImageName_WEB = 'yomaya/akvt.raspisanie.web:${env.shortProjEnvironment}'
+        dockerImageName_API = "yomaya/akvt.raspisanie.api:${env.shortProjEnvironment}"
+        dockerImageName_WEB = "yomaya/akvt.raspisanie.web:${env.shortProjEnvironment}"
 
         PROJECT_API = './API/'
         PROJECT_WEB = './Web/'        
