@@ -21,8 +21,12 @@ namespace API.Services
 
         public User? checkPassword(string username, string password)
         {
-            UserAuthData user = _dbContext.UserAuthData
-                .Include(p => p.User).FirstOrDefault(p=> p.UserName== username);
+            UserAuthData? user = _dbContext.UserAuthData
+                .Include(p => p.User).OrderBy(p => p.Id).LastOrDefault(p => p.UserName == username);
+            if (user == null)
+            {
+                return null;
+            }
 
             if (_passwordHasher.VerifyHashedPassword(user, user.Password, password) == PasswordVerificationResult.Success)
             {
