@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using API.Models;
+using API.Services;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,23 +16,64 @@ namespace API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        public AuthController(IConfiguration configuration)
+        private readonly ILogger<AuthController> _logger;
+        private readonly AuthService _authService;
+
+        public AuthController(IConfiguration configuration, AuthService authService)
         {
             _configuration = configuration;
+            _authService = authService;
         }
 
         [HttpPost]
-        public string Login(string username, string password)
+        public IActionResult Login(string username, string password)
         {
+            //pass check
+            User? user = _authService.checkPassword(username,password);
+            if (user == null)
+            {
+                return StatusCode(StatusCodes.Status404NotFound);
+            }
+
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
+            
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
                     claims: claims,
-                    expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)), // время действия 2 минуты
+                    expires: DateTime.UtcNow.Add(TimeSpan.FromDays(2)), // время действия 2 дня
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
-            return new JwtSecurityTokenHandler().WriteToken(jwt);
+            return StatusCode(200, new JwtSecurityTokenHandler().WriteToken(jwt));
+        }
+
+        [HttpPost("Register")]
+        public IActionResult Register(string username, string password)
+        {
+            //pass check
+            UserAuthData authData = new UserAuthData()
+            {
+                UserName = username,
+                Password = password,
+                User = new User()
+                {
+                    Name = username
+                }
+            };
+
+            _authService.CreateUser(authData);
+
+            //var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
+
+            //var jwt = new JwtSecurityToken(
+            //        issuer: AuthOptions.ISSUER,
+            //        audience: AuthOptions.AUDIENCE,
+            //        claims: claims,
+            //        expires: DateTime.UtcNow.Add(TimeSpan.FromDays(2)), // время действия 2 дня
+            //        signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+            //return StatusCode(200, new JwtSecurityTokenHandler().WriteToken(jwt));
+            return StatusCode(200);
         }
 
         [HttpGet("ValidateToken")]
