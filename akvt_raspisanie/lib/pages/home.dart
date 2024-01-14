@@ -1,3 +1,4 @@
+
 import 'package:akvt_raspisanie/customControl/Calendar.dart';
 import 'package:akvt_raspisanie/customControl/Card.dart';
 import 'package:akvt_raspisanie/customControl/CustomTitle.dart';
@@ -13,14 +14,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // Para para1 = Para(
-  //     1,
-  //     1,
-  //     Subject(1, 'Основы алгоритмизации', ''),
-  //     Cabinet(1, 1, Corpus(1, 'Пирогова'), TypeCabinet(1, 'Лаборатория')),
-  //     Group(1, Direction(1, Speciality(1, 11), 'name', "shortName")),
-  //   true
-  // );
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,20 +25,20 @@ class _HomeState extends State<Home> {
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: EdgeInsets.fromLTRB(18, 30, 0, 0),
-                child: CustomTitle(text: 'Группа - ПБ-11', isVisible: false),
+                child: CustomTitle(text: 'Группа - ПБ - 11', isVisible: false),
               )),
           const Padding(
             padding: EdgeInsets.fromLTRB(8, 10, 8, 0),
             child: SearchBox(),
           ),
-          TableBasicsExample(),
-          LessonCard(
-              num_lesson: 1,
-              start: DateTime.now(),
-              end: DateTime.now(),
-              lesson: 'Основы алгоритмизации и программирования',
-              prepod: 'Растопшина Т.С',
-              num_class: 107)
+          Expanded(child: TableBasicsExample(),)
+          // LessonCard(
+          //     num_lesson: 1,
+          //     start: DateTime.now(),
+          //     end: DateTime.now(),
+          //     lesson: 'Основы алгоритмизации и программирования',
+          //     prepod: 'Растопшина Т.С',
+          //     num_class: 107)
         ],
       ),
     );
