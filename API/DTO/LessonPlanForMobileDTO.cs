@@ -9,7 +9,7 @@ namespace API.DTO
         public int LessonNumber { get; set; }
         public string SubjectName { get; set; }
         public string ShortSubjectName { get; set; }
-        public string Audiebce { get; set; }
+        public string Audience { get; set; }
         public string Group { get; set; }
         public bool isDistantсe { get; set; }
         public int Weekday { get; set; }
