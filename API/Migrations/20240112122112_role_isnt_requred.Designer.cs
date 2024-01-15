@@ -3,6 +3,7 @@ using System;
 using API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240112122112_role_isnt_requred")]
+    partial class role_isnt_requred
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,7 +143,7 @@ namespace API.Migrations
                     b.Property<int>("Weekday")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("isDistantce")
+                    b.Property<bool>("isDistantсe")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");

@@ -3,6 +3,7 @@ using System;
 using API.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240112120809_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,7 +143,7 @@ namespace API.Migrations
                     b.Property<int>("Weekday")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("isDistantce")
+                    b.Property<bool>("isDistantсe")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
@@ -321,7 +324,7 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("RoleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("integer");
 
                     b.Property<int>("UserId")
@@ -454,7 +457,9 @@ namespace API.Migrations
                 {
                     b.HasOne("API.Models.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("API.Models.User", "User")
                         .WithMany()

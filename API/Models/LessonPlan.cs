@@ -13,7 +13,7 @@ namespace API.Models
         public Audience Audience { get; set; }
         public int GroupId { get; set; }
         public Group Group { get; set; }
-        public bool isDistantсe { get; set; }
+        public bool isDistantce { get; set; }
         public int Weekday { get; set; }
         public int? WeekNumber { get; set; }
         public List<LessonTeacher> LessonTeachers { get; set; }
