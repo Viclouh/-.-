@@ -30,12 +30,16 @@
 				<div class="col-2 p-0">
 					@for (int i = 1; i < 7; i++)
 					{
-							<div class="row border m-1" style="height:15.5%">
-								@Html.ActionLink("", "Lesson", new {groupId = group.Id, lessonNumber = i, weekday = weekdayId }, new {@class = "selectedLesson"})
-							@if (Model.Lessons.Any(x=>x.Group.Id == group.Id && x.LessonNumber == i && x.Weekday == weekdayId))
-							{
-								<h6>@Model.Lessons.Where(x=>x.Group.Id == group.Id && x.LessonNumber == i && x.Weekday == weekdayId).FirstOrDefault().Subject.Name</h6>
-							}
+						<div class="row border m-1" style="height:15.5%">
+								@if (Model.Lessons.Any(x=>x.Group.Id == group.Id && x.LessonNumber == i && x.Weekday == weekdayId))
+								{
+									LessonPlan lesson = Model.Lessons.Where(x => x.Group.Id == group.Id && x.LessonNumber == i && x.Weekday == weekdayId).FirstOrDefault();
+
+									<a class="selectedLesson" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId">
+										<h6 style="">@Model.Lessons.Where(x=>x.Group.Id == group.Id && x.LessonNumber == i && x.Weekday == weekdayId).FirstOrDefault().Subject.Name</h6>
+									</a>
+								}
+
 						</div>
 					}
 				</div>
