@@ -4,7 +4,7 @@
 }
 <div class="vh-100">
 	<div class="navbar container-fluid">
-		<select class="form-select container-fluid" style="width:auto;">
+		<select id="specialityFilter" class="form-select container-fluid" style="width:auto;">
 			<option selected disabled hidden>Направление</option>
 			<option>Все</option>
 			@foreach(Speciality speciality in Model.Specialities)
@@ -31,65 +31,15 @@
 			});
 		})
 	</script>
+
+	<script type="text/javascript">
+		$(function () {
+			$('#specialityFilter').change(function (e){
+				e.preventDefault();
+				var spec = $('#specialityFilter').val();
+				spec=encodeURIComponent(spec);
+				alert(spec);
+			})
+		})
+	</script>
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@*<div class="row vh-100">
-	<div class="col p-1">
-		<ul id="treeviewContainer" class="list-group">
-			@foreach(var item in Model)
-			{
-				<li class="list-group-item">
-					<span class="caret">@item.Name</span>
-					<ul class="nested">
-						@if (item.Courses != null)
-						{
-							@foreach (var course in item.Courses)
-							{
-								<li class="list-group-item">
-									<span class="caret">@course.Shortname</span>
-									<ul class="nested">
-										@foreach (var group in course.Groups)
-										{
-											<li class="list-group-item">@group.Course.Name - @group.Code</li>
-										}
-									</ul>
-								</li>
-							}
-						}
-					</ul>
-				</li>
-			}
-		</ul>
-	</div>
-	<div class="col-8 p-1">
-	</div>
-	<div class="col p-1">
-	</div>
-</div>*@
