@@ -46,26 +46,30 @@
 
 								if (secondLesson == null)
 								{
-									<a class="selectedLesson" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId">
+									<a class="selectedLesson" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=0">
 										<h6>@firstLesson.Subject.Name</h6>
 									</a>
 								}
 								else if (firstLesson == null && secondLesson != null)
 								{
 									<div class="border" style="height:50%; "></div>
-									<a class="selectedLesson border" style="height: 50%" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId">
+									<a class="selectedLesson border" style="height: 50%" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=1">
 										<h6>@secondLesson.Subject.Name</h6>
 									</a>
 								}
 								else
 								{
-									<a class="selectedLesson border" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId">
+									<a class="selectedLesson border" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=0">
 										<h6>@firstLesson.Subject.Name</h6>
 									</a>
-									<a class="selectedLesson border" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId">
+									<a class="selectedLesson border" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=1">
 										<h6>@secondLesson.Subject.Name</h6>
 									</a>
 								}
+							}
+							else
+							{
+								<a class="selectedLesson" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=0"></a>
 							}
 
 						</div>

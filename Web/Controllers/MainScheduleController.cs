@@ -17,7 +17,6 @@ namespace Web.Controllers
 			_service = service ?? throw new ArgumentNullException(nameof(service));
 		}
 
-
 		public async Task<IActionResult> Index()
 		{
 			var task = GetModel();
@@ -25,6 +24,7 @@ namespace Web.Controllers
 			return View(_viewModel);
 		}
 
+		[Route("Schedule")]
 		public async Task<IActionResult> Schedule(int spec)
 		{
 			Task task;
@@ -36,13 +36,13 @@ namespace Web.Controllers
 			return PartialView(_viewModel);
 		}
 
-		public ActionResult Lesson(int weekday, int lessonNumber, int groupId)
+		public ActionResult Lesson(int weekday, int lessonNumber, int groupId, int weekNumber)
 		{
-			//TODO: вот это заглушка
-			LessonPlan lp = new List<LessonPlan>()
-				.Where(x=>x.Weekday == weekday && x.LessonNumber == lessonNumber && x.GroupId == groupId).FirstOrDefault();
+/*			LessonPlan lesson = _viewModel.Lessons.Where(x=>x.Weekday==weekday
+			&&x.LessonNumber==lessonNumber&&x.Group.Id==groupId&&x.WeekNumber==weekNumber)
+				.FirstOrDefault();
 
-			if (lp == null)
+			if (lesson == null)
 			{
 				return PartialView(new LessonPlan
 				{
@@ -50,8 +50,8 @@ namespace Web.Controllers
 					LessonNumber = lessonNumber,
 					GroupId = groupId
 				});
-			}
-			else return PartialView(lp);
+			}*/
+			return PartialView();
 		}
 
 		public async Task GetModel()
@@ -77,6 +77,10 @@ namespace Web.Controllers
 				Lessons = Lessons.Where(x=>x.Group.Speciality.Id == spec),
 				Teachers = new List<Teacher>(),
 			};
+		}
+		public LessonPlan GetLesson()
+		{
+			return new LessonPlan();
 		}
 	}
 }
