@@ -10,34 +10,30 @@ namespace Web.Controllers
 	public class MainScheduleController : Controller
 	{
 		private readonly IScheduleService _service;
+		private MainScheduleViewModel _viewModel;
 
 		public MainScheduleController(IScheduleService service)
 		{
 			_service = service ?? throw new ArgumentNullException(nameof(service));
 		}
 
+
 		public async Task<IActionResult> Index()
 		{
-			MainScheduleViewModel model = new MainScheduleViewModel
-			{
-				//TODO ещё заглушка
-				Specialities = await _service.GetSpecialities(),
-				Groups = await _service.GetGroups(),
-				Lessons = await _service.GetLessons(),
-				Teachers = new List<Teacher>(),
-			};
-			return View(model);
+			var task = GetModel();
+			task.Wait();
+			return View(_viewModel);
 		}
+
 		public async Task<IActionResult> Schedule(int spec)
 		{
+			Task task;
 			if (spec == 0)
-			{
-				return PartialView();
-			}
+				task = GetModel();
 			else
-			{
-				return PartialView();
-			}
+				task = GetModel(spec);
+			task.Wait();
+			return PartialView(_viewModel);
 		}
 
 		public ActionResult Lesson(int weekday, int lessonNumber, int groupId)
@@ -56,6 +52,31 @@ namespace Web.Controllers
 				});
 			}
 			else return PartialView(lp);
+		}
+
+		public async Task GetModel()
+		{
+			_viewModel = new MainScheduleViewModel
+			{
+				//TODO ещё заглушка
+				Specialities = await _service.GetSpecialities(),
+				Groups = await _service.GetGroups(),
+				Lessons = await _service.GetLessons(),
+				Teachers = new List<Teacher>(),
+			};
+		}
+		public async Task GetModel(int spec)
+		{
+			var Groups = await _service.GetGroups();
+			var Lessons = await _service.GetLessons();
+
+			_viewModel = new MainScheduleViewModel
+			{
+				Specialities = await _service.GetSpecialities(),
+				Groups = Groups.Where(x=>x.Speciality.Id == spec),
+				Lessons = Lessons.Where(x=>x.Group.Speciality.Id == spec),
+				Teachers = new List<Teacher>(),
+			};
 		}
 	}
 }
