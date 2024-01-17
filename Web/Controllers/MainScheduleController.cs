@@ -26,12 +26,18 @@ namespace Web.Controllers
 				Lessons = await _service.GetLessons(),
 				Teachers = new List<Teacher>(),
 			};
-
 			return View(model);
 		}
-		public async Task<IActionResult> Schedule()
+		public async Task<IActionResult> Schedule(int spec)
 		{
-			return PartialView();
+			if (spec == 0)
+			{
+				return PartialView();
+			}
+			else
+			{
+				return PartialView();
+			}
 		}
 
 		public ActionResult Lesson(int weekday, int lessonNumber, int groupId)

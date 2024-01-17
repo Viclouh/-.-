@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom">
+    <header style="position:fixed; margin-top:-4%; width:100%; z-index:5">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom py-0">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="MainSchedule" asp-action="Index">
                     <img src="~/img/logo.png" class="ms-2" height="50" width="50" />
@@ -32,7 +32,7 @@
             </div>
         </nav>
     </header>
-    <div class="container-fluid vh-100">
+    <div class="container-fluid vh-100" style="margin-top: 4%">
         <main role="main" class="pb-3 vh-100">
             @RenderBody()
         </main>
