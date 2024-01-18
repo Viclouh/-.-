@@ -27,6 +27,7 @@ namespace Web.Controllers
 		[Route("Schedule")]
 		public async Task<IActionResult> Schedule(int spec)
 		{
+			//test
 			Task task;
 			if (spec == 0)
 				task = GetModel();
