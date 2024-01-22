@@ -9,8 +9,8 @@
 </div>
 
 <div style="display:inline-block">
-	<div class="row flex-nowrap">
-		<div class="col-1" style="width:70px"></div>
+	<div class="row flex-nowrap sticky" style="top:60px">
+		<div class="col-1" style="width:30px"></div>
 		@foreach (Group group in Model.Groups)
 		{
 			<div class="" style="width:350px">
@@ -22,7 +22,7 @@
 	@for (int weekdayId = 1; weekdayId < 7; weekdayId++)
 	{
 		<div class="row flex-nowrap" style="height:600px; margin-bottom:100px">
-			<div class="col-1" style="display:flex; align-items:center; justify-content:center; width:70px">
+			<div class="col-1 sticky weekday-container">
 				<h6 class="m-0" style="width:1px; word-wrap:break-word; vertical-align:middle;">@Model.Weekdays[weekdayId - 1]</h6>
 			</div>
 			@foreach (Group group in Model.Groups)

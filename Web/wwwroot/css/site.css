@@ -2,3 +2,14 @@ a {
     color: black;
     text-decoration: none;
 }
+.sticky{
+    position:sticky;
+    background-color:white;
+}
+.weekday-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    left: 0px;
+}
