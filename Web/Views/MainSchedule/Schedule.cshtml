@@ -8,12 +8,12 @@
 	</div>
 </div>
 
-<div>
-	<div class="row flex-nowrap">
-		<div class="col-1"></div>
+<div style="display:inline-block">
+	<div class="row flex-nowrap sticky" style="top:60px">
+		<div class="col-1" style="width:30px"></div>
 		@foreach (Group group in Model.Groups)
 		{
-			<div class="col-2">
+			<div class="" style="width:350px">
 				<h6 class="text-center">@group.Speciality.Shortname-@group.Name</h6>
 			</div>
 		}
@@ -22,15 +22,15 @@
 	@for (int weekdayId = 1; weekdayId < 7; weekdayId++)
 	{
 		<div class="row flex-nowrap" style="height:600px; margin-bottom:100px">
-			<div class="col-1" style="display:flex; align-items:center; justify-content:center;">
+			<div class="col-1 sticky weekday-container">
 				<h6 class="m-0" style="width:1px; word-wrap:break-word; vertical-align:middle;">@Model.Weekdays[weekdayId - 1]</h6>
 			</div>
 			@foreach (Group group in Model.Groups)
 			{
-				<div class="col-2 p-0">
+				<div class="col-2 p-0" style="width:350px">
 					@for (int i = 1; i < 7; i++)
 					{
-						<div class="row border m-1" style="height:17%">
+						<div class="row border m-1" style="height:17%;">
 							@if (Model.Lessons.Any(x => x.Group.Id == group.Id && x.LessonNumber == i && x.Weekday == weekdayId))
 							{
 								LessonPlan firstLesson = Model
@@ -77,6 +77,6 @@
 				</div>
 			}
 		</div>
-		<hr style="width: calc(16.66666667% * @Model.Groups.Count() + 13%)" />
+		<hr style="width: calc(350 * @Model.Groups.Count() + 50px)" />
 	}
 </div>
