@@ -10,6 +10,7 @@ namespace Web.Controllers
 	public class MainScheduleController : Controller
 	{
 		private readonly IScheduleService _service;
+		private LessonPlan _lesson;
 		private MainScheduleViewModel _viewModel;
 
 		public MainScheduleController(IScheduleService service)
@@ -37,22 +38,11 @@ namespace Web.Controllers
 			return PartialView(_viewModel);
 		}
 
-		public ActionResult Lesson(int weekday, int lessonNumber, int groupId, int weekNumber)
+		public async Task<IActionResult> Lesson(int weekday, int lessonNumber, int groupId, int weekNumber)
 		{
-/*			LessonPlan lesson = _viewModel.Lessons.Where(x=>x.Weekday==weekday
-			&&x.LessonNumber==lessonNumber&&x.Group.Id==groupId&&x.WeekNumber==weekNumber)
-				.FirstOrDefault();
-
-			if (lesson == null)
-			{
-				return PartialView(new LessonPlan
-				{
-					Weekday = weekday,
-					LessonNumber = lessonNumber,
-					GroupId = groupId
-				});
-			}*/
-			return PartialView();
+			var task = GetLesson(weekday, lessonNumber, groupId, weekNumber);
+			task.Wait();
+			return PartialView(_lesson);
 		}
 
 		public async Task GetModel()
@@ -79,9 +69,10 @@ namespace Web.Controllers
 				Teachers = new List<Teacher>(),
 			};
 		}
-		public LessonPlan GetLesson()
+		public async Task GetLesson(int weekday, int lessonNumber, int groupId, int weekNumber)
 		{
-			return new LessonPlan();
+			var lesson = await _service.GetLesson(weekday, lessonNumber, groupId, weekNumber);
+			_lesson = lesson;
 		}
 	}
 }

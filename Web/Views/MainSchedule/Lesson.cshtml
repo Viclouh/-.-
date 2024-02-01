@@ -6,14 +6,8 @@
         <button type="button" class="close" data-bs-dismiss="modal">X</button>
     </div>
     <div class="modal-body">
-@*        @if (Model.Subject==null)
-        {
-            <h6>@Model.Group.Id</h6>
-        }
-        else
-        {
-            <h6>@Model.Subject.Name</h6>
-        }*@
+        <h6>@Model.Group.Speciality.Name-@Model.Group.Name</h6>
+        <h6>@Model.Weekday</h6>
     </div>
 
     <div class="modal-footer">

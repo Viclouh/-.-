@@ -5,6 +5,7 @@ using AutoMapper;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers
 {
@@ -48,5 +49,20 @@ namespace API.Controllers
             return StatusCode(400);
             
         }
-    }
+
+		[HttpGet("WithParams")]
+		public IActionResult GetByParameters(
+            [FromQuery][Required] int weekday,
+			[FromQuery][Required] int groupId,
+			[FromQuery][Required] int weekNumber,
+			[FromQuery][Required] int lessonNumber)
+		{
+            LessonPlanDTO lesson = _mapper.Map<LessonPlanDTO>(_lessonPlanService.GetByParameters(weekday, groupId, weekNumber, lessonNumber));
+            if(lesson == null || weekday<1 || weekday>7 ||lessonNumber < 1||lessonNumber>6 || weekNumber > 1 || weekNumber < 0)
+            {
+                return StatusCode(400);
+            }
+            return StatusCode(200, lesson);
+		}
+	}
 }
