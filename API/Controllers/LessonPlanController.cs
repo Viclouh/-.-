@@ -65,7 +65,7 @@ namespace API.Controllers
             }
             return StatusCode(200, lesson);
 		}
-	}
+	
 
         [HttpGet]
         [Route("Search")]
