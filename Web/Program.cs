@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 builder.Services.AddHttpClient<IScheduleService, ScheduleService>(
-    c => c.BaseAddress = new Uri("https://localhost:7293"));
+    c => c.BaseAddress = new Uri("http://hnt8.ru:1149"));
 
 var app = builder.Build();
 
