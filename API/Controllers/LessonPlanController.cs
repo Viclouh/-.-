@@ -21,6 +21,7 @@ namespace API.Controllers
             _lessonPlanService = lessonPlanService;
             _mapper = mapper;
         }
+
         [HttpGet]
         public IActionResult GetAll(string formatting = "Standard") {
             switch (formatting)
@@ -64,5 +65,14 @@ namespace API.Controllers
             }
             return StatusCode(200, lesson);
 		}
-	}
+	
+
+        [HttpGet]
+        [Route("Search")]
+        public IActionResult Search(int? teacherId, int? groupId, int? audienceId)
+        {
+            IEnumerable<LessonPlanDTO> lessons = _lessonPlanService.Search(teacherId, groupId, audienceId).Select(item => _mapper.Map<LessonPlanDTO>(item));
+            return StatusCode(200, lessons);
+        }
+    }
 }

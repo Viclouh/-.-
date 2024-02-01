@@ -1,6 +1,7 @@
 ﻿using API.Models;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Services
 {
@@ -21,6 +22,27 @@ namespace API.Services
                     .ThenInclude(g=>g.Speciality)
                 .Include(ls => ls.LessonTeachers)
                     .ThenInclude(lt => lt.Teacher);
+        }
+        public IEnumerable<LessonPlan> Search(int? teacherId, int? groupId, int? audienceId)
+        {
+            IQueryable<LessonPlan> query = _context.LessonPlan.Include(lp => lp.LessonTeachers).ThenInclude(lt=>lt.Teacher).Include(lp => lp.Audience).Include(lp => lp.Group).Include(lp=>lp.Subject).AsNoTracking();
+
+            if (teacherId.HasValue)
+            {
+                query = query.Where(item => item.LessonTeachers.Any(lt=>lt.TeacherId == teacherId.Value));
+            }
+
+            if (groupId.HasValue)
+            {
+                query = query.Where(item => item.GroupId == groupId.Value);
+            }
+
+            if (audienceId.HasValue)
+            {
+                query = query.Where(item => item.AudienceId == audienceId.Value);
+            }
+
+            return query.ToList();
         }
 
         public LessonPlan GetByParameters(int weekday, int groupId, int weekNumber, int lessonNumber)
