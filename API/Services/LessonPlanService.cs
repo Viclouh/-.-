@@ -29,7 +29,8 @@ namespace API.Services
 
             if (teacherId.HasValue)
             {
-                query = query.Where(item => item.LessonTeachers.Any(lt=>lt.TeacherId == teacherId.Value));
+                query = query.Where(item => item.LessonTeachers.Any(lt=>lt.TeacherId == teacherId.Value))
+                    .OrderByDescending(lp=>lp.LessonTeachers.FirstOrDefault(lt => lt.TeacherId == teacherId.Value).IsGeneral);
             }
 
             if (groupId.HasValue)
