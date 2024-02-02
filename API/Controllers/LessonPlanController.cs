@@ -76,10 +76,10 @@ namespace API.Controllers
             switch (formatting)
             {
                 case "Standard":
-                    return StatusCode(200, _lessonPlanService.Search(teacherId, groupId, audienceId).Select(item => _mapper.Map<LessonPlanDTO>(item)));
+                    return StatusCode(200, lessons.Select(item => _mapper.Map<LessonPlanDTO>(item)));
 
                 case "MobileApp":
-                    return StatusCode(200, _lessonPlanService.Search(teacherId, groupId, audienceId).Select(item => _mapper.Map<LessonPlanForMobileDTO>(item)));
+                    return StatusCode(200, lessons.Select(item => _mapper.Map<LessonPlanForMobileDTO>(item)));
             }
             return StatusCode(400, "could not find format mode");
         }
