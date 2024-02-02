@@ -25,7 +25,7 @@ namespace API.Services
         }
         public IEnumerable<LessonPlan> Search(int? teacherId, int? groupId, int? audienceId)
         {
-            IQueryable<LessonPlan> query = _context.LessonPlan.Include(lp => lp.LessonTeachers).ThenInclude(lt=>lt.Teacher).Include(lp => lp.Audience).Include(lp => lp.Group).Include(lp=>lp.Subject).AsNoTracking();
+            IQueryable<LessonPlan> query = _context.LessonPlan.Include(lp => lp.LessonTeachers).ThenInclude(lt=>lt.Teacher).Include(lp => lp.Audience).Include(lp => lp.Group).ThenInclude(g=>g.Speciality).Include(lp=>lp.Subject).AsNoTracking();
 
             if (teacherId.HasValue)
             {
