@@ -1,4 +1,5 @@
 ﻿using API.DTO;
+using API.Models;
 using API.Services;
 
 using AutoMapper;
@@ -69,10 +70,18 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("Search")]
-        public IActionResult Search(int? teacherId, int? groupId, int? audienceId)
+        public IActionResult Search(int? teacherId, int? groupId, int? audienceId, string formatting = "Standard")
         {
-            IEnumerable<LessonPlanDTO> lessons = _lessonPlanService.Search(teacherId, groupId, audienceId).Select(item => _mapper.Map<LessonPlanDTO>(item));
-            return StatusCode(200, lessons);
+            IEnumerable<LessonPlan> lessons = _lessonPlanService.Search(teacherId, groupId, audienceId);
+            switch (formatting)
+            {
+                case "Standard":
+                    return StatusCode(200, _lessonPlanService.Search(teacherId, groupId, audienceId).Select(item => _mapper.Map<LessonPlanDTO>(item)));
+
+                case "MobileApp":
+                    return StatusCode(200, _lessonPlanService.Search(teacherId, groupId, audienceId).Select(item => _mapper.Map<LessonPlanForMobileDTO>(item)));
+            }
+            return StatusCode(400, "could not find format mode");
         }
     }
 }
