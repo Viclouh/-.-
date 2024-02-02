@@ -70,7 +70,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("Search")]
-        public IActionResult Search(string formatting = "Standard", int? teacherId, int? groupId, int? audienceId)
+        public IActionResult Search(int? teacherId, int? groupId, int? audienceId, string formatting = "Standard")
         {
             IEnumerable<LessonPlan> lessons = _lessonPlanService.Search(teacherId, groupId, audienceId);
             switch (formatting)
