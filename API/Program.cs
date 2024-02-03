@@ -102,7 +102,7 @@ namespace API
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            app.UseCors(AppCORSPolicy);
+            app.UseCors("AppCORSPolicy");
 
             app.UseHttpsRedirection();
 
