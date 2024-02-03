@@ -21,6 +21,13 @@ namespace API.Controllers
         public IActionResult Get() {
             return StatusCode(200, _weekService.GetCurrentWeek());
         }
+        [HttpGet]
+        [Route("/weekNum")]
+        public IActionResult Get(DateTime date)
+        {
+            return StatusCode(200, _weekService.GetWeekNum(date));
+        }
+
         [HttpPost]
         public IActionResult Set(DateTime startDate) {
             _weekService.SetYearStart(startDate);

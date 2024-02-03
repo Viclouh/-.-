@@ -12,9 +12,14 @@ namespace API.Services
 
         public int GetCurrentWeek()
         {
+            return GetWeekNum(DateTime.Now);
+        }
+
+        public int GetWeekNum(DateTime date)
+        {
             DateTime start = _context.YearBegin.FirstOrDefault().DateStart;
-            TimeSpan timeSpan = DateTime.Now - start;            
-            return timeSpan.Days / 7 % 2 +1;
+            TimeSpan timeSpan = date - start;
+            return timeSpan.Days / 7 % 2 + 1;
         }
         public void SetYearStart(DateTime start)
         {
