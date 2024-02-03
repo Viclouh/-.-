@@ -22,6 +22,8 @@ namespace API.Database
         public DbSet<LessonPlan> LessonPlan { get; set; }
         public DbSet<LessonTeacher> LessonTeacher { get; set; }
 
+        public DbSet<YearBegin> YearBegin { get; set; }
+
 
         //Auth
         public DbSet<UserAuthData> UserAuthData { get; set; }
