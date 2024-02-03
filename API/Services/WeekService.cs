@@ -16,5 +16,13 @@ namespace API.Services
             TimeSpan timeSpan = DateTime.Now - start;            
             return timeSpan.Days / 7 % 2 +1;
         }
+        public void SetYearStart(DateTime start)
+        {
+            _context.YearBegin.Add(new YearBegin()
+            {
+                DateStart = start
+            });
+            _context.SaveChanges();
+        }
     }
 }
