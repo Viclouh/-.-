@@ -58,6 +58,16 @@ namespace API
             builder.Services.AddScoped<TeacherService>();
             builder.Services.AddScoped<AudienceService>();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AppCORSPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
