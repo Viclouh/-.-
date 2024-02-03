@@ -64,7 +64,7 @@ namespace API
                 {
                     builder.AllowAnyOrigin()
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod().SetIsOriginAllowedToAllowWildcardSubdomains();
                 });
             });
 
