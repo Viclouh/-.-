@@ -1,13 +1,16 @@
-﻿@model Web.Models.LessonPlan
+﻿@model Web.ViewModels.LessonViewModel
+
 
 <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">
+            @Model.Lesson.Group.Speciality.Name-@Model.Lesson.Group.Name, @Model.Weekdays.ElementAt(Model.Lesson.Weekday), @Model.Lesson.LessonNumber пара
+        </h5>
         <button type="button" class="close" data-bs-dismiss="modal">X</button>
     </div>
     <div class="modal-body">
-        <h6>@Model.Group.Speciality.Name-@Model.Group.Name</h6>
-        <h6>@Model.Weekday</h6>
+        <h6>@Model.Lesson.Group.Speciality.Name-@Model.Lesson.Group.Name</h6>
+        <h6>@Model.Lesson.Weekday</h6>
     </div>
 
     <div class="modal-footer">

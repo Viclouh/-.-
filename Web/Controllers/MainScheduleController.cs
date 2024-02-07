@@ -10,7 +10,7 @@ namespace Web.Controllers
 	public class MainScheduleController : Controller
 	{
 		private readonly IScheduleService _service;
-		private LessonPlan _lesson;
+		private LessonViewModel _lessonViewModel;
 		private MainScheduleViewModel _viewModel;
 
 		public MainScheduleController(IScheduleService service)
@@ -42,7 +42,7 @@ namespace Web.Controllers
 		{
 			var task = GetLesson(weekday, lessonNumber, groupId, weekNumber);
 			task.Wait();
-			return PartialView(_lesson);
+			return PartialView(_lessonViewModel);
 		}
 
 		public async Task GetModel()
@@ -71,8 +71,11 @@ namespace Web.Controllers
 		}
 		public async Task GetLesson(int weekday, int lessonNumber, int groupId, int weekNumber)
 		{
-			var lesson = await _service.GetLesson(weekday, lessonNumber, groupId, weekNumber);
-			_lesson = lesson;
+			_lessonViewModel = new LessonViewModel
+			{
+				Lesson = await _service.GetLesson(weekday, lessonNumber, groupId, weekNumber),
+				Teachers = await _service.GetTeachers(),
+			};
 		}
 	}
 }
