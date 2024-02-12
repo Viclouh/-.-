@@ -46,30 +46,70 @@
 
 								if (secondLesson == null)
 								{
-									<a class="selectedLesson" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=0">
-										<h6>@firstLesson.Subject.Name</h6>
+									<a class="selectedLesson border" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=0">
+										<h6 class="h6 h-50">@firstLesson.Subject.Name</h6>
+										<div class="row h-50">
+											@if (firstLesson.Audience != null)
+											{
+												<h6 class="col">@firstLesson.Audience.Number</h6>
+											}
+											@if (firstLesson.Teachers.FirstOrDefault() != null)
+											{
+												<h6 class="col">@firstLesson.Teachers.FirstOrDefault().Surname @firstLesson.Teachers.FirstOrDefault().Name @firstLesson.Teachers.FirstOrDefault().Patronymic</h6>
+											}
+										</div>
 									</a>
 								}
 								else if (firstLesson == null && secondLesson != null)
 								{
-									<div class="border" style="height:50%; "></div>
+									<a class="selectedLesson border" style="height: 50%" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=0"></a>
 									<a class="selectedLesson border" style="height: 50%" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=1">
 										<h6>@secondLesson.Subject.Name</h6>
+										<div class="row h-50">
+											@if (secondLesson.Audience != null)
+											{
+												<h6 class="col">@secondLesson.Audience.Number</h6>
+											}
+											@if (secondLesson.Teachers.FirstOrDefault() != null)
+											{
+												<h6 class="col">@secondLesson.Teachers.FirstOrDefault().Surname @secondLesson.Teachers.FirstOrDefault().Name @secondLesson.Teachers.FirstOrDefault().Patronymic</h6>
+											}
+										</div>
 									</a>
 								}
 								else
 								{
 									<a class="selectedLesson border" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=0">
 										<h6>@firstLesson.Subject.Name</h6>
+										<div class="row h-50">
+											@if (firstLesson.Audience != null)
+											{
+												<h6 class="col">@firstLesson.Audience.Number</h6>
+											}
+											@if (firstLesson.Teachers.FirstOrDefault() != null)
+											{
+												<h6 class="col">@firstLesson.Teachers.FirstOrDefault().Surname @firstLesson.Teachers.FirstOrDefault().Name @firstLesson.Teachers.FirstOrDefault().Patronymic</h6>
+											}
+										</div>
 									</a>
 									<a class="selectedLesson border" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=1">
 										<h6>@secondLesson.Subject.Name</h6>
+										<div class="row h-50">
+											@if (secondLesson.Audience != null)
+											{
+												<h6 class="col">@secondLesson.Audience.Number</h6>
+											}
+											@if (secondLesson.Teachers.FirstOrDefault() != null)
+											{
+												<h6 class="col">@secondLesson.Teachers.FirstOrDefault().Surname @secondLesson.Teachers.FirstOrDefault().Name @secondLesson.Teachers.FirstOrDefault().Patronymic</h6>
+											}
+										</div>
 									</a>
 								}
 							}
 							else
 							{
-								<a class="selectedLesson" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=0"></a>
+								<a class="selectedLesson border" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=0"></a>
 							}
 
 						</div>

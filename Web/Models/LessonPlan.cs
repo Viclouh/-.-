@@ -16,6 +16,6 @@ namespace Web.Models
         public bool isDistantсe { get; set; }
         public int Weekday { get; set; }
         public int? WeekNumber { get; set; }
-        public List<LessonTeacher> LessonTeachers { get; set; }
+        public IEnumerable<Teacher> Teachers { get; set; }
     }
 }
