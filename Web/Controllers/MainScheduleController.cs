@@ -71,10 +71,13 @@ namespace Web.Controllers
 		}
 		public async Task GetLesson(int weekday, int lessonNumber, int groupId, int weekNumber)
 		{
+			LessonPlan lesson = await _service.GetLesson(weekday, lessonNumber, groupId, weekNumber);
+
 			_lessonViewModel = new LessonViewModel
 			{
-				Lesson = await _service.GetLesson(weekday, lessonNumber, groupId, weekNumber),
+				Lesson = lesson,
 				Teachers = await _service.GetTeachers(),
+				Exist = lesson.Id == 0 ? false : true,
 			};
 		}
 	}

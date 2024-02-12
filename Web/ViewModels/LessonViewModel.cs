@@ -6,6 +6,8 @@ namespace Web.ViewModels
     {
         public LessonPlan Lesson { get; set; }
 
+        public bool Exist { get; set; }
+
         public IEnumerable<Teacher> Teachers { get; set; }
 
         public List<String> Weekdays = new List<String>

@@ -13,3 +13,6 @@ a {
     width: 30px;
     left: 0px;
 }
+select{
+    min-width:100px;
+}

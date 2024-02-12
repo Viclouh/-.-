@@ -2,15 +2,40 @@
 
 
 <div class="modal-content">
-    <div class="modal-header">
+    <div class="modal-header justify-content-center">
         <h5 class="modal-title" id="exampleModalLabel">
             @Model.Lesson.Group.Speciality.Name-@Model.Lesson.Group.Name, @Model.Weekdays.ElementAt(Model.Lesson.Weekday), @Model.Lesson.LessonNumber пара
         </h5>
-        <button type="button" class="close" data-bs-dismiss="modal">X</button>
+        <button type="button" class="close btn btn-close" data-bs-dismiss="modal"></button>
     </div>
     <div class="modal-body">
-        <h6>@Model.Lesson.Group.Speciality.Name-@Model.Lesson.Group.Name</h6>
-        <h6>@Model.Lesson.Weekday</h6>
+        <h6 class="h6">Предмет</h6>
+        <select></select>
+        <h6 class="h6">Первый преподаватель</h6>
+        <select id="select-teacher" style="width:200px">
+            @if (!Model.Exist)
+            {
+                <option selected disabled hidden></option>
+            }
+            @foreach(Teacher teacher in Model.Teachers)
+            {
+                if (Model.Exist)
+                {
+                    if (teacher.Surname == Model.Lesson.Teachers.FirstOrDefault().Surname)
+                    {
+                        <option value="@teacher.Id" selected>@teacher.Surname @teacher.Name @teacher.Patronymic</option>
+                    }
+                    else
+                    {
+                        <option value="@teacher.Id">@teacher.Surname @teacher.Name @teacher.Patronymic</option>
+                    }
+                }
+                else
+                {
+                    <option value="@teacher.Id">@teacher.Surname @teacher.Name @teacher.Patronymic</option>
+                }
+            }
+        </select>
     </div>
 
     <div class="modal-footer">
@@ -18,3 +43,14 @@
     </div>
 
 </div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#select-teacher').select2({
+            dropdownParent: $('.modal-content'),
+            width: 'resolve'
+        });
+    });
+</script>
