@@ -57,6 +57,18 @@ namespace API
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddScoped<TeacherService>();
             builder.Services.AddScoped<AudienceService>();
+            builder.Services.AddScoped<WeekService>();
+            builder.Services.AddScoped<GroupTeacherService>();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AppCORSPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod().SetIsOriginAllowedToAllowWildcardSubdomains();
+                });
+            });
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -91,6 +103,8 @@ namespace API
             }
             app.UseSwagger();
             app.UseSwaggerUI();
+
+            app.UseCors("AppCORSPolicy");
 
             app.UseHttpsRedirection();
 

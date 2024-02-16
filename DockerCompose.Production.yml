@@ -21,7 +21,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
     ports:
       - '9091:80'
-      - '9092:443'
+      - '9098:443'
     container_name: AKVT.Raspisanie-WEB-prod
     restart: always
 

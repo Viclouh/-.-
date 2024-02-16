@@ -9,5 +9,9 @@ namespace Web.Services.Interfaces
 		Task<IEnumerable<Group>> GetGroups();
 
 		Task<IEnumerable<LessonPlan>> GetLessons();
+
+		Task<LessonPlan> GetLesson(int weekday, int lessonNumber, int groupId, int weekNumber);
+
+		Task<IEnumerable<Teacher>> GetTeachers();
 	}
 }

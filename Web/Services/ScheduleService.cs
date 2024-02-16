@@ -9,9 +9,11 @@ namespace Web.Services
 		private readonly HttpClient _client;
 		private const string SpecialityPath = "/api/speciality";
 		private const string GroupPath = "/api/group";
-		private const string LessonPath = "/api/LessonPlan";
+		private const string LessonsPath = "/api/LessonPlan";
+		private const string LessonPath = "/api/LessonPlan/WithParams";
+        private const string TeachersPath = "/api/Teacher";
 
-		public ScheduleService(HttpClient client)
+        public ScheduleService(HttpClient client)
 		{
 			_client = client ?? throw new ArgumentNullException(nameof(client));
 		}
@@ -31,9 +33,23 @@ namespace Web.Services
 
 		public async Task<IEnumerable<LessonPlan>> GetLessons()
 		{
-			var response = await _client.GetAsync(LessonPath);
+			var response = await _client.GetAsync(LessonsPath);
 
 			return await response.ReadContentAsync<List<LessonPlan>>();
 		}
-	}
+		public async Task<LessonPlan> GetLesson(int weekday, int lessonNumber, int groupId, int weekNumber)
+		{
+			var path = LessonPath + $"?weekday={weekday}&groupId={groupId}&weekNumber={weekNumber}&lessonNumber={lessonNumber}";
+			var response = await _client.GetAsync(path) ;
+
+			return await response.ReadContentAsync<LessonPlan>();
+		}
+
+        public async Task<IEnumerable<Teacher>> GetTeachers()
+        {
+            var response = await _client.GetAsync(TeachersPath);
+
+            return await response.ReadContentAsync<List<Teacher>>();
+        }
+    }
 }
