@@ -79,7 +79,7 @@
 								}
 								else
 								{
-									<a class="selectedLesson border" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=0">
+									<a class="selectedLesson border" style="height:50%" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=0">
 										<h6>@firstLesson.Subject.Name</h6>
 										<div class="row h-50">
 											@if (firstLesson.Audience != null)
@@ -92,7 +92,7 @@
 											}
 										</div>
 									</a>
-									<a class="selectedLesson border" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=1">
+									<a class="selectedLesson border" style="height:50%" href="/MainSchedule/Lesson?groupId=@group.Id&lessonNumber=@i&weekday=@weekdayId&weekNumber=1">
 										<h6>@secondLesson.Subject.Name</h6>
 										<div class="row h-50">
 											@if (secondLesson.Audience != null)
