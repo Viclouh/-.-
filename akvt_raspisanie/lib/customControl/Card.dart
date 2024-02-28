@@ -18,8 +18,9 @@ class _LessonCardState extends State<LessonCard> {
   ParaDB paraDB;
 
   _LessonCardState(this.paraDB){
-    teachers = FillTeachers();
+    FillTeachers();
     SwitchNumLesson(paraDB.lessonNumber);
+    print(paraDB.audience.toString());
   }
 
   DateTime start = DateTime(1);
@@ -56,14 +57,13 @@ class _LessonCardState extends State<LessonCard> {
     }
 
   }
-  String teachers = '';
+  List<String> teachers = [];
+  // String teachers = '';
 
-  String FillTeachers (){
+  void FillTeachers (){
     paraDB.teachers?.forEach((element) {
-      String temp = "${element.surname} ${element.name}.${element.patronymic}. ";
-      teachers = teachers + temp;
+      teachers.add("${element.surname} ${element.name}.${element.patronymic}. ");
     });
-    return  teachers;
   }
 
   @override
@@ -145,7 +145,7 @@ class _LessonCardState extends State<LessonCard> {
                 Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(17, 16, 0, 16),
+                      padding: const EdgeInsets.fromLTRB(12, 16, 0, 16),
                       child: Wrap(
                         spacing: 8.0,
                         runSpacing: 8.0,
@@ -163,28 +163,41 @@ class _LessonCardState extends State<LessonCard> {
                                   children: [
                                     Center(
                                         child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                                           child: SvgPicture.asset(
-                                            'lib/res/icons/user.svg',
-                                            color: const Color.fromRGBO(51, 51, 51, 1),
-                                            width: 24.0,
-                                            height: 24.0),
-                                      )
-                                    ),
-                                    Center(
-                                        child: Padding(
+                                              'lib/res/icons/user.svg',
+                                              color:  const Color.fromRGBO(51, 51, 51, 1),
+                                              width: 24.0,
+                                              height: 24.0),
+                                        )),
+                                    Padding(
                                           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                                          child: Text(paraDB.teachers!.isNotEmpty ? teachers : 'Нет преподователя',
-                                              style: const TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontFamily: 'Ubuntu',
-                                                  color: Color.fromRGBO(51, 51, 51, 1),
-                                                  fontWeight: FontWeight.normal)
-                                          ),
-                                      )
-                                    ),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              if(paraDB.teachers!.isNotEmpty)
+                                                for (String teacher in teachers) Text( teacher ,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontFamily: 'Ubuntu',
+                                                        color: Color.fromRGBO(51, 51, 51, 1),
+                                                        fontWeight: FontWeight.normal)
+                                                )
+                                              else const Text( 'Нет преподователя' ,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      fontFamily: 'Ubuntu',
+                                                      color: Color.fromRGBO(51, 51, 51, 1),
+                                                      fontWeight: FontWeight.normal)
+                                              )
+                                            ],
+                                          )
+                                    )
                                   ],
-                                )),
+                                )
+                            ),
                           ),
                           UnconstrainedBox(
                             child: Container(
@@ -209,12 +222,12 @@ class _LessonCardState extends State<LessonCard> {
                                     Center(
                                         child: Padding(
                                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                                      child: Text(paraDB.audience.toString(),
-                                          style: const TextStyle(
-                                              fontSize: 16.0,
-                                              fontFamily: 'Ubuntu',
-                                              color:  Color.fromRGBO(51, 51, 51, 1),
-                                              fontWeight: FontWeight.normal)),
+                                          child: Text(paraDB.audience.toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontFamily: 'Ubuntu',
+                                                  color:  Color.fromRGBO(51, 51, 51, 1),
+                                                  fontWeight: FontWeight.normal)),
                                     )),
                                   ],
                                 )),

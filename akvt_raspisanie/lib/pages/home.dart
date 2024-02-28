@@ -1,10 +1,12 @@
 
+import 'package:akvt_raspisanie/HelpersClasses/Lessons.dart';
 import 'package:akvt_raspisanie/customControl/Calendar.dart';
 import 'package:akvt_raspisanie/customControl/Card.dart';
 import 'package:akvt_raspisanie/customControl/CustomTitle.dart';
 import 'package:akvt_raspisanie/customControl/SearchBox.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,31 +16,25 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
-
   @override
   Widget build(BuildContext context) {
+    String title = Provider.of<Lessons>(context).GetItem().item;
     return Scaffold(
       body: Column(
         children: <Widget>[
-          const Align(
+           Align(
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: EdgeInsets.fromLTRB(18, 30, 0, 0),
-                child: CustomTitle(text: 'Группа - ПБ - 11', isVisible: false),
+                child: CustomTitle(text: title, isVisible: false),
               )),
-          const Padding(
+           Padding(
             padding: EdgeInsets.fromLTRB(8, 10, 8, 0),
             child: SearchBox(),
           ),
-          Expanded(child: TableBasicsExample(),)
-          // LessonCard(
-          //     num_lesson: 1,
-          //     start: DateTime.now(),
-          //     end: DateTime.now(),
-          //     lesson: 'Основы алгоритмизации и программирования',
-          //     prepod: 'Растопшина Т.С',
-          //     num_class: 107)
+          Expanded(
+            child: TableBasicsExample(),
+          )
         ],
       ),
     );

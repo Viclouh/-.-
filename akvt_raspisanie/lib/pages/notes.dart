@@ -57,7 +57,7 @@ class _NotesState extends State<Notes> {
                 padding: EdgeInsets.fromLTRB(18, 30, 0, 0),
                 child: CustomTitle(text: 'Задачи', isVisible: false),
               )),
-           const Padding(
+            Padding(
             padding: EdgeInsets.fromLTRB(8, 10, 8, 0),
             child: SearchBox(),
           ),

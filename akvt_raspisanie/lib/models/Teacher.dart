@@ -1,6 +1,6 @@
-import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../DB/DB.dart';
 part 'Teacher.g.dart';
 
 @JsonSerializable()
@@ -21,9 +21,9 @@ class Teacher{
       _$TeacherFromJson(json);
   Map<String, dynamic> toJson() => _$TeacherToJson(this);
 
-  // factory Teacher.fromJson(dynamic json) {
-  //   return Teacher(json['id'] as int, json['name'] as String,json['firstName'] as String,json['secondName'] as String);
-  // }
+  static Item ConvertorToItem (Teacher teacher){
+    return Item(teacher.id,'${teacher.surname} ${teacher.name}.${teacher.patronymic}.', 'teacher');
+  }
 }
 
 

@@ -1,36 +1,69 @@
+import 'package:akvt_raspisanie/DB/DB.dart';
+import 'package:akvt_raspisanie/HelpersClasses/Lessons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
-class SearchBox extends StatelessWidget {
-  const SearchBox({super.key});
+class SearchBox extends StatefulWidget {
+   SearchBox({super.key});
 
   @override
+  State<SearchBox> createState() => _SearchBoxState();
+}
+
+class _SearchBoxState extends State<SearchBox> {
+  _SearchBoxState(){}
+  String? _searchingWithQuery;
+  late Iterable<Widget> _lastOptions = <Widget>[];
+
+  String itemLowerCase(String item){
+    // String temp = item.re(0,null, " - ");
+    return item.toLowerCase().replaceAll(' - ', '');
+  }
+  @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-            color: const Color.fromRGBO(243, 243, 243, 100),
-            border: Border.all(style: BorderStyle.none),
-            borderRadius: const BorderRadius.all(Radius.circular(16.0))),
-        child: Row(
-          children: <Widget>[
-            IconButton(
-                icon: SvgPicture.asset('lib/res/icons/search_1.svg',
-                    color: Colors.black),
-                onPressed: () {}),
-            Expanded(
-              child: TextFormField(
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontFamily: 'Ubuntu',
-                    color: Colors.black
-                  ),
-                  decoration: const InputDecoration(
-                    hintText: "Поиск",
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                  )),
-            ),
-          ],
-        ));
+    return SearchAnchor(
+        builder: (BuildContext context, SearchController controller) {
+          return SearchBar(
+            controller: controller,
+            onTap: () {
+              controller.openView();
+            },
+            onChanged: (_) {
+              controller.openView();
+            },
+          );
+        },
+        suggestionsBuilder: (BuildContext context,
+            SearchController controller) async {
+          List<Item> temp = [];
+          List<Item> items = [];
+          temp  = await AppDB.EditAllItems();
+
+          _searchingWithQuery = controller.text;
+
+          items = temp.where((element) =>
+          itemLowerCase(element.item).contains(_searchingWithQuery!.toLowerCase())||
+                element.item.contains(_searchingWithQuery!)).toList();
+
+          if (_searchingWithQuery != controller.text) {
+            return _lastOptions;
+          }
+
+
+
+          _lastOptions = List<ListTile>.generate(items.length, (int index) {
+            final String item = items[index].item;
+            return ListTile(
+              title: Text( item ),
+              onTap: (){
+                // Provider.of<GlobalGroup>(context,listen: false).ChangeGroup(item);
+                Provider.of<Lessons>(context,listen: false).ChangeItem(items[index]);
+                },
+            );
+          });
+          return _lastOptions;
+        }
+    );
   }
 }

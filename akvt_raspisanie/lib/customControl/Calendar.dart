@@ -1,63 +1,59 @@
 import 'package:akvt_raspisanie/DB/DB.dart';
+import 'package:akvt_raspisanie/HelpersClasses/Lessons.dart';
 import 'package:akvt_raspisanie/HelpersClasses/StudyDates.dart';
 import 'package:akvt_raspisanie/customControl/Card.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:swipe_widget/swipe_widget.dart';
+
+import '../models/Para.dart';
 
 
 
 class TableBasicsExample extends StatefulWidget {
+
+
   @override
   _TableBasicsExampleState createState() => _TableBasicsExampleState();
 }
 
 class _TableBasicsExampleState extends State<TableBasicsExample> {
 
-  _TableBasicsExampleState(){
-    final db = AppDB();
-    db.EditAllParas().then((value){
-      FillOrgerByGroupAndWeekDay(_selectedDay.weekday, 'ИБ - 42').then((value) => setState(() {}));
-      print(lessons.length);
-      FillAllLessons();
-      print(allLessons);
-    });
-  }
-  int allLessons  = 0;
-  List<ParaDB> lessons = [];
-
-  Future<void> FillAllLessons () async{
-    final isar = await AppDB.isar;
-    allLessons = await isar.paraDBs.count();
-  }
-
-  Future<void> FillOrgerByGroupAndWeekDay (int weekday,String group) async{
-    final isar = await AppDB.isar;
-    lessons = await isar.paraDBs.where().weekdayGroupEqualTo(weekday, group).findAll();
-  }
-
+  late PageController _pageController ;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   final DateTime _firstDay = StudyDates.GetAcademicYearStart();
 
 
-
-
-
   @override
   Widget build(BuildContext context) {
+    // String group = Provider.of<GlobalGroup>(context).GetGroup();
+    // Provider.of<Lessons>(context,listen: false).UpdateLessons(_selectedDay.weekday+1, group);
+    // List<ParaDB> lessons = context.watch<Lessons>().lessons;
+    // List<ParaDB> lessons =  Provider.of<Lessons>(context).GetLessons();
+
+    List<Para> temp = Provider.of<Lessons>(context).GetLessons2();
+    List<Para> lessons = temp.where((element) => element.weekday==_selectedDay.weekday).toList();
+
+
     return Column(children: [
       TableCalendar(
+      availableGestures: AvailableGestures.all,
       firstDay: _firstDay,
       lastDay: DateTime.utc(_firstDay.year+1, _firstDay.month, _firstDay.day),
       focusedDay: _focusedDay,
+      weekNumbersVisible: true,
       calendarFormat: _calendarFormat,
       startingDayOfWeek: StartingDayOfWeek.monday,
-      locale: Localizations.localeOf(context).languageCode,
+      locale: 'ru_RU'/*Localizations.localeOf(context).languageCode*/,
       headerStyle: const HeaderStyle(
-        formatButtonVisible: false,
+        formatButtonVisible: true,
+        formatButtonShowsNext: false,
+
         titleTextStyle: TextStyle(fontSize: 18.0,fontFamily: 'Ubuntu'),
       ),
       daysOfWeekHeight: 24.0,
@@ -95,11 +91,11 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
         },
         selectedBuilder: (context, date, _) {
           return Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             child: Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: Color.fromRGBO(217, 217, 217, 100),
+                  color: const Color.fromRGBO(217, 217, 217, 100),
                   border: Border.all(
                       style: BorderStyle.none
                   ),
@@ -114,11 +110,7 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
         },
       ),
       selectedDayPredicate: (day) {
-        // Use `selectedDayPredicate` to determine which day is currently selected.
-        // If this returns true, then `day` will be marked as selected.
 
-        // Using `isSameDay` is recommended to disregard
-        // the time-part of compared DateTime objects.
         return isSameDay(_selectedDay, day);
       },
       onDaySelected: (selectedDay, focusedDay) {
@@ -127,34 +119,65 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
             _selectedDay = selectedDay;
             _focusedDay = focusedDay;
           });
-          FillOrgerByGroupAndWeekDay(_selectedDay.weekday, 'ИБ - 42').then((value) => setState(() {}));
         }
       },
       onFormatChanged: (format) {
         if (_calendarFormat != format) {
-          // Call `setState()` when updating calendar format
           setState(() {
             _calendarFormat = format;
           });
         }
       },
       onPageChanged: (focusedDay) {
-        _focusedDay = focusedDay;
+        setState(() {
+          _focusedDay = focusedDay;
+
+        });
       },
+        onHeaderTapped: (gg){},
     ),
-      Expanded(
-        child: lessons.isEmpty ? Center(child: Text('Нет занятий')) :  ListView.builder(
-          shrinkWrap: true,
-          key:  Key(lessons.hashCode.toString()),
-          itemCount: lessons.length,
-          itemBuilder: (BuildContext context, int index) {
-            return LessonCard(paraDB: lessons[index]);
+       Expanded(
+        child: GestureDetector(
+          onHorizontalDragEnd: (details){
+          // switch (details.primaryVelocity){}
+          if(details.velocity.pixelsPerSecond.dx < 0) {
+          print("left");
+          _selectedDay=_selectedDay.add(const Duration(days: 1));
+          setState(() {});
+            print(_selectedDay.toString());
+          }
+          else {
+            _selectedDay=_selectedDay.subtract(const Duration(days: 1));
+          print("right");
+          print(_selectedDay.toString());
+          setState(() {});
+          }
           },
-        ),
-      ),
+          child: lessons.isEmpty ? const Center(child: Text('Нет занятий')) :  ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            key:  Key(lessons.hashCode.toString()),
+            itemCount: lessons.length,
+            itemBuilder: (BuildContext context, int index) {
+              return LessonCard(paraDB: /*lessons[index]*/ Para.ConvertorToParaDB(lessons[index]));
+            },
+          ),
+        )
+      )
     ],
     );
   }
-
-
 }
+// onHorizontalDragEnd: (details){
+// // switch (details.primaryVelocity){}
+// if(details.primaryVelocity! < 0) {
+// print("left");
+// _selectedDay.add(Duration(days: -1));
+// setState(() {});
+// }
+// else {
+// _selectedDay.add(Duration(days: 1));
+// print("right");
+// setState(() {});
+// }
+// },
