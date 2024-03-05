@@ -1,9 +1,11 @@
+
 import 'package:akvt_raspisanie/DB/DB.dart';
 import 'package:akvt_raspisanie/HelpersClasses/Lessons.dart';
 import 'package:akvt_raspisanie/HelpersClasses/StudyDates.dart';
 import 'package:akvt_raspisanie/customControl/Card.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -11,31 +13,24 @@ import 'package:swipe_widget/swipe_widget.dart';
 
 import '../models/Para.dart';
 
-
-
 class TableBasicsExample extends StatefulWidget {
-
-
   @override
   _TableBasicsExampleState createState() => _TableBasicsExampleState();
 }
 
 class _TableBasicsExampleState extends State<TableBasicsExample> {
-
-  late PageController _pageController ;
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   final DateTime _firstDay = StudyDates.GetAcademicYearStart();
+  Map<DateTime, List> _eventsList = {};
 
+  int getHashCode(DateTime key) {
+    return key.day * 1000000 + key.month * 10000 + key.year;
+  }
 
   @override
   Widget build(BuildContext context) {
-    // String group = Provider.of<GlobalGroup>(context).GetGroup();
-    // Provider.of<Lessons>(context,listen: false).UpdateLessons(_selectedDay.weekday+1, group);
-    // List<ParaDB> lessons = context.watch<Lessons>().lessons;
-    // List<ParaDB> lessons =  Provider.of<Lessons>(context).GetLessons();
-
     List<Para> temp = Provider.of<Lessons>(context).GetLessons2();
     List<Para> lessons = temp.where((element) => element.weekday==_selectedDay.weekday).toList();
 

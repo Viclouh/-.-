@@ -12,14 +12,14 @@ class SearchBox extends StatefulWidget {
 }
 
 class _SearchBoxState extends State<SearchBox> {
-  _SearchBoxState(){}
   String? _searchingWithQuery;
   late Iterable<Widget> _lastOptions = <Widget>[];
 
+
   String itemLowerCase(String item){
-    // String temp = item.re(0,null, " - ");
     return item.toLowerCase().replaceAll(' - ', '');
   }
+
   @override
   Widget build(BuildContext context) {
     return SearchAnchor(
@@ -59,6 +59,8 @@ class _SearchBoxState extends State<SearchBox> {
               onTap: (){
                 // Provider.of<GlobalGroup>(context,listen: false).ChangeGroup(item);
                 Provider.of<Lessons>(context,listen: false).ChangeItem(items[index]);
+                controller.closeView(item);
+
                 },
             );
           });
