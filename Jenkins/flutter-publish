@@ -42,7 +42,7 @@ pipeline {
             steps {
                 script {
                     dir('akvt_raspisanie') {
-                        sh 'docker run --rm -v $PWD:/app -w /app instrumentisto/flutter flutter build apk'
+                        sh 'docker run --rm -v $PWD:/app -w /app instrumentisto/flutter flutter pub get && flutter build apk'
                     }
                 }
             }
