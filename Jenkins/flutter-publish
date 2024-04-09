@@ -14,7 +14,7 @@ pipeline {
             agent {
                 docker {
                     // Используем Docker образ с Python для отправки
-                    image 'python:3.9-alpine'
+                    image 'python:3.9'
                     // Монтируем директории с APK и скриптом в контейнер
                     args "-v ${WORKSPACE}/akvt_raspisanie/build/app/outputs/flutter-apk:/apk -v ${WORKSPACE}/Jenkins/apk-sender:/app"
                 }
