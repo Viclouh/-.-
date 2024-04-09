@@ -1,3 +1,4 @@
+import 'package:akvt_raspisanie/customControl/SelectGroup.dart';
 import 'package:flutter/material.dart';
 import '../customControl/CustomTitle.dart';
 import '../customControl/SearchBox.dart';
@@ -19,7 +20,11 @@ class _SettingsState extends State<Settings> {
               Padding(
                 padding: EdgeInsets.fromLTRB(18, 30, 0, 0),
                 child: CustomTitle(text: 'Настройки', isVisible: false),
-              )
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 30, 0, 0),
+                child: SelectGroup(),
+              ),
             ],
           )
     );

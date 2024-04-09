@@ -1,24 +1,22 @@
 
+import 'package:akvt_raspisanie/DB/DB.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import '../DB/Notes.dart';
 import '../customControl/CustomTitle.dart';
 
 class EditNote extends StatefulWidget {
-  // TODO note;
 
-  EditNote({super.key, /*required this.note*/});
+  EditNote({super.key});
 
   @override
-  State<EditNote> createState() => _EditNoteState(/*this.note*/);
+  State<EditNote> createState() => _EditNoteState();
 }
 
 class _EditNoteState extends State<EditNote> {
 
-  // _EditNoteState(this.note);
-  // TODO note;
+
   final _formKey = GlobalKey<FormState>();
   DateTime _selectedDay = DateTime.now();
   static final DateTime _firstDay = getFirstDay();
@@ -26,14 +24,12 @@ class _EditNoteState extends State<EditNote> {
   String _description = "";
   String _name = '';
 
-  Future<void> EditTODO() async{
-    final database = AppDatabase();
-    database.into(database.tODOs).insert(TODOsCompanion.insert(
-        name: _name,
-        isCompleted: false,
-        datetime: _selectedDay,
-        description: _description)
-    );
+  Future<void> EditNote() async{
+    final isar = await AppDB.isar;
+
+    await isar.writeTxn(() async {
+      await isar.notes.put(Note(_name, false, _selectedDay, _description));
+    });
   }
   _changeName(String text){
     setState(() {
@@ -69,7 +65,7 @@ class _EditNoteState extends State<EditNote> {
             const Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(18, 12, 0, 0),
+                  padding: EdgeInsets.fromLTRB(18, 30, 0, 0),
                   child: CustomTitle(text: 'Новая задача', isVisible: false),
                 )
             ),
@@ -173,8 +169,8 @@ class _EditNoteState extends State<EditNote> {
                                 child:  Text(
                                   '${DateFormat.yMMMMEEEEd('ru').format(_selectedDay)}, ${DateFormat.Hm().format(_selectedDay)}',
                                   style: const TextStyle(
-                                      fontSize: 18.0,
-                                      fontFamily: 'sdf',
+                                      fontSize: 16.0,
+                                      fontFamily: 'Ubuntu',
                                       color: Colors.black
                                   ),
                                 )
@@ -254,7 +250,7 @@ class _EditNoteState extends State<EditNote> {
                     IconButton(
                         onPressed: (){
                           if (_formKey.currentState!.validate()){
-                            EditTODO().then((value) => setState(() {}));
+                            EditNote().then((value) => setState(() {}));
                             Navigator.pushReplacementNamed(context, '/navigation');
                           }
                         },

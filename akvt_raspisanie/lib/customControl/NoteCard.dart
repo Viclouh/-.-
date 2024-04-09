@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
 
-import '../DB/Notes.dart';
-import '../models/Note.dart';
-import '../models/test/Para.dart';
+import '../DB/DB.dart';
 
 class NoteCard extends StatefulWidget {
-  TODO note;
+  Note note;
 
   NoteCard({super.key,required this.note,});
 
@@ -17,22 +14,22 @@ class NoteCard extends StatefulWidget {
 
 class _NoteCardState extends State<NoteCard> {
 
-  TODO note;
+  Note note;
 
   _NoteCardState(this.note);
 
-  Future<void> ChangeTODOComplete(bool b) async{
-
-    final database = AppDatabase();
-    note = TODO(
-        id:note.id,
-        name: note.name,
-        isCompleted: b,
-        datetime: note.datetime,
-        description: note.description);
-
-    database.update(database.tODOs).replace(note);
-
+  Future<void> ChangeNoteCompleted(bool b) async{
+    final isar = await AppDB.isar;
+    note = Note.Full( note.id,note.name , b, note.dateTime, note.description);
+    await isar.writeTxn(() async {
+      isar.notes.put(note);
+    });
+  }
+  Future<void> DeleteNote() async{
+    final isar = await AppDB.isar;
+    await isar.writeTxn(() async {
+      isar.notes.delete(note.id);
+    });
   }
 
   @override
@@ -53,7 +50,7 @@ class _NoteCardState extends State<NoteCard> {
                       shape: CircleBorder(),
                       value: note.isCompleted,
                       onChanged: (bool? value){
-                        ChangeTODOComplete(value!).then((value) => setState(() {}));
+                        ChangeNoteCompleted(value!).then((value) => setState(() {}));
                       }),
                     Expanded(
                         child: Column(
@@ -82,7 +79,7 @@ class _NoteCardState extends State<NoteCard> {
                         ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(8,8,8,0),
-                          child: Text('${DateFormat.yMMMMEEEEd('ru').format(note.datetime)}, ${DateFormat.Hm().format(note.datetime)}',
+                          child: Text('${DateFormat.yMMMMEEEEd('ru').format(note.dateTime)}, ${DateFormat.Hm().format(note.dateTime)}',
                               style: const TextStyle(
                                   fontSize: 16.0,
                                   fontFamily: 'Ubuntu',
@@ -91,7 +88,13 @@ class _NoteCardState extends State<NoteCard> {
                         )
                       ],
                     )
-                    )
+                    ),
+                  IconButton(
+                          onPressed: (){
+                            DeleteNote().then((value) => setState(() {}));
+                          },
+                          icon: const Icon(Icons.delete)
+                  )
 
                 ],
               ),
