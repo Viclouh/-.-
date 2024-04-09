@@ -27,7 +27,7 @@ pipeline {
             steps {
                 // Запускаем скрипт Python в контейнере Docker для отправки APK в Telegram
                 script {
-                    sh 'chmod +x /app/publish.py'
+                    sh 'ls -la /app/publish.py'
                     sh 'python /app/publish.py /apk/*.apk'
                 }
             }
