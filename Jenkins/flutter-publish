@@ -1,0 +1,31 @@
+pipeline {
+    agent {
+        docker {
+            image 'instrumentisto/flutter'
+            args '-v $HOME/.gradle:/root/.gradle' // Если используется Gradle для сборки, это может потребоваться для кэширования зависимостей Gradle
+        }
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Install dependencies') {
+            steps {
+                sh 'flutter pub get'
+            }
+        }
+        stage('Build APK') {
+            steps {
+                sh 'flutter build apk'
+            }
+        }
+        
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: '**/build/app/outputs/flutter-apk/*.apk', fingerprint: true
+        }
+    }
+}
