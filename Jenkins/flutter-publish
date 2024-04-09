@@ -22,8 +22,6 @@ pipeline {
             steps {
                 // Запускаем скрипт Python в контейнере Docker для отправки APK в Telegram
                 script {
-                    sh 'sudo mkdir /.local'
-                    sh 'sudo chmod 777 /.local'
                     sh 'pip install -r /app/requirements.txt'
                     sh 'python /app/publish.py /apk/*.apk'
                 }
