@@ -2,7 +2,6 @@ pipeline {
     agent any
     stages {
         // stage('Build APK') {
-        //     when { changeset "*/akvt_raspisanie/**" }
         //     steps {
         //         script {
         //             dir('akvt_raspisanie') {
@@ -23,7 +22,6 @@ pipeline {
             steps {
                 // Запускаем скрипт Python в контейнере Docker для отправки APK в Telegram
                 script {
-                    sh 'chmod u+w /.local'
                     sh 'pip install --user -r /app/requirements.txt'
                     sh 'python /app/publish.py /apk/*.apk'
                 }
