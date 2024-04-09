@@ -21,7 +21,7 @@ pipeline {
                     // Используем Docker образ с Python для отправки
                     image 'python:3.9-slim'
                     // Монтируем директории с APK и скриптом в контейнер
-                    args '-v $PWD/akvt_raspisanie/build/app/outputs/flutter-apk:/apk -v $PWD/Jenkins:/app'
+                    args "-v $PWD/akvt_raspisanie/build/app/outputs/flutter-apk:/apk -v $PWD/Jenkins:/app"
                 }
             }
             steps {
