@@ -24,7 +24,7 @@ class _EditNoteState extends State<EditNote> {
   String _description = "";
   String _name = '';
 
-  Future<void> EditTODO() async{
+  Future<void> EditNote() async{
     final isar = await AppDB.isar;
 
     await isar.writeTxn(() async {
@@ -65,7 +65,7 @@ class _EditNoteState extends State<EditNote> {
             const Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(18, 12, 0, 0),
+                  padding: EdgeInsets.fromLTRB(18, 30, 0, 0),
                   child: CustomTitle(text: 'Новая задача', isVisible: false),
                 )
             ),
@@ -250,7 +250,7 @@ class _EditNoteState extends State<EditNote> {
                     IconButton(
                         onPressed: (){
                           if (_formKey.currentState!.validate()){
-                            EditTODO().then((value) => setState(() {}));
+                            EditNote().then((value) => setState(() {}));
                             Navigator.pushReplacementNamed(context, '/navigation');
                           }
                         },

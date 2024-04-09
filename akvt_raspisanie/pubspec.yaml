@@ -88,6 +88,7 @@ flutter:
      - lib/res/icons/settings.svg
      - lib/res/icons/input-field.svg
      - lib/res/icons/edit-2.svg
+     - lib/res/icons/group-svgrepo-com.svg
 
 
   fonts:

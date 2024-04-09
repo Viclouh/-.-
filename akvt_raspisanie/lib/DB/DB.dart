@@ -47,15 +47,26 @@ class Note{
   Note(this.name, this.isCompleted, this.dateTime, this.description);
 }
 
-// @collection
+
 class Item{
   Id id ;
   String item;
   String type;
-// IsarLinks<ParaDB> lessons  = IsarLinks<ParaDB>();
-
   Item(this.id, this.item, this.type);
 
+}
+@collection
+class ItemDB{
+  Id id  = Isar.autoIncrement;
+  int itemID;
+  String item;
+  String type;
+  ItemDB( this.itemID, this.item, this.type);
+  ItemDB.Full( this.id, this.itemID, this.item, this.type);
+
+  static Item ConvertorToItem (ItemDB itemDB){
+    return Item(itemDB.itemID,itemDB.item, itemDB.type);
+  }
 }
 
 class AppDB{
@@ -65,7 +76,7 @@ class AppDB{
   static Future<Isar> Init()async{
     final dir = await getApplicationDocumentsDirectory();
     final isar = await Isar.open(
-      [ParaDBSchema,NoteSchema],
+      [ParaDBSchema,NoteSchema,ItemDBSchema],
       directory: dir.path,
     );
     return isar;
@@ -130,6 +141,7 @@ class AppDB{
     // debugPrint((await isar.paraDBs.count()).toString());
   }
 
+
   static Future<List<Item>> EditAllItems()async{
 
     List<Audience> audiences =  await FetchAudience();
@@ -144,6 +156,21 @@ class AppDB{
     teachers.forEach((element) {
       items.add( Teacher.ConvertorToItem(element));
     });
+    groups.forEach((element) {
+      items.add( Group.ConvertorToItem(element));
+    });
+    return items;
+  }
+  static Future<List<Item>> EditGroupsAndTeachers()async{
+    List<Group> groups =  await FetchGroup();
+
+    List<Item> items = [];
+    List<Teacher> teachers =  await FetchTeacher();
+
+    teachers.forEach((element) {
+      items.add( Teacher.ConvertorToItem(element));
+    });
+
     groups.forEach((element) {
       items.add( Group.ConvertorToItem(element));
     });

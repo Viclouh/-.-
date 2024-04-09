@@ -40,11 +40,9 @@ class _NotesState extends State<Notes> {
       notes = await isar.notes.filter().isCompletedEqualTo(b).findAll();
   }
 
-
   _NotesState() {
     FillOrgerByIsCompleted(false).then((value) => setState(() {}));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +53,7 @@ class _NotesState extends State<Notes> {
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: EdgeInsets.fromLTRB(18, 30, 0, 0),
-                child: CustomTitle(text: 'Задачи', isVisible: false),
+                child: CustomTitle(text: 'Заметки', isVisible: false),
               )),
             Padding(
             padding: EdgeInsets.fromLTRB(8, 10, 8, 0),

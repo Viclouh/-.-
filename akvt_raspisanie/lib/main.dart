@@ -1,6 +1,7 @@
 
 import 'package:akvt_raspisanie/HelpersClasses/Lessons.dart';
 import 'package:akvt_raspisanie/pages/edit_note.dart';
+import 'package:akvt_raspisanie/HelpersClasses/LevenshteinDistance.dart';
 import 'package:flutter/material.dart';
 import 'package:akvt_raspisanie/pages/home.dart';
 import 'package:akvt_raspisanie/pages/splash_screen.dart';
@@ -11,6 +12,13 @@ import 'package:provider/provider.dart';
 
 
 void main() {
+  String s1 = "kitten";
+  String s2 = "sitting";
+
+  int distance = LevenshteinDistance.levenshteinDistance(s1, s2);
+  print("Редакционное расстояние между $s1 и $s2: $distance");
+
+
   runApp(
   MultiProvider(
     providers:[
@@ -33,6 +41,7 @@ void main() {
         '/':(context)=> SplashScreen(),
         '/navigation':(context) => Navigation(),
         '/editNote':(context) => EditNote(),
+
       },
     )
       // home:SplashScreen(),

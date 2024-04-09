@@ -1,4 +1,6 @@
+import 'dart:collection';
 
+import 'package:collection/collection.dart';
 import 'package:akvt_raspisanie/DB/DB.dart';
 import 'package:akvt_raspisanie/HelpersClasses/Lessons.dart';
 import 'package:akvt_raspisanie/HelpersClasses/StudyDates.dart';
@@ -23,21 +25,45 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   final DateTime _firstDay = StudyDates.GetAcademicYearStart();
-  Map<DateTime, List> _eventsList = {};
+  // Map<DateTime, List<Para>> _eventsList = {};
 
-  int getHashCode(DateTime key) {
-    return key.day * 1000000 + key.month * 10000 + key.year;
-  }
+  Map<int, List<Para>> _eventsListTest = {};
+
+  // int getHashCode(DateTime key) {
+  //   return key.day * 1000000 + key.month * 10000 + key.year;
+  // }
 
   @override
   Widget build(BuildContext context) {
     List<Para> temp = Provider.of<Lessons>(context).GetLessons2();
     List<Para> lessons = temp.where((element) => element.weekday==_selectedDay.weekday).toList();
 
+    // _eventsList = groupBy(temp, (Para para) => DateTime(2024,3,4).add(Duration(days: para.weekday-1)));
+    _eventsListTest = groupBy(temp, (Para para) => para.weekday);
+    //
+    // print(_eventsList);
+    //
+    // final _events = LinkedHashMap<DateTime, List>(
+    //   equals: isSameDay,
+    //   hashCode: getHashCode,
+    // )..addAll(_eventsList);
+    //
+    // print( "_events ${_events}");
+    //
+    //
+    //
+    // List getEventForDay(DateTime day) {
+    //   return _events[day] ?? [];
+    // }
+
+    List getEventSample(DateTime day){
+      return _eventsListTest[day.weekday]??[];
+    }
 
     return Column(children: [
       TableCalendar(
       availableGestures: AvailableGestures.all,
+      eventLoader: getEventSample,
       firstDay: _firstDay,
       lastDay: DateTime.utc(_firstDay.year+1, _firstDay.month, _firstDay.day),
       focusedDay: _focusedDay,
@@ -148,7 +174,8 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
           setState(() {});
           }
           },
-          child: lessons.isEmpty ? const Center(child: Text('Нет занятий')) :  ListView.builder(
+          child: lessons.isEmpty ?  /*Center(child: Text('Нет занятий'))*/ SizedBox.expand(child: Container(color: Colors.white,child:const Center(child: Text('Нет занятий')) ),
+    ) :  ListView.builder(
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             key:  Key(lessons.hashCode.toString()),
