@@ -16,16 +16,12 @@ pipeline {
             }
         }
         stage('Send APK to Telegram') {
-            environment {
-                APK_DIRECTORY = "$PWD/akvt_raspisanie/build/app/outputs/flutter-apk"
-                SCRIPT_DIRECTORY = "$PWD/Jenkins"
-            }
             agent {
                 docker {
                     // Используем Docker образ с Python для отправки
                     image 'python:3.9-slim'
                     // Монтируем директории с APK и скриптом в контейнер
-                    args '-v ${APK_DIRECTORY}:/apk -v ${SCRIPT_DIRECTORY}:/app'
+                    args '-v $PWD/akvt_raspisanie/build/app/outputs/flutter-apk:/apk -v $PWD/Jenkins:/app'
                 }
             }
             steps {
