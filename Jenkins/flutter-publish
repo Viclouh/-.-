@@ -22,11 +22,11 @@ pipeline {
             steps {
                 // Запускаем скрипт Python в контейнере Docker для отправки APK в Telegram
                 script {
-                    sh 'cd /app'
-                    sh 'python -m venv myenv'
-                    sh 'source myenv/bin/activate'
-                    sh 'pip install -r /app/requirements.txt'
-                    sh 'python /app/publish.py /apk/*.apk'
+                    bash 'cd /app'
+                    bash 'python -m venv myenv'
+                    bash 'source myenv/bin/activate'
+                    bash 'pip install -r /app/requirements.txt'
+                    bash 'python /app/publish.py /apk/*.apk'
                 }
             }
         }
