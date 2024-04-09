@@ -1,35 +1,3 @@
-// pipeline {
-//     agent {
-//         docker {
-//             image 'instrumentisto/flutter'
-//             args '-v $HOME/.gradle:/root/.gradle' // Если используется Gradle для сборки, это может потребоваться для кэширования зависимостей Gradle
-//         }
-//     }
-//     stages {
-//         stage('Checkout') {
-//             steps {
-//                 checkout scm
-//             }
-//         }
-//         stage('Install dependencies') {
-//             steps {
-//                 sh 'flutter pub get'
-//             }
-//         }
-//         stage('Build APK') {
-//             steps {
-//                 sh 'flutter build apk'
-//             }
-//         }
-        
-//     }
-//     post {
-//         always {
-//             archiveArtifacts artifacts: '**/build/app/outputs/flutter-apk/*.apk', fingerprint: true
-//         }
-//     }
-// }
-
 pipeline {
     agent any
     stages {
@@ -47,15 +15,22 @@ pipeline {
                 }
             }
         }
-        // stage('Send APK to Telegram') {
-        //     steps {
-        //         script {
-        //             // Отправляем APK в Telegram
-        //             sh 'python отправить_апк_в_телеграм.py'
-        //         }
-        //     }
-        // }
-    }
+        stage('Send APK to Telegram') {
+            agent {
+                docker {
+                    // Используем Docker образ с Python для отправки
+                    image 'python:3.9-slim'
+                    // Монтируем директории с APK и скриптом в контейнер
+                    args '-v $PWD/akvt_raspisanie/build/app/outputs/flutter-apk:/apk -v $PWD/Jenkins:/app'
+                }
+            }
+            steps {
+                // Запускаем скрипт Python в контейнере Docker для отправки APK в Telegram
+                script {
+                    sh 'python /app/publish.py /apk/*.apk'
+                }
+            }
+        }
     post {
         always {
             archiveArtifacts artifacts: '**/build/app/outputs/flutter-apk/*.apk', fingerprint: true
