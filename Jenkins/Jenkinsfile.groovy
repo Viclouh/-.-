@@ -40,16 +40,16 @@ pipeline {
             }
         }
 
-        stage('Build WEB') {
-            steps {
-                script {
-                    // ���� ��� ������ ������� WEB
-                    dir("${PROJECT_WEB}") {
-                        sh 'docker build -t ${dockerImageName_WEB} .'
-                    }
-                }
-            }
-        }
+        // stage('Build WEB') {
+        //     steps {
+        //         script {
+        //             // ���� ��� ������ ������� WEB
+        //             dir("${PROJECT_WEB}") {
+        //                 sh 'docker build -t ${dockerImageName_WEB} .'
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Clean and Start Docker Compose') {
             steps {
