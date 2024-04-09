@@ -41,8 +41,9 @@ pipeline {
         stage('Build APK') {
             steps {
                 script {
-                    // Запускаем сборку в Docker контейнере
-                    sh 'docker run --rm -v $PWD:/akvt_raspisanie -w /app instrumentisto/flutter flutter build apk'
+                    dir('akvt_raspisanie') {
+                        sh 'docker run --rm -v $PWD:/app -w /app instrumentisto/flutter flutter build apk'
+                    }
                 }
             }
         }
