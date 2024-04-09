@@ -2,6 +2,9 @@ pipeline {
     agent any
     stages {
         stage('Build APK') {
+            when {
+                changeset "**/akvt_raspisanie/**"
+            }
             steps {
                 script {
                     dir('akvt_raspisanie') {
@@ -11,6 +14,9 @@ pipeline {
             }
         }
         stage('Send APK to Telegram') {
+            when {
+                changeset "**/akvt_raspisanie/**"
+            }
             agent {
                 docker {
                     // Используем Docker образ с Python для отправки
