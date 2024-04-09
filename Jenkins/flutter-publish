@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    triggers {
-        pathChanged(path: 'akvt_raspisanie/**')
-    }
     stages {
         stage('Checkout') {
             steps {
