@@ -22,8 +22,8 @@ pipeline {
             steps {
                 // Запускаем скрипт Python в контейнере Docker для отправки APK в Telegram
                 script {
-                    sh 'pip install -r /app/requirements.txt --prefix=/usr/local'
-                    sh 'python /app/publish.py /apk/*.apk'
+                    sh 'pip install -r /app/requirements.txt --target=/tmp/python_packages'
+                    sh 'PYTHONPATH=/tmp/python_packages python /app/publish.py /apk/*.apk'
                 }
             }
         }
