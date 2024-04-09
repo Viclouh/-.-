@@ -21,14 +21,13 @@ pipeline {
                     // Используем Docker образ с Python для отправки
                     image 'python:3.9-slim'
                     // Монтируем директории с APK и скриптом в контейнер
-                    args "-v ${WORKSPACE}/akvt_raspisanie/build/app/outputs/flutter-apk:/apk -v ${WORKSPACE}/Jenkins:/app"
+                    args "-v ${WORKSPACE}/akvt_raspisanie/build/app/outputs/flutter-apk:/apk -v ${WORKSPACE}/Jenkins/apk-sender:/app"
                 }
             }
             steps {
                 // Запускаем скрипт Python в контейнере Docker для отправки APK в Telegram
                 script {
-                    sh 'ls -la /app'
-                    sh 'ls -la /apk'
+                    sh 'pip install -r /app/requirements.txt'
                     sh 'python /app/publish.py /apk/*.apk'
                 }
             }
