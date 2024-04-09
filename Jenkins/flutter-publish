@@ -29,3 +29,35 @@ pipeline {
         }
     }
 }
+
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build APK') {
+            steps {
+                script {
+                    // Запускаем сборку в Docker контейнере
+                    sh 'docker run --rm -v $PWD:/app -w /app instrumentisto/flutter flutter build apk'
+                }
+            }
+        }
+        // stage('Send APK to Telegram') {
+        //     steps {
+        //         script {
+        //             // Отправляем APK в Telegram
+        //             sh 'python отправить_апк_в_телеграм.py'
+        //         }
+        //     }
+        // }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: '**/build/app/outputs/flutter-apk/*.apk', fingerprint: true
+        }
+    }
+}
