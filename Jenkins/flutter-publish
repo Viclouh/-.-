@@ -1,59 +1,38 @@
-// pipeline {
-//     agent {
-//         docker {
-//             image 'instrumentisto/flutter'
-//             args '-v $HOME/.gradle:/root/.gradle' // Если используется Gradle для сборки, это может потребоваться для кэширования зависимостей Gradle
-//         }
-//     }
-//     stages {
-//         stage('Checkout') {
-//             steps {
-//                 checkout scm
-//             }
-//         }
-//         stage('Install dependencies') {
-//             steps {
-//                 sh 'flutter pub get'
-//             }
-//         }
-//         stage('Build APK') {
-//             steps {
-//                 sh 'flutter build apk'
-//             }
-//         }
-        
-//     }
-//     post {
-//         always {
-//             archiveArtifacts artifacts: '**/build/app/outputs/flutter-apk/*.apk', fingerprint: true
-//         }
-//     }
-// }
-
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
         stage('Build APK') {
+            when {
+                changeset "**/akvt_raspisanie/**"
+            }
             steps {
                 script {
-                    // Запускаем сборку в Docker контейнере
-                    sh 'docker run --rm -v $PWD:/app -w /app instrumentisto/flutter flutter build apk'
+                    dir('akvt_raspisanie') {
+                        sh 'docker run --rm -v $PWD:/app -w /app instrumentisto/flutter bash -c \'flutter pub get; flutter pub run build_runner build; flutter build apk --release\''
+                    }
                 }
             }
         }
-        // stage('Send APK to Telegram') {
-        //     steps {
-        //         script {
-        //             // Отправляем APK в Telegram
-        //             sh 'python отправить_апк_в_телеграм.py'
-        //         }
-        //     }
-        // }
+        stage('Send APK to Telegram') {
+            when {
+                changeset "**/akvt_raspisanie/**"
+            }
+            agent {
+                docker {
+                    // Используем Docker образ с Python для отправки
+                    image 'python:3.9'
+                    // Монтируем директории с APK и скриптом в контейнер
+                    args "-v ${WORKSPACE}/akvt_raspisanie/build/app/outputs/flutter-apk:/apk -v ${WORKSPACE}/Jenkins/apk-sender:/app"
+                }
+            }
+            steps {
+                // Запускаем скрипт Python в контейнере Docker для отправки APK в Telegram
+                script {
+                    sh 'pip install -r /app/requirements.txt --target=/tmp/python_packages'
+                    sh 'PYTHONPATH=/tmp/python_packages python /app/publish.py /apk/*.apk'
+                }
+            }
+        }
     }
     post {
         always {
