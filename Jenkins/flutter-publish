@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    triggers {
+        pathChanged(path: 'akvt_raspisanie/**')
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -27,7 +30,7 @@ pipeline {
             steps {
                 // Запускаем скрипт Python в контейнере Docker для отправки APK в Telegram
                 script {
-                    sh 'pip install -r /app/requirements.txt'
+                    sh 'pip install --user -r /app/requirements.txt'
                     sh 'python /app/publish.py /apk/*.apk'
                 }
             }
