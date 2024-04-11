@@ -1,5 +1,5 @@
 ﻿using API.Models;
-
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -77,5 +77,19 @@ namespace API.Services
             }
             return null;
 		}
+
+        public bool Delete(int id)
+        {
+            var item  = _context.LessonPlan.Where(lp => lp.Id == id).FirstOrDefault();
+
+            if(item == null)
+            {
+                return false;
+            }
+
+            _context.LessonPlan.Remove(item);
+            _context.SaveChanges();
+            return true;
+        }
     }
 }
