@@ -83,5 +83,14 @@ namespace API.Controllers
             }
             return StatusCode(400, "could not find format mode");
         }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            if (_lessonPlanService.Delete(id))
+                return StatusCode(200);
+            else
+                return StatusCode(400);
+        }
     }
 }
