@@ -6,6 +6,7 @@ using AutoMapper;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers
@@ -88,9 +89,18 @@ namespace API.Controllers
         public IActionResult Delete(int id)
         {
             if (_lessonPlanService.Delete(id))
-                return StatusCode(200);
+                return StatusCode(200, id);
             else
                 return StatusCode(400);
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody]LessonPlanDTO lesson)
+        {
+            LessonPlan newLesson = _lessonPlanService.Post(lesson);
+
+
+           return StatusCode(200, _mapper.Map<LessonPlanDTO>(newLesson));
         }
     }
 }

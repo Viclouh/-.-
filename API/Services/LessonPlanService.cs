@@ -1,7 +1,10 @@
 ﻿using API.Models;
+using API.DTO;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 
 namespace API.Services
 {
@@ -90,6 +93,47 @@ namespace API.Services
             _context.LessonPlan.Remove(item);
             _context.SaveChanges();
             return true;
+        }
+
+        public LessonPlan Post(LessonPlanDTO lesson)
+        {
+
+            var newLesson = new LessonPlan
+            {
+                LessonNumber = lesson.LessonNumber,
+                Weekday = lesson.Weekday,
+                GroupId = lesson.Group.Id,
+                AudienceId = lesson.Audience.Id,
+                SubjectId = lesson.Subject.Id,
+                WeekNumber = lesson.WeekNumber,
+            };
+
+            _context.LessonPlan.Add(newLesson);
+
+            _context.SaveChanges();
+
+            newLesson = _context.LessonPlan.Where(lp => lp.LessonNumber == newLesson.LessonNumber &&
+            lp.Weekday == newLesson.Weekday &&
+            lp.GroupId == newLesson.GroupId &&
+            lp.WeekNumber == newLesson.WeekNumber).FirstOrDefault();
+
+            _context.LessonTeacher.Add(new LessonTeacher
+            {
+                Lesson = newLesson,
+                TeacherId = lesson.Teachers.First().Id,
+                IsGeneral = true,
+            });
+
+            _context.LessonTeacher.Add(new LessonTeacher
+            {
+                Lesson = newLesson,
+                TeacherId = lesson.Teachers.Last().Id,
+                IsGeneral = false,
+            });
+
+            _context.SaveChanges();
+
+            return _context.LessonPlan.Where(lp=> lp.Id == newLesson.Id).FirstOrDefault();
         }
     }
 }
