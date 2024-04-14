@@ -103,7 +103,7 @@ namespace API.Services
                 LessonNumber = lesson.LessonNumber,
                 Weekday = lesson.Weekday,
                 GroupId = lesson.Group.Id,
-                AudienceId = lesson.Audience.Id,
+                AudienceId = lesson.Audience != null ? lesson.Audience.Id : null,
                 SubjectId = lesson.Subject.Id,
                 WeekNumber = lesson.WeekNumber,
             };
@@ -124,12 +124,15 @@ namespace API.Services
                 IsGeneral = true,
             });
 
-            _context.LessonTeacher.Add(new LessonTeacher
+            if (lesson.Teachers.Last() != null)
             {
-                Lesson = newLesson,
-                TeacherId = lesson.Teachers.Last().Id,
-                IsGeneral = false,
-            });
+                _context.LessonTeacher.Add(new LessonTeacher
+                {
+                    Lesson = newLesson,
+                    TeacherId = lesson.Teachers.Last().Id,
+                    IsGeneral = false,
+                });
+            }
 
             _context.SaveChanges();
 
