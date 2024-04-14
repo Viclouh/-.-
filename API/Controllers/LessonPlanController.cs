@@ -89,7 +89,7 @@ namespace API.Controllers
         public IActionResult Delete(int id)
         {
             if (_lessonPlanService.Delete(id))
-                return StatusCode(200);
+                return StatusCode(200, id);
             else
                 return StatusCode(400);
         }
