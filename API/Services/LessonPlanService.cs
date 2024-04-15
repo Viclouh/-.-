@@ -149,9 +149,9 @@ namespace API.Services
 
             _context.LessonTeacher.Update(mainTeacher);
 
-            if (lesson.Teachers.Last() != lesson.Teachers.First())
+            if (lesson.Teachers.Last() != null)
             {
-                if (updatedLesson.LessonTeachers.First() == updatedLesson.LessonTeachers.Last())
+                if (updatedLesson.LessonTeachers.First() == updatedLesson.LessonTeachers.Last() )
                 {
                     _context.LessonTeacher.Add(new LessonTeacher { Lesson = updatedLesson, TeacherId =  lesson.Teachers.Last().Id, IsGeneral = false});
                 }
