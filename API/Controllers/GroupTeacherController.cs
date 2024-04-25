@@ -14,10 +14,10 @@ namespace API.Controllers
             _groupTeacherService = groupTeacherService;
         }
 
-        [HttpGet("{groupId}")]
-        public IActionResult Get(int groupId)
+        [HttpGet]
+        public IActionResult Get(int? groupId, int? teacherId)
         {
-            return StatusCode(200, _groupTeacherService.Get(groupId).ToList());
+                return StatusCode(200, _groupTeacherService.Get(groupId, teacherId).ToList());
         }
     }
 }
