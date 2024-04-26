@@ -12,13 +12,42 @@ namespace API.Services
         {
             _context = context;
         }
-        public IEnumerable<GroupTeacher> Get(int groupId)
+        public IEnumerable<GroupTeacher> Get(int? groupId, int? teacherId)
         {
+            if (groupId != null && teacherId != null)
+            {
+                return _context.GroupTeacher
+                    .Include(gt => gt.Group)
+                    .ThenInclude(g => g.Speciality)
+                    .Include(gt => gt.Teacher)
+                    .Include(gt => gt.Subject)
+                    .Where(gt => gt.Group.Id == groupId && gt.Teacher.Id == teacherId);
+            }
+            if (groupId != null)
+            {
+                return _context.GroupTeacher
+                    .Include(gt => gt.Group)
+                    .ThenInclude(g => g.Speciality)
+                    .Include(gt => gt.Teacher)
+                    .Include(gt => gt.Subject)
+                    .Where(gt => gt.Group.Id == groupId);
+            }
+            if (teacherId != null)
+            {
+                return _context.GroupTeacher
+                    .Include(gt => gt.Group)
+                    .ThenInclude(g=> g.Speciality)
+                    .Include(gt => gt.Teacher)
+                    .Include(gt => gt.Subject)
+                    .Where(gt => gt.Teacher.Id == teacherId);
+            }
+
             return _context.GroupTeacher
                 .Include(gt => gt.Group)
+                .ThenInclude(g => g.Speciality)
                 .Include(gt => gt.Teacher)
-                .Include(gt => gt.Subject)
-                .Where(gt => gt.Group.Id == groupId);
+                .Include(gt => gt.Subject);
+
         }
     }
 }
