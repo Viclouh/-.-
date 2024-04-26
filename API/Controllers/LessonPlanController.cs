@@ -36,7 +36,6 @@ namespace API.Controllers
                             lessons.Add(_mapper.Map<LessonPlanDTO>(item));
                         }
                         return StatusCode(200, lessons);
-                        break;
                     }
                 case "MobileApp":
                     {
@@ -46,7 +45,6 @@ namespace API.Controllers
                             lessons.Add(_mapper.Map<LessonPlanForMobileDTO>(item));
                         }
                         return StatusCode(200, lessons);
-                        break;
                     }
             }
             return StatusCode(400);
