@@ -12,6 +12,7 @@ namespace API.Services
         {
             _context = context;
         }
+      
         public IEnumerable<GroupTeacher> Get(int? groupId, int? teacherId)
         {
             if (groupId != null && teacherId != null)
@@ -47,7 +48,6 @@ namespace API.Services
                 .ThenInclude(g => g.Speciality)
                 .Include(gt => gt.Teacher)
                 .Include(gt => gt.Subject);
-
         }
     }
 }

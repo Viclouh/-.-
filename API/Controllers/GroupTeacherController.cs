@@ -17,7 +17,7 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult Get(int? groupId, int? teacherId)
         {
-            return StatusCode(200, _groupTeacherService.Get(groupId, teacherId).ToList());
+                return StatusCode(200, _groupTeacherService.Get(groupId, teacherId).ToList());
         }
     }
 }

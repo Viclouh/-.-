@@ -136,7 +136,40 @@ namespace API.Services
 
             _context.SaveChanges();
 
-            return _context.LessonPlan.Where(lp=> lp.Id == newLesson.Id).FirstOrDefault();
+            return GetByParameters(lesson.Weekday, lesson.Group.Id, lesson.WeekNumber, lesson.LessonNumber);
+        }
+
+        public LessonPlan Put(LessonPlanDTO lesson)
+        {
+            var updatedLesson = GetByParameters(lesson.Weekday, lesson.Group.Id, lesson.WeekNumber, lesson.LessonNumber);
+
+            var mainTeacher = updatedLesson.LessonTeachers.First();
+
+            mainTeacher.Teacher.Id = lesson.Teachers.First().Id;
+
+            _context.LessonTeacher.Update(mainTeacher);
+
+            if (lesson.Teachers.Last() != null)
+            {
+                if (updatedLesson.LessonTeachers.First() == updatedLesson.LessonTeachers.Last() )
+                {
+                    _context.LessonTeacher.Add(new LessonTeacher { Lesson = updatedLesson, TeacherId =  lesson.Teachers.Last().Id, IsGeneral = false});
+                }
+                else
+                {
+                    var secondTeacher = updatedLesson.LessonTeachers.Last();
+                    secondTeacher.TeacherId = lesson.Teachers.Last().Id;
+                    _context.LessonTeacher.Update(secondTeacher);
+                }
+            }
+
+            updatedLesson.AudienceId = lesson.Audience == null ? null : lesson.Audience.Id;
+            updatedLesson.SubjectId = lesson.Subject.Id;
+            _context.LessonPlan.Update(updatedLesson);
+
+            _context.SaveChanges();
+
+            return GetByParameters(lesson.Weekday, lesson.Group.Id, lesson.WeekNumber, lesson.LessonNumber);
         }
     }
 }
