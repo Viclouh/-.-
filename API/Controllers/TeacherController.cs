@@ -19,17 +19,23 @@ namespace API.Controllers
 
 
         // GET: api/<TeacherController>
-        [HttpGet]
-        public IActionResult Get()
-        {
-            return StatusCode(200,_teacherService.GetAll());
-        }
+        //[HttpGet]
+        //public IActionResult Get()
+        //{
+        //    return StatusCode(200,_teacherService.GetAll());
+        //}
 
         // GET api/<TeacherController>/5|
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            return StatusCode(200, _teacherService.Get(id));
+        }
+
+        [HttpGet]
+        public IActionResult Get(string? query)
+        {
+            return StatusCode(200, _teacherService.Get(query));
         }
 
         // POST api/<TeacherController>
