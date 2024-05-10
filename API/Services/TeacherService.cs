@@ -31,5 +31,16 @@ namespace API.Services
             || t.Name.ToLower().Contains(query.ToLower())
             || t.Patronymic.ToLower().Contains(query.ToLower())).ToList();
         }
+
+        public Teacher Put(Teacher newTeacher)
+        {
+            Teacher teacher = _context.Teacher.Where(t=> t.Id == newTeacher.Id).FirstOrDefault();
+            teacher.Surname = newTeacher.Surname;
+            teacher.Name = newTeacher.Name;
+            teacher.Patronymic = newTeacher.Patronymic;
+            _context.Teacher.Update(teacher);
+            _context.SaveChanges();
+            return teacher;
+        }
     }
 }

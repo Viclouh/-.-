@@ -44,10 +44,11 @@ namespace API.Controllers
         {
         }
 
-        // PUT api/<TeacherController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/<TeacherController>
+        [HttpPut]
+        public IActionResult Put([FromBody] Teacher teacher)
         {
+            return StatusCode(200, _teacherService.Put(teacher));
         }
 
         // DELETE api/<TeacherController>/5
