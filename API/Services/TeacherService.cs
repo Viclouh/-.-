@@ -27,9 +27,9 @@ namespace API.Services
                 return _context.Teacher.ToList();
             }
 
-            return _context.Teacher.Where(t => t.Surname.ToLower() == query.ToLower()
-            || t.Name.ToLower() == query.ToLower()
-            || t.Patronymic.ToLower() == query.ToLower()).ToList();
+            return _context.Teacher.Where(t => t.Surname.ToLower().Contains(query.ToLower())
+            || t.Name.ToLower().Contains(query.ToLower())
+            || t.Patronymic.ToLower().Contains(query.ToLower())).ToList();
         }
     }
 }
