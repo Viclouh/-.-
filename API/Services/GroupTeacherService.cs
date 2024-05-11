@@ -49,5 +49,16 @@ namespace API.Services
                 .Include(gt => gt.Teacher)
                 .Include(gt => gt.Subject);
         }
+        public bool Delete(int id)
+        {
+            var item = _context.GroupTeacher.Where(gt => gt.Id == id).FirstOrDefault();
+            if (item == null)
+            {
+                return false;
+            }
+            _context.GroupTeacher.Remove(item);
+            _context.SaveChanges();
+            return true;
+        }
     }
 }
