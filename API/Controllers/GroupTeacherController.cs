@@ -32,7 +32,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(GroupTeacher groupTeacher)
+        public IActionResult Post([FromBody]GroupTeacher groupTeacher)
         {
             return StatusCode(200, _groupTeacherService.Post(groupTeacher));
         }
