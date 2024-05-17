@@ -60,5 +60,14 @@ namespace API.Services
             _context.SaveChanges();
             return true;
         }
+
+        public GroupTeacher Post(GroupTeacher groupTeacher)
+        {
+            _context.GroupTeacher.Add(groupTeacher);
+            _context.SaveChanges();
+            return _context.GroupTeacher
+                .Where(gt => gt.Teacher.Id == groupTeacher.Id && gt.Group.Id == groupTeacher.Group.Id && gt.Subject.Id == groupTeacher.Subject.Id)
+                .FirstOrDefault();
+        }
     }
 }

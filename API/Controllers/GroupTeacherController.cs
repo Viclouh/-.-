@@ -1,4 +1,5 @@
-﻿using API.Services;
+﻿using API.Models;
+using API.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -28,6 +29,12 @@ namespace API.Controllers
                 return StatusCode(200, id);
             }
             return StatusCode(400);
+        }
+
+        [HttpPost]
+        public IActionResult Post(GroupTeacher groupTeacher)
+        {
+            return StatusCode(200, _groupTeacherService.Post(groupTeacher));
         }
     }
 }
