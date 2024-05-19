@@ -143,9 +143,7 @@ namespace API.Services
         {
             var updatedLesson = GetByParameters(lesson.Weekday, lesson.Group.Id, lesson.WeekNumber, lesson.LessonNumber);
 
-            var mainTeacher = updatedLesson.LessonTeachers.First();
-
-            mainTeacher.Teacher.Id = lesson.Teachers.First().Id;
+            updatedLesson.LessonTeachers.First().TeacherId = lesson.Teachers.First().Id;
 
             _context.LessonTeacher.Update(mainTeacher);
 
