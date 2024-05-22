@@ -145,8 +145,6 @@ namespace API.Services
 
             updatedLesson.LessonTeachers.First().TeacherId = lesson.Teachers.First().Id;
 
-            _context.LessonTeacher.Update(mainTeacher);
-
             if (lesson.Teachers.Last() != null)
             {
                 if (updatedLesson.LessonTeachers.First() == updatedLesson.LessonTeachers.Last() )

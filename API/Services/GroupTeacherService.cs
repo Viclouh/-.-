@@ -1,5 +1,6 @@
 ﻿using API.Database;
 using API.Models;
+using API.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services
@@ -12,7 +13,7 @@ namespace API.Services
         {
             _context = context;
         }
-      
+
         public IEnumerable<GroupTeacher> Get(int? groupId, int? teacherId)
         {
             if (groupId != null && teacherId != null)
@@ -37,7 +38,7 @@ namespace API.Services
             {
                 return _context.GroupTeacher
                     .Include(gt => gt.Group)
-                    .ThenInclude(g=> g.Speciality)
+                    .ThenInclude(g => g.Speciality)
                     .Include(gt => gt.Teacher)
                     .Include(gt => gt.Subject)
                     .Where(gt => gt.Teacher.Id == teacherId);
@@ -61,12 +62,23 @@ namespace API.Services
             return true;
         }
 
-        public GroupTeacher Post(GroupTeacher groupTeacher)
+        public GroupTeacher Post(GroupTeacherDTO groupTeacher)
         {
-            _context.GroupTeacher.Add(groupTeacher);
+            GroupTeacher newGroupTeacher = new GroupTeacher
+            {
+                GroupId = groupTeacher.Group.Id,
+                SubjectId = groupTeacher.Subject.Id,
+                TeacherId = groupTeacher.Teacher.Id,
+                IsGeneral = false
+            };
+            _context.GroupTeacher.Add(newGroupTeacher);
             _context.SaveChanges();
+
             return _context.GroupTeacher
-                .Where(gt => gt.Teacher.Id == groupTeacher.Id && gt.Group.Id == groupTeacher.Group.Id && gt.Subject.Id == groupTeacher.Subject.Id)
+                .Where(gt => gt.Teacher.Id == groupTeacher.Teacher.Id && gt.Group.Id == groupTeacher.Group.Id && gt.Subject.Id == groupTeacher.Subject.Id)
+                .Include(gt => gt.Teacher)
+                .Include(gt => gt.Subject)
+                .Include(gt => gt.Group)
                 .FirstOrDefault();
         }
     }
