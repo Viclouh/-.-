@@ -1,4 +1,5 @@
 ﻿using API.Models;
+using API.DTO;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +33,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]GroupTeacher groupTeacher)
+        public IActionResult Post([FromBody]GroupTeacherDTO groupTeacher)
         {
             return StatusCode(200, _groupTeacherService.Post(groupTeacher));
         }

@@ -13,6 +13,8 @@ namespace API
 
             CreateMap<Speciality, SpecialityDTO>();
 
+            CreateMap<GroupTeacher, GroupTeacherDTO>();
+
             CreateMap<LessonPlan, LessonPlanDTO>()
                 .ForMember(dest => dest.Teachers, opt => opt.MapFrom(src => src.LessonTeachers.Select(i => i.Teacher)))
                 .ForMember(dest => dest.Audience, opt => opt.MapFrom(src => src.Audience))
