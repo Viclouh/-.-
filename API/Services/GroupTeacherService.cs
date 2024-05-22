@@ -79,6 +79,7 @@ namespace API.Services
                 .Include(gt => gt.Teacher)
                 .Include(gt => gt.Subject)
                 .Include(gt => gt.Group)
+                .ThenInclude(g => g.Speciality)
                 .FirstOrDefault();
         }
     }
