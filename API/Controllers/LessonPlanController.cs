@@ -51,21 +51,16 @@ namespace API.Controllers
             return StatusCode(400);
 
         }
-        [HttpGet("{id}")]
-        public IActionResult GetLessonPlanByGroup(int id)
+        [HttpGet("{groupId}")]
+        public IActionResult GetLessonPlanByGroup(int? teacherId, int? groupId, int? audienceId)
         {
             try
             {
-                List<LessonPlanDTO> lessons = new List<LessonPlanDTO>();
-                foreach (var item in _lessonPlanService.GetByGroup(id))
-                {
-                    lessons.Add(_mapper.Map<LessonPlanDTO>(item));
-                }
-                return StatusCode(200, lessons);
+                return StatusCode(200, _lessonPlanService.GetPDF( teacherId, groupId, audienceId));
             }
-            catch (Exception)
+            catch (Exception )
             {
-                return StatusCode(400);
+                return StatusCode(500);
             }
 
         }
