@@ -34,13 +34,27 @@ namespace API.Services
 
         public Teacher Put(Teacher newTeacher)
         {
-            Teacher teacher = _context.Teacher.Where(t=> t.Id == newTeacher.Id).FirstOrDefault();
+            Teacher teacher = _context.Teacher.Where(t => t.Id == newTeacher.Id).FirstOrDefault();
             teacher.Surname = newTeacher.Surname;
             teacher.Name = newTeacher.Name;
             teacher.Patronymic = newTeacher.Patronymic;
             _context.Teacher.Update(teacher);
             _context.SaveChanges();
             return teacher;
+        }
+
+        public Teacher Post(Teacher teacher)
+        {
+
+            var newTeacher = new Teacher
+            {
+                Name = teacher.Name,
+                Surname = teacher.Surname,
+                Patronymic = teacher.Patronymic
+            };
+            _context.Add(newTeacher);
+            _context.SaveChanges();
+            return newTeacher;
         }
     }
 }
