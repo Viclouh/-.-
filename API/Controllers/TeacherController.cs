@@ -40,8 +40,9 @@ namespace API.Controllers
 
         // POST api/<TeacherController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] Teacher value)
         {
+            return StatusCode(200, _teacherService.Post(value));
         }
 
         // PUT api/<TeacherController>
