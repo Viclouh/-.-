@@ -54,8 +54,9 @@ namespace API.Controllers
 
         // DELETE api/<TeacherController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            return StatusCode(200, _teacherService.Delete(id));
         }
     }
 }
