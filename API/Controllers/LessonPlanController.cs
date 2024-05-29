@@ -25,7 +25,8 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll(string formatting = "Standard") {
+        public IActionResult GetAll(string formatting = "Standard")
+        {
             switch (formatting)
             {
                 case "Standard":
@@ -48,24 +49,42 @@ namespace API.Controllers
                     }
             }
             return StatusCode(400);
-            
+
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetLessonPlanByGroup(int id)
+        {
+            try
+            {
+                List<LessonPlanDTO> lessons = new List<LessonPlanDTO>();
+                foreach (var item in _lessonPlanService.GetByGroup(id))
+                {
+                    lessons.Add(_mapper.Map<LessonPlanDTO>(item));
+                }
+                return StatusCode(200, lessons);
+            }
+            catch (Exception)
+            {
+                return StatusCode(400);
+            }
+
         }
 
-		[HttpGet("WithParams")]
-		public IActionResult GetByParameters(
+        [HttpGet("WithParams")]
+        public IActionResult GetByParameters(
             [FromQuery][Required] int weekday,
-			[FromQuery][Required] int groupId,
-			[FromQuery][Required] int weekNumber,
-			[FromQuery][Required] int lessonNumber)
-		{
+            [FromQuery][Required] int groupId,
+            [FromQuery][Required] int weekNumber,
+            [FromQuery][Required] int lessonNumber)
+        {
             LessonPlanDTO lesson = _mapper.Map<LessonPlanDTO>(_lessonPlanService.GetByParameters(weekday, groupId, weekNumber, lessonNumber));
-            if(lesson == null || weekday<1 || weekday>7 ||lessonNumber < 1||lessonNumber>6 || weekNumber > 1 || weekNumber < 0)
+            if (lesson == null || weekday < 1 || weekday > 7 || lessonNumber < 1 || lessonNumber > 6 || weekNumber > 1 || weekNumber < 0)
             {
                 return StatusCode(400);
             }
             return StatusCode(200, lesson);
-		}
-	
+        }
+
 
         [HttpGet]
         [Route("Search")]
@@ -93,12 +112,12 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]LessonPlanDTO lesson)
+        public IActionResult Post([FromBody] LessonPlanDTO lesson)
         {
             LessonPlan newLesson = _lessonPlanService.Post(lesson);
 
 
-           return StatusCode(200, _mapper.Map<LessonPlanDTO>(newLesson));
+            return StatusCode(200, _mapper.Map<LessonPlanDTO>(newLesson));
         }
 
         [HttpPut]

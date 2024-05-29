@@ -26,6 +26,16 @@ namespace API.Services
                 .Include(ls => ls.LessonTeachers)
                     .ThenInclude(lt => lt.Teacher);
         }
+        public IEnumerable<LessonPlan> GetByGroup(int id) {
+            return _context.LessonPlan
+               .Include(ls => ls.Subject)
+               .Include(ls => ls.Audience)
+                   .ThenInclude(a => a.AudienceType)
+               .Include(ls => ls.Group)
+                   .ThenInclude(g => g.Speciality)
+               .Include(ls => ls.LessonTeachers)
+                   .ThenInclude(lt => lt.Teacher).Where(x=>x.Group.Id == id);
+        }
         public IEnumerable<LessonPlan> Search(int? teacherId, int? groupId, int? audienceId)
         {
             IQueryable<LessonPlan> query = _context.LessonPlan.Include(lp => lp.LessonTeachers).ThenInclude(lt=>lt.Teacher).Include(lp => lp.Audience).Include(lp => lp.Group).ThenInclude(g=>g.Speciality).Include(lp=>lp.Subject).AsNoTracking();
@@ -167,5 +177,7 @@ namespace API.Services
 
             return GetByParameters(lesson.Weekday, lesson.Group.Id, lesson.WeekNumber, lesson.LessonNumber);
         }
+
+
     }
 }
