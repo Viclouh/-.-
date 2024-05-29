@@ -56,5 +56,11 @@ namespace API.Services
             _context.SaveChanges();
             return newTeacher;
         }
+
+        public bool Delete(int id)
+        {
+            _context.Teacher.Remove(_context.Teacher.FirstOrDefault(t => t.Id == id));
+            return true;
+        }
     }
 }
