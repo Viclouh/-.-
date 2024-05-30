@@ -201,8 +201,9 @@ namespace API.Services
             // Register the code pages encoding provider
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
+
             // Use the abstract path for the font file
-            string fontPath = Path.Combine(Environment.CurrentDirectory, "Fonts", "arial.ttf");
+            string fontPath = "pack://application:,,,/Fonts/arial.ttf";
             BaseFont baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             Font font = new Font(baseFont);
 
