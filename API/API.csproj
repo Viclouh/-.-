@@ -22,6 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\arial.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="iTextSharp" Version="5.5.13.3" />
@@ -46,6 +50,10 @@
   <ItemGroup>
     <Folder Include="Helpers\Auth\" />
     <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Fonts\arial.ttf" />
   </ItemGroup>
 
 </Project>
