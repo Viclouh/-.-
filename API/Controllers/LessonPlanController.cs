@@ -58,9 +58,9 @@ namespace API.Controllers
             {
                 return StatusCode(200, _lessonPlanService.GetPDF( teacherId, groupId, audienceId));
             }
-            catch (Exception )
+            catch (Exception ex )
             {
-                return StatusCode(500);
+                return StatusCode(500,ex.Message+"\n"+ex.StackTrace.ToString());
             }
 
         }
