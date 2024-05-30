@@ -53,7 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Fonts\arial.ttf" />
+    <Content Include="Fonts\arial.ttf" />
   </ItemGroup>
 
 </Project>

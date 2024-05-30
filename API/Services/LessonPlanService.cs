@@ -203,7 +203,7 @@ namespace API.Services
 
 
             // Use the abstract path for the font file
-            string fontPath = "pack://application:,,,/Fonts/arial.ttf";
+            string fontPath = Path.Combine(Directory.GetCurrentDirectory(),"Fonts","arial.ttf");
             BaseFont baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             Font font = new Font(baseFont);
 
