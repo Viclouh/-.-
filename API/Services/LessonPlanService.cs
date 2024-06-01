@@ -240,33 +240,44 @@ namespace API.Services
             // Добавление нескольких строк с данными
             for (int i = 0; i < 6; i++)
             {
+                //ячейка с днем недели
                 PdfPCell cell = new PdfPCell(new Phrase(week[i], font));
                 cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell.VerticalAlignment = Element.ALIGN_MIDDLE;
-                cell.Rowspan = 6;
+                cell.Rowspan = 12;
                 cell.Rotation = 90;
                 table.AddCell(cell);
                 for (int j = 0; j < 6; j++)
                 {
-                    table.AddCell(paras[j]);
-                    if (GetByParameters(i + 1, (int)groupId, 0, j + 1) != null) 
+                    //ячейка с часами
+                    PdfPCell hoursCell = new PdfPCell(new Phrase(paras[j], font));
+                    hoursCell.Rowspan = 2;
+                    hoursCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    table.AddCell(hoursCell);
+                    if (GetByParameters(i + 1, (int)groupId, 0, j + 1) != null)
                     {
                         if (GetByParameters(i + 1, (int)groupId, 1, j + 1) != null)
                         {
-                            string str = $"{GetByParameters(i + 1, (int)groupId, 0, j + 1).Subject.Name}\n----------------\n{GetByParameters(i + 1, (int)groupId, 1, j + 1).Subject.Name}";
-                            PdfPCell cell1 = new PdfPCell(new Phrase(str, font));
-                            table.AddCell(cell1);
+                            table.AddCell(new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 0, j + 1).Subject.Name, font)));
+                            table.AddCell(new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 1, j + 1).Subject.Name, font)));
                         }
-                        else 
+                        else
                         {
                             PdfPCell cell1 = new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 0, j + 1).Subject.Name, font));
+                            cell1.Rowspan = 2;
                             table.AddCell(cell1);
                         }
 
 
 
                     }
-                    else table.AddCell("");
+                    else
+                    {
+                        PdfPCell cell1 = new PdfPCell(new Phrase("", font));
+                        cell1.Rowspan = 2;
+                        table.AddCell(cell1);
+                        //table.AddCell("");
+                    }
                 }
             }
 
