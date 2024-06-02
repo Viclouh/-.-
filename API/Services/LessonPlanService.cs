@@ -254,29 +254,71 @@ namespace API.Services
                     hoursCell.Rowspan = 2;
                     hoursCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     table.AddCell(hoursCell);
-                    if (GetByParameters(i + 1, (int)groupId, 0, j + 1) != null)
+                    var lesson = GetByParameters(i + 1, (int)groupId, 0, j + 1);
+                    var lesson1 = GetByParameters(i + 1, (int)groupId, 1, j + 1);
+
+                    //———————————No switches?———————————
+                    //⠀⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝
+                    //⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇
+                    //⠀⠀⢀⢀⢄⢬⢪⡪⡎⣆⡈⠚⠜⠕⠇⠗⠝⢕⢯⢫⣞⣯⣿⣻⡽⣏⢗⣗⠏⠀
+                    //⠀⠪⡪⡪⣪⢪⢺⢸⢢⢓⢆⢤⢀⠀⠀⠀⠀⠈⢊⢞⡾⣿⡯⣏⢮⠷⠁⠀⠀
+                    //⠀⠀⠀⠈⠊⠆⡃⠕⢕⢇⢇⢇⢇⢇⢏⢎⢎⢆⢄⠀⢑⣽⣿⢝⠲⠉⠀⠀⠀⠀
+                    //⠀⠀⠀⠀⠀⡿⠂⠠⠀⡇⢇⠕⢈⣀⠀⠁⠡⠣⡣⡫⣂⣿⠯⢪⠰⠂⠀⠀⠀⠀
+                    //⠀⠀⠀⠀⡦⡙⡂⢀⢤⢣⠣⡈⣾⡃⠠⠄⠀⡄⢱⣌⣶⢏⢊⠂⠀⠀⠀⠀⠀⠀
+                    //⠀⠀⠀⠀⢝⡲⣜⡮⡏⢎⢌⢂⠙⠢⠐⢀⢘⢵⣽⣿⡿⠁⠁⠀⠀⠀⠀⠀⠀⠀
+                    //⠀⠀⠀⠀⠨⣺⡺⡕⡕⡱⡑⡆⡕⡅⡕⡜⡼⢽⡻⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    //⠀⠀⠀⠀⣼⣳⣫⣾⣵⣗⡵⡱⡡⢣⢑⢕⢜⢕⡝⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    //⠀⠀⠀⣴⣿⣾⣿⣿⣿⡿⡽⡑⢌⠪⡢⡣⣣⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    //⠀⠀⠀⡟⡾⣿⢿⢿⢵⣽⣾⣼⣘⢸⢸⣞⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    //⠀⠀⠀⠀⠁⠇⠡⠩⡫⢿⣝⡻⡮⣒⢽⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                    //—————————————————————————————
+                    //if (lesson != null)
+                    //{
+                    //    if (lesson1 != null)
+                    //    {
+                    //        table.AddCell(new PdfPCell(new Phrase(lesson.Subject.Name, font)));
+                    //        table.AddCell(new PdfPCell(new Phrase(lesson1.Subject.Name, font)));
+                    //        continue;
+                    //    }
+                    //    PdfPCell cell1 = new PdfPCell(new Phrase(lesson.Subject.Name, font));
+                    //    cell1.Rowspan = 2;
+                    //    table.AddCell(cell1);
+                    //    continue;
+                    //}
+                    //if (lesson1 != null)
+                    //{
+                    //    table.AddCell("  ");
+                    //    table.AddCell(new PdfPCell(new Phrase(lesson1.Subject.Name, font)));
+                    //    continue;
+                    //}
+                    //PdfPCell cellEmpty = new PdfPCell(new Phrase("", font));
+                    //cellEmpty.Rowspan = 2;
+                    //table.AddCell(cellEmpty);
+
+
+                    switch ((lesson, lesson1))
                     {
-                        if (GetByParameters(i + 1, (int)groupId, 1, j + 1) != null)
-                        {
-                            table.AddCell(new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 0, j + 1).Subject.Name, font)));
-                            table.AddCell(new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 1, j + 1).Subject.Name, font)));
-                        }
-                        else
-                        {
-                            PdfPCell cell1 = new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 0, j + 1).Subject.Name, font));
+                        case (not null, not null):
+                            table.AddCell(new PdfPCell(new Phrase(lesson.Subject.Name, font)));
+                            table.AddCell(new PdfPCell(new Phrase(lesson1.Subject.Name, font)));
+                            break;
+
+                        case (not null, null):
+                            PdfPCell cell1 = new PdfPCell(new Phrase(lesson.Subject.Name, font));
                             cell1.Rowspan = 2;
                             table.AddCell(cell1);
-                        }
+                            break;
 
+                        case (null, not null):
+                            table.AddCell("  ");
+                            table.AddCell(new PdfPCell(new Phrase(lesson1.Subject.Name, font)));
+                            break;
 
-
-                    }
-                    else
-                    {
-                        PdfPCell cell1 = new PdfPCell(new Phrase("", font));
-                        cell1.Rowspan = 2;
-                        table.AddCell(cell1);
-                        //table.AddCell("");
+                        case (null, null):
+                            PdfPCell cellEmpty = new PdfPCell(new Phrase("  ", font));
+                            cellEmpty.Rowspan = 2;
+                            table.AddCell(cellEmpty);
+                            break;
                     }
                 }
             }
