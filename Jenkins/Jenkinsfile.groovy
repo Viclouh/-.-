@@ -2,6 +2,9 @@ def getProjEnv(branch){
     if(branch=='main'){
         return 'Production'
     }
+    if(branch=='test'){
+        return 'Test'
+    }
     return 'Development'
 }
 def getDockerVer(branch){
