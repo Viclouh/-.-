@@ -2,6 +2,7 @@ version: '0.1'
 
 services:
   AKVT.Raspisanie-API-Test:
+    image: yomaya/akvt.raspisanie:test
     build: ./API
     environment:
       - ASPNETCORE_URLS=http://+:80
