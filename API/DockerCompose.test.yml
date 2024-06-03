@@ -8,7 +8,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Test
     ports:
-      - '1147:80'
+      - '13657:80'
       - '1148:443'
     container_name: AKVT.Raspisanie-API-Test
     restart: always
