@@ -11,6 +11,9 @@ def getDockerVer(branch){
     if(branch=='main'){
         return 'prod'
     }
+    if(branch=='test'){
+        return 'test'
+    }
     return 'dev'
 }
 
