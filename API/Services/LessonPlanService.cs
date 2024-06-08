@@ -116,6 +116,7 @@ namespace API.Services
                 AudienceId = lesson.Audience != null ? lesson.Audience.Id : null,
                 SubjectId = lesson.Subject.Id,
                 WeekNumber = lesson.WeekNumber,
+                isDistantce = lesson.isDistantce,
             };
 
             _context.LessonPlan.Add(newLesson);
@@ -171,24 +172,17 @@ namespace API.Services
 
             updatedLesson.AudienceId = lesson.Audience == null ? null : lesson.Audience.Id;
             updatedLesson.SubjectId = lesson.Subject.Id;
+            updatedLesson.isDistantce = lesson.isDistantce;
             _context.LessonPlan.Update(updatedLesson);
 
             _context.SaveChanges();
 
             return GetByParameters(lesson.Weekday, lesson.Group.Id, lesson.WeekNumber, lesson.LessonNumber);
         }
-        public string GetPDF(int? teacherId, int? groupId, int? audienceId)
+        public string GetPDF(int? teacherId, int? groupId)
         {
 
             iTextSharp.text.Document document = new Document();
-
-            //string outputPath = "C:\\Users\\User\\Desktop\\example_table.pdf";
-            //PdfWriter.GetInstance(document, new FileStream(outputPath, FileMode.Create));
-            //document.Open();
-            //System.Text.EncodingProvider ppp = System.Text.CodePagesEncodingProvider.Instance;
-            //Encoding.RegisterProvider(ppp);
-            //BaseFont baseFont = BaseFont.CreateFont("c:/Windows/Fonts/arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-            //Font font = new Font(baseFont);
 
             // Используем относительный путь для выходного PDF
 
@@ -223,11 +217,24 @@ namespace API.Services
             "11-12 (17:35-18:20; 18:25-19:10)"
             };
 
-            string ss = $"{_context.Group
-                .Include(ls => ls.Speciality)
-                  .Where(x => x.Id == groupId).FirstOrDefault().Speciality.Shortname} - {_context.Group
-                .Include(ls => ls.Speciality)
-                  .Where(x => x.Id == groupId).FirstOrDefault().Name}";
+            string ss = "";
+
+            switch(teacherId, groupId)
+            {
+                case (null, not null):
+                    var group = _context.Group
+                        .Include(ls => ls.Speciality)
+                        .FirstOrDefault(x => x.Id == groupId);
+                    ss = $"{group.Speciality.Shortname} - {group.Name}";
+                    break;
+
+                case (not null, null):
+                    var teacher = _context.Teacher.FirstOrDefault(t => t.Id == teacherId);
+                    ss = $"{teacher.Surname} {teacher.Name[0]}. {teacher.Patronymic[0]}.";
+                    break;
+            }
+
+
             Paragraph title = new Paragraph(ss,font);
             title.Alignment = Element.ALIGN_CENTER;
             title.SpacingAfter = 20; // Отступ после заголовка
@@ -255,36 +262,47 @@ namespace API.Services
                     hoursCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     table.AddCell(hoursCell);
 
-                    if (GetByParameters(i + 1, (int)groupId, 0, j + 1) != null || GetByParameters(i + 1, (int)groupId, 1, j + 1) != null)
+                    LessonPlan lesson = new LessonPlan();
+                    LessonPlan lesson1 = new LessonPlan();
+
+                    switch (teacherId, groupId)
                     {
-                        if (GetByParameters(i + 1, (int)groupId, 0, j + 1) != null && GetByParameters(i + 1, (int)groupId, 1, j + 1) != null)
-                        {
-                            table.AddCell(new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 0, j + 1).Subject.Name, font)));
-                            table.AddCell(new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 1, j + 1).Subject.Name, font)));
-                            continue;
-                        }
-                        if (GetByParameters(i + 1, (int)groupId, 0, j + 1) != null ) 
-                        {
-                            PdfPCell cell1 = new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 0, j + 1).Subject.Name, font));
+                        case (null, not null):
+                            lesson = GetByParameters(i + 1, (int)groupId, 0, j + 1);
+                            lesson1 = GetByParameters(i + 1, (int)groupId, 1, j + 1);
+                            break;
+
+                        case (not null, null):
+                            lesson = Search(teacherId, null, null)
+                                .FirstOrDefault(lp => lp.Weekday == i + 1 && lp.LessonNumber == j + 1 && lp.WeekNumber == 0);
+                            lesson1 = Search(teacherId, null, null)
+                                .FirstOrDefault(lp => lp.Weekday == i + 1 && lp.LessonNumber == j + 1 && lp.WeekNumber == 1);
+                            break;
+                    }
+
+                    switch ((lesson, lesson1))
+                    {
+                        case (not null, not null):
+                            table.AddCell(new PdfPCell(new Phrase(groupId != null ? lesson.Subject.Name : $"{lesson.Group.Speciality.Shortname}-{lesson.Group.Name} {lesson.Subject.Name}", font)));
+                            table.AddCell(new PdfPCell(new Phrase(groupId != null ? lesson1.Subject.Name : $"{lesson1.Group.Speciality.Shortname}-{lesson1.Group.Name} {lesson1.Subject.Name}", font)));
+                            break;
+
+                        case (not null, null):
+                            PdfPCell cell1 = new PdfPCell(new Phrase(groupId != null ? lesson.Subject.Name : $"{lesson.Group.Speciality.Shortname}-{lesson.Group.Name} {lesson.Subject.Name}", font));
                             cell1.Rowspan = 2;
                             table.AddCell(cell1);
-                            continue;
-                        }
-                        if (GetByParameters(i + 1, (int)groupId, 1, j + 1) != null)
-                        {
-                            table.AddCell(new PdfPCell(new Phrase("", font)));
-                            table.AddCell(new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 1, j + 1).Subject.Name, font)));
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        PdfPCell cell1 = new PdfPCell(new Phrase("", font));
-                        cell1.Rowspan = 2;
-                        table.AddCell(cell1);
+                            break;
 
+                        case (null, not null):
+                            table.AddCell("  ");
+                            table.AddCell(new PdfPCell(new Phrase(groupId != null ? lesson1.Subject.Name : $"{lesson1.Group.Speciality.Shortname}-{lesson1.Group.Name} {lesson1.Subject.Name}", font)));
+                            break;
 
-                        //table.AddCell("");
+                        case (null, null):
+                            PdfPCell cellEmpty = new PdfPCell(new Phrase("  ", font));
+                            cellEmpty.Rowspan = 2;
+                            table.AddCell(cellEmpty);
+                            break;
                     }
                 }
             }

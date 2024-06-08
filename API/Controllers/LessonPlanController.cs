@@ -51,12 +51,12 @@ namespace API.Controllers
             return StatusCode(400);
 
         }
-        [HttpGet("{groupId}")]
-        public IActionResult GetLessonPlanByGroup(int? teacherId, int? groupId, int? audienceId)
+        [HttpGet("Pdf")]
+        public IActionResult GetLessonPlanPdf(int? teacherId, int? groupId)
         {
             try
             {
-                return StatusCode(200, _lessonPlanService.GetPDF( teacherId, groupId, audienceId));
+                return StatusCode(200, _lessonPlanService.GetPDF( teacherId, groupId));
             }
             catch (Exception ex )
             {

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using API.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Services
 {
@@ -12,6 +14,19 @@ namespace API.Services
 		public IEnumerable<Models.Group> GetAll() 
 		{
 			return _context.Group.Include(x=>x.Speciality);
+		}
+
+		
+		public List<Group> Get(string? query)
+		{
+			if (query.IsNullOrEmpty())
+			{
+				return GetAll().OrderBy(g => g.Name).ThenBy(g => g.Speciality.Shortname).ToList();
+			}
+
+			return GetAll().Where(g => g.Speciality.Name.ToLower().Contains(query.ToLower())
+				|| g.Name.Contains(query.ToLower()) || g.Speciality.Shortname.ToLower().Contains(query.ToLower()))
+				.ToList();
 		}
 	}
 }
