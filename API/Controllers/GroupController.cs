@@ -23,5 +23,11 @@ namespace API.Controllers
 		{
 			return StatusCode(200, _groupService.GetAll().ToList());
 		}
+
+		[HttpGet]
+		public IActionResult Get(string? query)
+		{
+			return StatusCode(200, _groupService.Get(query));
+		}
 	}
 }

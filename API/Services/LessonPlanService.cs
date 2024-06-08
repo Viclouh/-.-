@@ -116,6 +116,7 @@ namespace API.Services
                 AudienceId = lesson.Audience != null ? lesson.Audience.Id : null,
                 SubjectId = lesson.Subject.Id,
                 WeekNumber = lesson.WeekNumber,
+                isDistantce = lesson.isDistantce,
             };
 
             _context.LessonPlan.Add(newLesson);
@@ -171,6 +172,7 @@ namespace API.Services
 
             updatedLesson.AudienceId = lesson.Audience == null ? null : lesson.Audience.Id;
             updatedLesson.SubjectId = lesson.Subject.Id;
+            updatedLesson.isDistantce = lesson.isDistantce;
             _context.LessonPlan.Update(updatedLesson);
 
             _context.SaveChanges();
