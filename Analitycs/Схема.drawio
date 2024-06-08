@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-06-08T18:23:39.577Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" etag="u-bzJu-J7jFrmvMkRLjH" version="24.4.13" type="github">
+<mxfile host="app.diagrams.net" modified="2024-06-08T18:25:52.213Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" etag="oKdqRcxvNh94X6JD-6BX" version="24.4.13" type="github">
   <diagram id="tlPU0n3_dSyVTQZ9mSz2" name="Страница — 1">
-    <mxGraphModel dx="3906" dy="3335" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
+    <mxGraphModel dx="2762" dy="2747" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -2158,7 +2158,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="8rCzdK_C49J0JL5xAZ4r-28" value="Кабинет" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;" vertex="1" parent="1">
-          <mxGeometry x="1695" y="-808.75" width="180" height="120" as="geometry" />
+          <mxGeometry x="1485" y="-820" width="180" height="120" as="geometry" />
         </mxCell>
         <mxCell id="8rCzdK_C49J0JL5xAZ4r-29" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" vertex="1" parent="8rCzdK_C49J0JL5xAZ4r-28">
           <mxGeometry y="30" width="180" height="30" as="geometry" />
@@ -2242,7 +2242,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="8rCzdK_C49J0JL5xAZ4r-48" value="Тип кабинета" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;" vertex="1" parent="1">
-          <mxGeometry x="1470" y="-808.75" width="180" height="90" as="geometry" />
+          <mxGeometry x="1260" y="-820" width="180" height="90" as="geometry" />
         </mxCell>
         <mxCell id="8rCzdK_C49J0JL5xAZ4r-49" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" vertex="1" parent="8rCzdK_C49J0JL5xAZ4r-48">
           <mxGeometry y="30" width="180" height="30" as="geometry" />
@@ -2722,10 +2722,18 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="8rCzdK_C49J0JL5xAZ4r-174" style="edgeStyle=elbowEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;curved=0;" edge="1" parent="1" source="8rCzdK_C49J0JL5xAZ4r-29" target="8rCzdK_C49J0JL5xAZ4r-79">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1710" y="-850" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="8rCzdK_C49J0JL5xAZ4r-175" style="edgeStyle=elbowEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;curved=0;" edge="1" parent="1" source="8rCzdK_C49J0JL5xAZ4r-29" target="8rCzdK_C49J0JL5xAZ4r-104">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1710" y="-740" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="8rCzdK_C49J0JL5xAZ4r-176" style="edgeStyle=elbowEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="8rCzdK_C49J0JL5xAZ4r-16" target="8rCzdK_C49J0JL5xAZ4r-132">
           <mxGeometry relative="1" as="geometry">
