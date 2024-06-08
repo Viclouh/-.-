@@ -16,6 +16,7 @@ namespace API.Services
 			return _context.Group.Include(x=>x.Speciality);
 		}
 
+		
 		public List<Group> Get(string? query)
 		{
 			if (query.IsNullOrEmpty())
