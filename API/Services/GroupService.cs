@@ -20,7 +20,7 @@ namespace API.Services
 		{
 			if (query.IsNullOrEmpty())
 			{
-				return GetAll().OrderBy(g => g.Speciality.Name).ThenBy(g => g.Name).ToList();
+				return GetAll().OrderBy(g => g.Name).ThenBy(g => g.Speciality.Shortname).ToList();
 			}
 
 			return GetAll().Where(g => g.Speciality.Name.ToLower().Contains(query.ToLower())

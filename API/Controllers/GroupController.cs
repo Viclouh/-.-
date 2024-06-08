@@ -18,11 +18,11 @@ namespace API.Controllers
 			_mapper= mapper;
 		}
 
-		[HttpGet]
-		public IActionResult GetAll()
-		{
-			return StatusCode(200, _groupService.GetAll().ToList());
-		}
+		//[HttpGet]
+		//public IActionResult GetAll()
+		//{
+		//	return StatusCode(200, _groupService.GetAll().ToList());
+		//}
 
 		[HttpGet]
 		public IActionResult Get(string? query)
