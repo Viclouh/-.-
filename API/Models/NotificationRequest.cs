@@ -4,6 +4,5 @@
     {
         public string CustomKey { get; set; }
         public string Message { get; set; }
-        public string SmallIcon { get; set; }
     }
 }
