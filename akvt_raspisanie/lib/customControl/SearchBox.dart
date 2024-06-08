@@ -23,11 +23,15 @@ class _SearchBoxState extends State<SearchBox> {
     return item.toLowerCase().replaceAll(' - ', '');
   }
 
-  // Int ErrorsCount(int s1, int s2){
-  //   int ec;
-  //   return
-  // }
-
+  String selectLetters(String input) {
+    String result = '';
+    for (int i = 0; i < input.length; i++) {
+      if (input[i].toUpperCase() != input[i].toLowerCase()) {
+        result += input[i];
+      }
+    }
+    return result;
+  }
 
 
   @override
@@ -70,18 +74,18 @@ class _SearchBoxState extends State<SearchBox> {
 //           items = sorted;
 
 //3
-          // items = temp.where((element) =>
-          // LevenshteinDistance.levenshteinDistance(itemLowerCase(element.item),_searchingWithQuery!.toLowerCase())<=4)
-          //     .toList();
+//           items = temp.where((element) =>
+//           LevenshteinDistance.levenshteinDistance(itemLowerCase(element.item),_searchingWithQuery!.toLowerCase())<=4)
+//               .toList();
 
 //4
-          int procent = (_searchingWithQuery!.length * 0.2).truncate();
+          int percent = (_searchingWithQuery!.length * 0.2).truncate();
           List<Item> filtered = [] ;
           temp.forEach((element) {
             for(int i  = 0 ; i <= element.item.length - _searchingWithQuery!.length; i++){
               String s1 = element.item.substring(i,i+_searchingWithQuery!.length);
               int distance =  LevenshteinDistance.levenshteinDistance(s1.toLowerCase(), _searchingWithQuery!.toLowerCase());
-              if(distance<=procent) {
+              if(distance<=percent) {
                 filtered.add(element);
                 return;
               }

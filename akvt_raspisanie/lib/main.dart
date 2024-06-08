@@ -9,16 +9,10 @@ import 'package:akvt_raspisanie/pages/navigation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 
 void main() {
-  String s1 = "kitten";
-  String s2 = "sitting";
-
-  int distance = LevenshteinDistance.levenshteinDistance(s1, s2);
-  print("Редакционное расстояние между $s1 и $s2: $distance");
-
-
   runApp(
   MultiProvider(
     providers:[
@@ -47,6 +41,14 @@ void main() {
       // home:SplashScreen(),
     ),
   );
+
+  // OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  OneSignal.initialize("915cc389-bc1e-403d-8f15-86d7dbc0463e");
+  OneSignal.Notifications.requestPermission(true);
+  // String TagKey = Provider.of<Lessons>(context).GetItem().type;
+  // String TagValue = Provider.of<Lessons>(context).GetItem().item;
+  OneSignal.User.addTagWithKey("группы","ПБ - 41");
+
 }
 
 
