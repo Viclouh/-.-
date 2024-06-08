@@ -254,28 +254,36 @@ namespace API.Services
                     hoursCell.Rowspan = 2;
                     hoursCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                     table.AddCell(hoursCell);
-                    if (GetByParameters(i + 1, (int)groupId, 0, j + 1) != null)
+
+                    if (GetByParameters(i + 1, (int)groupId, 0, j + 1) != null || GetByParameters(i + 1, (int)groupId, 1, j + 1) != null)
                     {
-                        if (GetByParameters(i + 1, (int)groupId, 1, j + 1) != null)
+                        if (GetByParameters(i + 1, (int)groupId, 0, j + 1) != null && GetByParameters(i + 1, (int)groupId, 1, j + 1) != null)
                         {
                             table.AddCell(new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 0, j + 1).Subject.Name, font)));
                             table.AddCell(new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 1, j + 1).Subject.Name, font)));
+                            continue;
                         }
-                        else
+                        if (GetByParameters(i + 1, (int)groupId, 0, j + 1) != null ) 
                         {
                             PdfPCell cell1 = new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 0, j + 1).Subject.Name, font));
                             cell1.Rowspan = 2;
                             table.AddCell(cell1);
+                            continue;
                         }
-
-
-
+                        if (GetByParameters(i + 1, (int)groupId, 1, j + 1) != null)
+                        {
+                            table.AddCell(new PdfPCell(new Phrase("", font)));
+                            table.AddCell(new PdfPCell(new Phrase(GetByParameters(i + 1, (int)groupId, 1, j + 1).Subject.Name, font)));
+                            continue;
+                        }
                     }
                     else
                     {
                         PdfPCell cell1 = new PdfPCell(new Phrase("", font));
                         cell1.Rowspan = 2;
                         table.AddCell(cell1);
+
+
                         //table.AddCell("");
                     }
                 }
