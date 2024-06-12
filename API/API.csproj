@@ -50,4 +50,8 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\excel-parcing\excel-parcing\excel-parcing.csproj" />
+  </ItemGroup>
+
 </Project>
