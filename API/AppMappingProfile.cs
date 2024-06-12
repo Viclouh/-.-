@@ -9,21 +9,20 @@ namespace API
     {
         public AppMappingProfile()
         {
-            CreateMap<Audience, AudienceDTO>();
+            CreateMap<Classroom, ClassroomDTO>()
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src=>src.ClassroomType.Name));
 
-            CreateMap<Speciality, SpecialityDTO>();
-
-            CreateMap<LessonPlan, LessonPlanDTO>()
-                .ForMember(dest => dest.Teachers, opt => opt.MapFrom(src => src.LessonTeachers.Select(i => i.Teacher)))
-                .ForMember(dest => dest.Audience, opt => opt.MapFrom(src => src.Audience))
+            CreateMap<Lesson, LessonDTO>()
+                .ForMember(dest => dest.Teachers, opt => opt.MapFrom(src => src.LessonGroup.LessonGroupTeachers.Select(i => i.Teacher)))
+                .ForMember(dest => dest.Audience, opt => opt.MapFrom(src => src.Classroom))
                 .ReverseMap();
 
-            CreateMap<LessonPlan, LessonPlanForMobileDTO>()
-                .ForMember(dest => dest.Teachers, opt => opt.MapFrom(src => src.LessonTeachers.Select(i => i.Teacher)))
-                .ForMember(dest => dest.SubjectName, opt => opt.MapFrom(src => src.Subject.Name))
-                .ForMember(dest => dest.ShortSubjectName, opt => opt.MapFrom(src => src.Subject.Shortname))
-                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.Group.Speciality.Shortname + " - " + src.Group.Name))
-                .ForMember(dest => dest.Audience, opt => opt.MapFrom(src => src.Audience.Number))
+            CreateMap<Lesson, LessonForMobileDTO>()
+                .ForMember(dest => dest.Teachers, opt => opt.MapFrom(src => src.LessonGroup.LessonGroupTeachers.Select(i => i.Teacher)))
+                .ForMember(dest => dest.SubjectName, opt => opt.MapFrom(src => src.LessonGroup.Subject.Name))
+                .ForMember(dest => dest.ShortSubjectName, opt => opt.MapFrom(src => src.LessonGroup.Subject.ShortName))
+                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.LessonGroup.Group.GroupCode))
+                .ForMember(dest => dest.Audience, opt => opt.MapFrom(src => src.Classroom.Number))
                 .ReverseMap();
         }
     }

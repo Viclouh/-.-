@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.DTO
 {
-    public class LessonPlanForMobileDTO : ILessonPlanDTO
+    public class LessonForMobileDTO : ILessonDTO
     {
         public int Id { get; set; }
         public int LessonNumber { get; set; }

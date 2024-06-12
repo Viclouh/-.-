@@ -12,12 +12,16 @@
 
   <ItemGroup>
     <Compile Remove="DTO\Новая папка\**" />
+    <Compile Remove="Helpers\**" />
     <Compile Remove="Repository\**" />
     <Content Remove="DTO\Новая папка\**" />
+    <Content Remove="Helpers\**" />
     <Content Remove="Repository\**" />
     <EmbeddedResource Remove="DTO\Новая папка\**" />
+    <EmbeddedResource Remove="Helpers\**" />
     <EmbeddedResource Remove="Repository\**" />
     <None Remove="DTO\Новая папка\**" />
+    <None Remove="Helpers\**" />
     <None Remove="Repository\**" />
   </ItemGroup>
 
@@ -43,7 +47,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\Auth\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

@@ -3,8 +3,11 @@
     public class Teacher
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string Patronymic { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string MiddleName { get; set; }
+
+        public ICollection<TeacherSubject> TeacherSubjects { get; set; }
+        public ICollection<LessonGroupTeacher> LessonGroupTeachers { get; set; }
     }
 }

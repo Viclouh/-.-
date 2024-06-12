@@ -51,8 +51,7 @@ namespace API
 
 
             builder.Services.AddControllers();
-            builder.Services.AddScoped<LessonPlanService>();
-            builder.Services.AddScoped<SpecialityService>();
+            builder.Services.AddScoped<LessonService>();
             builder.Services.AddScoped<GroupService>();
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddScoped<TeacherService>();

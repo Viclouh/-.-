@@ -12,13 +12,13 @@ namespace API.Services
         {
             _context = context;
         }
-        public IEnumerable<GroupTeacher> Get(int groupId)
+        public IEnumerable<LessonGroupTeacher> Get(int groupId)
         {
-            return _context.GroupTeacher
-                .Include(gt => gt.Group)
-                .Include(gt => gt.Teacher)
-                .Include(gt => gt.Subject)
-                .Where(gt => gt.Group.Id == groupId);
+            return _context.LessonGroupTeachers
+                .Include(lgt => lgt.LessonGroup.Group)
+                .Include(lgt => lgt.Teacher)
+                .Include(lgt => lgt.LessonGroup.Subject)
+                .Where(lgt => lgt.LessonGroup.GroupId == groupId);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace API.Services
 		}
 		public IEnumerable<Models.Group> GetAll() 
 		{
-			return _context.Group.Include(x=>x.Speciality);
+			return _context.Groups;
 		}
 	}
 }

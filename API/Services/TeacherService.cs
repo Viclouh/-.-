@@ -13,7 +13,7 @@ namespace API.Services
         }
         public List<Teacher> GetAll()
         {
-            return _context.Teacher.ToList();
+            return _context.Teachers.ToList();
         }
     }
 }
