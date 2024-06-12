@@ -5,7 +5,6 @@
         public int Id { get; set; }
         public int LessonNumber { get; set; }
         public int ScheduleId { get; set; }
-        public int RnnId { get; set; }
         public bool IsRemote { get; set; }
         public int DayOfWeek { get; set; }
         public int WeekOrderNumber { get; set; }

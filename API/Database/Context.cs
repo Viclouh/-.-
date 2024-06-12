@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Database
 {
-	public class Context : DbContext
-	{
+    public class Context : DbContext
+    {
         public DbSet<ScheduleStatus> ScheduleStatuses { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
@@ -58,6 +58,13 @@ namespace API.Database
             //        new Speciality{Id = 9, Name="08.01.18"},
             //        new Speciality{Id = 10, Name="15.01.31"},
             //    });
+            modelBuilder.Entity<ScheduleStatus>().HasData(
+                new ScheduleStatus[]
+                    {
+                        new ScheduleStatus{Id=1, Name="Завершенное"},
+                        new ScheduleStatus{Id=2, Name="Черновик"}
+                    }
+                );
         }
     }
 }
