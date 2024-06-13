@@ -22,7 +22,8 @@ namespace API
             builder.Services.AddDbContext<Database.Context>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetSection("Database").GetConnectionString("DefaultConnection"));
-            });
+                //options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }, ServiceLifetime.Transient);
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -58,6 +59,7 @@ namespace API
             builder.Services.AddScoped<AudienceService>();
             builder.Services.AddScoped<WeekService>();
             builder.Services.AddScoped<GroupTeacherService>();
+            builder.Services.AddScoped<ParserService>();
 
             builder.Services.AddCors(options =>
             {
