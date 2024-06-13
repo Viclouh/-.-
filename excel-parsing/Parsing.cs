@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using API.Models;
+using API.Database;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Office.Interop.Excel;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Runtime.CompilerServices;
@@ -13,7 +15,7 @@ using System.Net.Http.Headers;
 using System.Diagnostics;
 using Range = Microsoft.Office.Interop.Excel.Range;
 
-namespace excel_parcing
+namespace excel_parsing
 {
     public class ParseConfig
     {
@@ -29,9 +31,11 @@ namespace excel_parcing
         private Schedule Schedule;
 
         private ParseConfig _config;
-        public Parsing(string path, int department, Schedule schedule)
+        private Context _context;
+        public Parsing(string path, int department, Schedule schedule, Context context)
         {
             Department = department;
+            _context = context;
             Schedule = schedule;
             var str = LevenshteinDistance("Введение в прф. деятельность", "Введение в проф. деятельность");
             var str1 = LevenshteinDistance("Введение в проф. деятельность", "Введение в проф. деятельность");
@@ -104,7 +108,7 @@ namespace excel_parcing
             //System.Runtime.InteropServices.Marshal.ReleaseComObject(Application);
         }
         //парсинг всей информации
-        public List<Task> ParseAllDataAsync()
+        public bool ParseAllDataAsync()
         {
             object rOnly = true;
             object SaveChanges = false;
@@ -136,31 +140,30 @@ namespace excel_parcing
                 {
                     task.Start();
                 }
-
-                return tasks;
+                Task.WaitAll(tasks.ToArray());
+                ParseLessonGroupTeachers();
+                ParseLessons();
+                _context.Teachers.AddRange(Teachers);
+                _context.Groups.AddRange(Groups);
+                _context.Classrooms.AddRange(Classrooms);
+                _context.Subjects.AddRange(Subjects);
+                _context.LessonGroups.AddRange(LessonGroups);
+                _context.LessonGroupTeachers.AddRange(LessonGroupTeachers);
+                _context.Lessons.AddRange(Lessons);
+                return true;
             }
 
-            return null;
+            return false;
 
         }
-        //вывод всех данных
-        //public void OutputAllData()
-        //{
-        //    CoursesPasport();
-        //    GroupsPasport();
-        //    TeachersPassport();
-        //    CabinetsPassport();
-        //    SubjectsPassport();
-        //    lessonPassport();
-        //}
-        //парсинг направлений и групп
+
         public void ParseGroups()
         {
             int CourseId = 1;
             int lastRow = _config.StartRow + _config.CountRows;
             for (int i = 3; i <= lastRow; i++)
             {
-                Range CellRange = UsedRange[9, i];
+                Range CellRange = UsedRange[9, i] as Range;
                 string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
                     (CellRange as Excel.Range).Value2.ToString();
                 if (CellText == null)
@@ -198,7 +201,7 @@ namespace excel_parcing
             {
                 for (int y = _config.StartRow; y < _config.CountRows; y++)
                 {
-                    Range CellRange = UsedRange.Cells[y, x];
+                    Range CellRange = UsedRange.Cells[y, x] as Range;
                     string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
                         (CellRange).Value2.ToString();
                     if (CellText == null)
@@ -243,7 +246,7 @@ namespace excel_parcing
             {
                 for (int y = 10; y < 159; y++)
                 {
-                    Range CellRange = UsedRange.Cells[y, x];
+                    Range CellRange = UsedRange.Cells[y, x] as Range;
                     string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
                         (CellRange as Excel.Range).Value2.ToString();
                     if (CellText == null)
@@ -283,9 +286,9 @@ namespace excel_parcing
                 {
                     if (_config.SkipRows.Contains(y))
                         y++;
-
-                    Range CellRange = UsedRange.Cells[y, x];
-                    Range NextCellRange = UsedRange.Cells[y + 1, x];
+                    Range cellRange = UsedRange.Cells[y, x] as Range;
+                    Range CellRange = UsedRange.Cells[y, x] as Range;
+                    Range NextCellRange = UsedRange.Cells[y + 1, x] as Range;
 
                     string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
                         (CellRange as Excel.Range).Value2.ToString();
@@ -297,7 +300,7 @@ namespace excel_parcing
 
                     MatchCollection cabMatches = regCab.Matches(s);
                     MatchCollection teacherMatches = regTeacher.Matches(s);
-                    if (CellRange.Borders[Excel.XlBordersIndex.xlEdgeTop].Weight == 2)
+                    if ((double)CellRange.Borders[Excel.XlBordersIndex.xlEdgeTop].Weight == 2)
                     {
                         continue;
                     }
@@ -329,52 +332,11 @@ namespace excel_parcing
 
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public void ParseLessonGroupTeachers()
         {
             for (int x = 3; x < 36; x++)
             {
-                API.Models.Group group = GetGroup(UsedRange.Cells[9, x].Value2 == null ? "" : UsedRange.Cells[9, x].Value2.ToString());
+                API.Models.Group group = GetGroup((UsedRange.Cells[9, x] as Range).Value2 == null ? "" : (UsedRange.Cells[9, x] as Range).Value2.ToString());
                 for (int y = 10; y < 159;)
                 {
                     string s = "";
@@ -383,16 +345,16 @@ namespace excel_parcing
                     for (int i = 0; i < 4; i++)
                     {
                         isOne = true;
-                        Range CellRange = UsedRange.Cells[y, x];
+                        Range CellRange = UsedRange.Cells[y, x] as Range;
                         //-4138
                         s += CellRange.Value2 == null ? "" : CellRange.Value2.ToString() + " ";
                         if (i == 1)
                         {
-                            if (CellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].Weight == -4138)
+                            if ((double)CellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].Weight == -4138)
                             {
                                 isOne = false;
-                                s1 += UsedRange.Cells[y + 1, x].Value2 == null ? "" : UsedRange.Cells[y + 1, x].Value2.ToString() + " ";
-                                s1 += UsedRange.Cells[y + 2, x].Value2 == null ? "" : UsedRange.Cells[y + 2, x].Value2.ToString() + " ";
+                                s1 += (UsedRange.Cells[y + 1, x] as Range).Value2 == null ? "" : (UsedRange.Cells[y + 1, x] as Range).Value2.ToString() + " ";
+                                s1 += (UsedRange.Cells[y + 2, x] as Range).Value2 == null ? "" : (UsedRange.Cells[y + 2, x] as Range).Value2.ToString() + " ";
                                 y += 3;
                                 break;
                             }
@@ -461,7 +423,7 @@ namespace excel_parcing
                                     }
                                 }
                             }
-                            
+
                         }
                     }
                 }
@@ -483,7 +445,7 @@ namespace excel_parcing
             int lessonNumber = 1;
             for (int x = 3; x < 36; x++)
             {
-                API.Models.Group group = GetGroup(UsedRange.Cells[9, x].Value2 == null ? "" : UsedRange.Cells[9, x].Value2.ToString());
+                API.Models.Group group = GetGroup((UsedRange.Cells[9, x] as Range).Value2 == null ? "" : (UsedRange.Cells[9, x] as Range).Value2.ToString());
                 int weekday = 1;
                 for (int y = 10; y < 159;)
                 {
@@ -493,16 +455,16 @@ namespace excel_parcing
                     for (int i = 0; i < 4; i++)
                     {
                         isOne = true;
-                        Range CellRange = UsedRange.Cells[y, x];
+                        Range CellRange = UsedRange.Cells[y, x] as Range;
                         //-4138
                         s += CellRange.Value2 == null ? "" : CellRange.Value2.ToString() + " ";
                         if (i == 1)
                         {
-                            if (CellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].Weight == -4138)
+                            if ((double)CellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].Weight == -4138)
                             {
                                 isOne = false;
-                                s1 += UsedRange.Cells[y + 1, x].Value2 == null ? "" : UsedRange.Cells[y + 1, x].Value2.ToString() + " ";
-                                s1 += UsedRange.Cells[y + 2, x].Value2 == null ? "" : UsedRange.Cells[y + 2, x].Value2.ToString() + " ";
+                                s1 += (UsedRange.Cells[y + 1, x] as Range).Value2 == null ? "" : (UsedRange.Cells[y + 1, x] as Range).Value2.ToString() + " ";
+                                s1 += (UsedRange.Cells[y + 2, x] as Range).Value2 == null ? "" : (UsedRange.Cells[y + 2, x] as Range).Value2.ToString() + " ";
                                 y += 3;
                                 break;
                             }
@@ -558,40 +520,6 @@ namespace excel_parcing
 
         }
 
-    
-        //public void ParseTeacherSubject()
-        //{
-        //    foreach (var item in Lessons)
-        //    {
-        //        for (int i = 0; i < item.Count; i++)
-        //        {
-        //            TeacherSubject ts;
-        //            if (i == 0)
-        //            {
-        //                ts = new TeacherSubject()
-        //                {
-        //                    Teacher = item.Teachers[i],
-        //                    Subject = item.Subject
-        //                };
-        //            }
-        //            else
-        //            {
-        //                ts = new TeacherSubject()
-        //                {
-        //                    Teacher = item.Teachers[i],
-        //                    Subject = item.Subject
-        //                };
-        //            }
-        //            if (Teacher_Subjects.Where(x => x.Teacher == ts.Teacher && x.Subject == ts.Subject).Count() == 0)
-        //            {
-        //                Teacher_Subjects.Add(ts);
-        //            }
-        //        }
-        //    }
-        //    Console.WriteLine("[Finished] парсинг урок-препод");
-        //}
-
-
         public List<Teacher> GetTeacher(string CellText)
         {
 
@@ -644,18 +572,6 @@ namespace excel_parcing
             }
             return null;
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
         private Subject GetOrCreate(string word)
         {
@@ -716,49 +632,5 @@ namespace excel_parcing
             return distance[currentRow, m];
         }
 
-        //вывод всех направлений
-        //public void CoursesPasport()
-        //{
-        //    Console.WriteLine("Направления");
-        //    foreach (Course course in Courses)
-        //        Console.WriteLine($"{course.Id.ToString()} {course.Name} {course.Shortname}");
-        //}
-        ////вывод всех групп
-        //public void GroupsPasport()
-        //{
-        //    Console.WriteLine("Группы");
-        //    foreach (var group in Groups)
-        //        Console.WriteLine($"{group.Id.ToString()} {group.Name}");
-        //}
-        ////вывод всех преподов
-        //public void TeachersPassport()
-        //{
-        //    Console.WriteLine("Преподаватели");
-        //    //Teachers = Teachers.OrderBy(x=>x.Surname).ToList();
-        //    foreach (Teacher teacher in Teachers)
-        //        Console.WriteLine($"{teacher.Id} {teacher.Surname} {teacher.Name} {teacher.Patronymic}");
-        //}
-        ////вывод всех кабинетов
-        //public void CabinetsPassport()
-        //{
-        //    Console.WriteLine("Кабинеты");
-        //    foreach (Cabinet cabinet in Cabinets)
-        //        Console.WriteLine($"{cabinet.Id} {cabinet.Number}");
-        //}
-        //public void SubjectsPassport()
-        //{
-        //    Console.WriteLine("Предметы");
-        //    foreach (Subject subject in Subjects)
-        //        Console.WriteLine($"{subject.Id} {subject.Name}");
-        //}
-        //public void lessonPassport()
-        //{
-        //    Console.WriteLine("Пары");
-        //    foreach (Main_Lesson main_Lesson in Main_Lessons)
-        //    {
-        //        Console.WriteLine($"{main_Lesson.Weekday} {main_Lesson.LessonNumber} {main_Lesson.Group.Speciality.Shortname}-{main_Lesson.Group.Name} {main_Lesson.Subject.Name}" +
-        //            $" {(main_Lesson.Audience == null ? "" : main_Lesson.Audience.Number)}");
-        //    }
-        //}
     }
 }
