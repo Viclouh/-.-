@@ -22,7 +22,8 @@ namespace API
             builder.Services.AddDbContext<Database.Context>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetSection("Database").GetConnectionString("DefaultConnection"));
-            });
+                //options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }, ServiceLifetime.Transient);
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

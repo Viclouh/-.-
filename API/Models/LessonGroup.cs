@@ -1,9 +1,11 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.RegularExpressions;
 
 namespace API.Models
 {
     public class LessonGroup
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int SubjectId { get; set; }
         public int GroupId { get; set; }

@@ -1,7 +1,10 @@
-﻿namespace API.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace API.Models
 {
     public class LessonGroupTeacher
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int LessonGroupId { get; set; }
         public int TeacherId { get; set; }

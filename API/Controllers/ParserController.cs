@@ -14,10 +14,10 @@ namespace API.Controllers
             _ParserService = ParserService;
         }
 
-        //[HttpGet]
-        //public IActionResult Parse(string base64, int year, int semester, int statusId, int department)
-        //{
-        //    //return StatusCode(200, _ParserService.Parse(base64, year, semester, statusId, department));
-        //}
+        [HttpPost]
+        public IActionResult Parse([FromBody]string base64, int year, int semester, int statusId, int department)
+        {
+            return StatusCode(200, _ParserService.Parse(base64, year, semester, statusId, department));
+        }
     }
 }

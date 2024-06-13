@@ -15,7 +15,7 @@ using System.Net.Http.Headers;
 using System.Diagnostics;
 using Range = Microsoft.Office.Interop.Excel.Range;
 
-namespace excel_parsing
+namespace API
 {
     public class ParseConfig
     {
@@ -147,9 +147,13 @@ namespace excel_parsing
                 _context.Groups.AddRange(Groups);
                 _context.Classrooms.AddRange(Classrooms);
                 _context.Subjects.AddRange(Subjects);
+                _context.SaveChanges();
                 _context.LessonGroups.AddRange(LessonGroups);
-                _context.LessonGroupTeachers.AddRange(LessonGroupTeachers);
+                _context.SaveChanges();
                 _context.Lessons.AddRange(Lessons);
+                _context.SaveChanges();
+                _context.LessonGroupTeachers.AddRange(LessonGroupTeachers);
+                _context.SaveChanges();
                 return true;
             }
 
@@ -157,7 +161,7 @@ namespace excel_parsing
 
         }
 
-        public void ParseGroups()
+        public async void ParseGroups()
         {
             int CourseId = 1;
             int lastRow = _config.StartRow + _config.CountRows;
@@ -182,16 +186,19 @@ namespace excel_parsing
                 //	CourseId++;
                 //}
                 //Course CurrentCourse = Courses.Where(x => x.Name == group[0]).FirstOrDefault();
-                Groups.Add(new API.Models.Group
+                if (!Groups.Any(g => g.Department == Department && g.GroupCode == CellText))
                 {
-                    Department = Department,
-                    GroupCode = CellText
-                });
+                    Groups.Add(new API.Models.Group
+                    {
+                        Department = Department,
+                        GroupCode = CellText
+                    });
+                }
             }
             Console.WriteLine("[Finished] парсинг направлений и групп");
         }
         //парсинг преподов
-        public void ParseTeachers()
+        public async void ParseTeachers()
         {
             int teacherId = 1;
             Regex regex = new Regex(@"[А-ЯЁа-яё\-]+ [А-ЯЁ]\.\s*[А-ЯЁ]\.*");
@@ -225,7 +232,6 @@ namespace excel_parsing
                         }
                         Teachers.Add(new Teacher
                         {
-                            Id = teacherId,
                             LastName = s[0],
                             FirstName = s[1],
                             MiddleName = s[2]
@@ -238,7 +244,7 @@ namespace excel_parsing
 
         }
         //парсинг кабинетов
-        public void ParseCabinets()
+        public async void ParseCabinets()
         {
             int cabinetId = 1;
             Regex regex = new Regex(@"ауд\.\s*\d+");
@@ -265,7 +271,6 @@ namespace excel_parsing
                         {
                             Classrooms.Add(new Classroom
                             {
-                                Id = cabinetId,
                                 Number = s[1],
                             });
                             cabinetId++;
@@ -300,7 +305,7 @@ namespace excel_parsing
 
                     MatchCollection cabMatches = regCab.Matches(s);
                     MatchCollection teacherMatches = regTeacher.Matches(s);
-                    if ((double)CellRange.Borders[Excel.XlBordersIndex.xlEdgeTop].Weight == 2)
+                    if ((Int32)CellRange.Borders[Excel.XlBordersIndex.xlEdgeTop].Weight == 2)
                     {
                         continue;
                     }
@@ -332,7 +337,7 @@ namespace excel_parsing
 
         }
 
-        public void ParseLessonGroupTeachers()
+        public async void ParseLessonGroupTeachers()
         {
             for (int x = 3; x < 36; x++)
             {
@@ -350,7 +355,7 @@ namespace excel_parsing
                         s += CellRange.Value2 == null ? "" : CellRange.Value2.ToString() + " ";
                         if (i == 1)
                         {
-                            if ((double)CellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].Weight == -4138)
+                            if ((Int32)CellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].Weight == -4138)
                             {
                                 isOne = false;
                                 s1 += (UsedRange.Cells[y + 1, x] as Range).Value2 == null ? "" : (UsedRange.Cells[y + 1, x] as Range).Value2.ToString() + " ";
@@ -366,7 +371,7 @@ namespace excel_parsing
                         if (!string.IsNullOrEmpty(s))
                         {
                             var subject = GetSubject(s);
-                            if (LessonGroups.FirstOrDefault(lg => lg.Group == group && lg.Subject == subject) == null)
+                            if (!LessonGroups.Any(lg => lg.Group == group && lg.Subject == subject))
                             {
                                 var lessonGroup = new LessonGroup
                                 {
@@ -378,15 +383,16 @@ namespace excel_parsing
                                 LessonGroups.Add(lessonGroup);
 
                                 var teachers = GetTeacher(s);
-                                for (int i = 0; i < teachers.Count(); i++)
+                                foreach (var teacher in teachers)
                                 {
                                     var lessonGroupTeacher = new LessonGroupTeacher
                                     {
                                         LessonGroup = lessonGroup,
-                                        Teacher = teachers[i],
-                                        IsMain = i == 0 ? true : false
+                                        Teacher = teacher,
+                                        Subgroup = 1,
+                                        IsMain = teachers.IndexOf(teacher) == 0
                                     };
-                                    if (LessonGroupTeachers.FirstOrDefault(lgt => lgt.LessonGroup == lessonGroup && lgt.Teacher == teachers[i] && lgt.IsMain == lessonGroupTeacher.IsMain) == null)
+                                    if (!LessonGroupTeachers.Any(lgt => lgt.LessonGroup == lessonGroup && lgt.Teacher == teacher && lgt.IsMain == lessonGroupTeacher.IsMain))
                                     {
                                         LessonGroupTeachers.Add(lessonGroupTeacher);
                                     }
@@ -397,7 +403,7 @@ namespace excel_parsing
                         if (!string.IsNullOrEmpty(s1))
                         {
                             Subject subject = GetSubject(s1);
-                            if (LessonGroups.FirstOrDefault(lg => lg.Group == group && lg.Subject == subject) == null)
+                            if (!LessonGroups.Any(lg => lg.Group == group && lg.Subject == subject))
                             {
                                 var lessonGroup = new LessonGroup
                                 {
@@ -409,19 +415,21 @@ namespace excel_parsing
                                 LessonGroups.Add(lessonGroup);
 
                                 var teachers = GetTeacher(s1);
-                                for (int i = 0; i < teachers.Count(); i++)
+                                foreach(var teacher in teachers)
                                 {
                                     var lessonGroupTeacher = new LessonGroupTeacher
                                     {
                                         LessonGroup = lessonGroup,
-                                        Teacher = teachers[i],
-                                        IsMain = i == 0 ? true : false
+                                        Teacher = teacher,
+                                        IsMain = teachers.IndexOf(teacher) == 0,
+                                        Subgroup = 1,
                                     };
-                                    if (LessonGroupTeachers.FirstOrDefault(lgt => lgt.LessonGroup == lessonGroup && lgt.Teacher == teachers[i] && lgt.IsMain == lessonGroupTeacher.IsMain) == null)
+                                    if (!LessonGroupTeachers.Any(lgt => lgt.LessonGroup == lessonGroup && lgt.Teacher == teacher && lgt.IsMain == lessonGroupTeacher.IsMain))
                                     {
                                         LessonGroupTeachers.Add(lessonGroupTeacher);
                                     }
                                 }
+
                             }
 
                         }
@@ -460,7 +468,7 @@ namespace excel_parsing
                         s += CellRange.Value2 == null ? "" : CellRange.Value2.ToString() + " ";
                         if (i == 1)
                         {
-                            if ((double)CellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].Weight == -4138)
+                            if ((Int32)CellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].Weight == -4138)
                             {
                                 isOne = false;
                                 s1 += (UsedRange.Cells[y + 1, x] as Range).Value2 == null ? "" : (UsedRange.Cells[y + 1, x] as Range).Value2.ToString() + " ";
@@ -479,32 +487,39 @@ namespace excel_parsing
                             Classroom cab = GetClassroom(s);
                             Subject subject = GetSubject(s);
                             var weekNumber = 0;
-                            Lessons.Add(new Lesson
+                            if (LessonGroups.Any(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject))
                             {
-                                Classroom = cab,
-                                IsRemote = false,
-                                Schedule = Schedule,
-                                LessonGroup = LessonGroups.FirstOrDefault(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject),
-                                LessonNumber = lessonNumber,
-                                DayOfWeek = weekday,
-                                WeekOrderNumber = weekNumber,
-                            });
+                                Lessons.Add(new Lesson
+                                {
+                                    Classroom = cab,
+                                    IsRemote = false,
+                                    Schedule = Schedule,
+                                    LessonGroup = LessonGroups.FirstOrDefault(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject),
+                                    LessonNumber = lessonNumber,
+                                    DayOfWeek = weekday,
+                                    WeekOrderNumber = weekNumber,
+                                });
+                            }
+
                         }
                         if (!string.IsNullOrEmpty(s1))
                         {
                             Console.WriteLine($"{weekday} {lessonNumber} {s1}");
                             Classroom cab = GetClassroom(s1);
                             Subject subject = GetSubject(s1);
-                            Lessons.Add(new Lesson
+                            if (LessonGroups.Any(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject))
                             {
-                                Classroom = cab,
-                                IsRemote = false,
-                                LessonNumber = lessonNumber,
-                                DayOfWeek = weekday,
-                                WeekOrderNumber = 1,
-                                Schedule = Schedule,
-                                LessonGroup = LessonGroups.FirstOrDefault(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject)
-                            });
+                                Lessons.Add(new Lesson
+                                {
+                                    Classroom = cab,
+                                    IsRemote = false,
+                                    LessonNumber = lessonNumber,
+                                    DayOfWeek = weekday,
+                                    WeekOrderNumber = 1,
+                                    Schedule = Schedule,
+                                    LessonGroup = LessonGroups.FirstOrDefault(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject)
+                                });
+                            }
                         }
                     }
                     lessonNumber++;
