@@ -83,5 +83,22 @@ namespace API.Controllers
             }
             return StatusCode(400, "could not find format mode");
         }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            if (_LessonService.Delete(id) != 0)
+                return StatusCode(200, id);
+            else
+                return StatusCode(400, 0);
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] LessonDTO lesson, [FromBody]Schedule schedule, [FromBody]List<dynamic> teachers)
+        {
+            Lesson newLesson = _LessonService.Post(lesson, schedule, teachers);
+
+            return StatusCode(200, _mapper.Map<LessonDTO>(newLesson));
+        }
     }
 }

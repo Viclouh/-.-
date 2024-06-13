@@ -1,5 +1,5 @@
-﻿using API.Models;
-
+﻿using API.DTO;
+using API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -81,5 +81,80 @@ namespace API.Services
             }
             return null;
 		}
+
+        public int Delete(int id)
+        {
+            var item = _context.Lessons.FirstOrDefault(l => l.Id == id);
+            if (item == null)
+            {
+                return 0;
+            }
+
+            _context.Lessons.Remove(item);
+            _context.SaveChanges();
+            return id;
+        }
+
+        public Lesson Post(LessonDTO lesson, Schedule schedule, List<dynamic> teachers)
+        {
+            LessonGroup lessonGroup;
+            if (_context.LessonGroups
+                .Include(lg => lg.Group)
+                .Include(lg => lg.Subject)
+                .Any(lg => lg.SubjectId == lesson.Subject.Id && lg.Group.Id == lesson.Group.Id && lg.ScheduleType == "1"))
+            {
+                lessonGroup = _context.LessonGroups
+                .Include(lg => lg.Group)
+                .Include(lg => lg.Subject)
+                .FirstOrDefault(lg => lg.SubjectId == lesson.Subject.Id && lg.Group.Id == lesson.Group.Id && lg.ScheduleType == "1");
+            }
+            else
+            {
+                lessonGroup = new LessonGroup()
+                {
+                    GroupId = lesson.Group.Id,
+                    SubjectId = lesson.Subject.Id,
+                    ScheduleType = "1"
+                };
+                _context.LessonGroups.Add(lessonGroup);
+                _context.SaveChanges();
+            }
+
+            var newLesson = new Lesson
+            {
+                LessonNumber = lesson.LessonNumber,
+                DayOfWeek = lesson.Weekday,
+                IsRemote = lesson.isDistantce,
+                WeekOrderNumber = lesson.WeekNumber,
+                ClassroomId = lesson.Audience != null ? lesson.Audience.Id : null,
+                ScheduleId = schedule.Id,
+                LessonGroup = lessonGroup
+            };
+
+            _context.Lessons.Add(newLesson);
+
+            foreach (var teacher in teachers)
+            {
+                var lessonGroupTeacher = new LessonGroupTeacher()
+                {
+                    TeacherId = teacher.Id,
+                    LessonGroup = lessonGroup,
+                    Subgroup = (teachers.IndexOf(teacher) == 2 && teacher.IsMain) ? 2 : 1,
+                    IsMain = teacher.IsMain
+                };
+                if (!_context.LessonGroupTeachers
+                    .Any(lgt => lgt.TeacherId == lessonGroupTeacher.TeacherId 
+                    && lgt.LessonGroup == lessonGroupTeacher.LessonGroup
+                    && lgt.Subgroup == lessonGroupTeacher.Subgroup
+                    && lgt.IsMain == lessonGroupTeacher.IsMain))
+                {
+                    _context.LessonGroupTeachers.Add(lessonGroupTeacher);
+                }
+            }
+
+            _context.SaveChanges();
+
+            return newLesson;
+        }
     }
 }
