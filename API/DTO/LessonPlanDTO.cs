@@ -12,7 +12,7 @@ namespace API.DTO
         public bool isDistantce { get; set; }
         public IEnumerable<Teacher> Teachers { get; set; }
         public Subject Subject { get; set; }
-        public ClassroomType? Audience { get; set; }
+        public Classroom? Audience { get; set; }
         public Group Group { get; set; }
     }
 }

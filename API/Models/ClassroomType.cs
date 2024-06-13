@@ -8,6 +8,6 @@ namespace API.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<Classroom> Classrooms { get; set; }
+        //public ICollection<Classroom> Classrooms { get; set; }
     }
 }

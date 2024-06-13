@@ -11,6 +11,6 @@ namespace API.Models
         public int ScheduleStatusId { get; set; }
 
         public ScheduleStatus ScheduleStatus { get; set; }
-        public ICollection<Lesson> Lessons { get; set; }
+        //public ICollection<Lesson> Lessons { get; set; }
     }
 }

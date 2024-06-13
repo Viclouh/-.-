@@ -10,7 +10,7 @@ namespace API.Models
         public int? ClassroomTypeId { get; set; }
 
         public ClassroomType? ClassroomType { get; set; }
-        public ICollection<Lesson> Lessons { get; set; }
-        public ICollection<Change> Changes { get; set; }
+        //public ICollection<Lesson> Lessons { get; set; }
+        //public ICollection<Change> Changes { get; set; }
     }
 }

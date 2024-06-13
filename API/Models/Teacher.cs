@@ -10,7 +10,7 @@ namespace API.Models
         public string LastName { get; set; }
         public string MiddleName { get; set; }
 
-        public ICollection<TeacherSubject> TeacherSubjects { get; set; }
-        public ICollection<LessonGroupTeacher> LessonGroupTeachers { get; set; }
+        //public ICollection<TeacherSubject> TeacherSubjects { get; set; }
+        //public ICollection<LessonGroupTeacher> LessonGroupTeachers { get; set; }
     }
 }

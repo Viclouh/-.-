@@ -15,6 +15,11 @@ namespace API
             CreateMap<Lesson, LessonDTO>()
                 .ForMember(dest => dest.Teachers, opt => opt.MapFrom(src => src.LessonGroup.LessonGroupTeachers.Select(i => i.Teacher)))
                 .ForMember(dest => dest.Audience, opt => opt.MapFrom(src => src.Classroom))
+                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.LessonGroup.Group))
+                .ForMember(dest => dest.WeekNumber, opt => opt.MapFrom(src => src.WeekOrderNumber))
+                .ForMember(dest => dest.Weekday, opt => opt.MapFrom(src => src.DayOfWeek))
+                .ForMember(dest => dest.isDistantce, opt => opt.MapFrom(src => src.IsRemote))
+                .ForMember(dest => dest.Subject, opt => opt.MapFrom(src => src.LessonGroup.Subject))
                 .ReverseMap();
 
             CreateMap<Lesson, LessonForMobileDTO>()

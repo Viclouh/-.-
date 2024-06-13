@@ -9,7 +9,7 @@ namespace API.Models
         public string Name { get; set; }
         public string ShortName { get; set; }
 
-        public ICollection<TeacherSubject> TeacherSubjects { get; set; }
-        public ICollection<LessonGroup> LessonGroups { get; set; }
+        //public ICollection<TeacherSubject> TeacherSubjects { get; set; }
+        //public ICollection<LessonGroup> LessonGroups { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace API.Models
         public int Department { get; set; }
         public string GroupCode { get; set; }
 
-        public ICollection<LessonGroup> LessonGroups { get; set; }
+        //public ICollection<LessonGroup> LessonGroups { get; set; }
     }
 }
