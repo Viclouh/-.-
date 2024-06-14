@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace API.Services
 {
-    public class LessonService 
+    public class LessonService
     {
         private Database.Context _context;
         public LessonService(Database.Context context)
@@ -37,13 +37,13 @@ namespace API.Services
 
             if (teacherId.HasValue)
             {
-                query = query.Where(item => item.LessonGroup.LessonGroupTeachers.Any(lgt=> lgt.TeacherId == teacherId.Value))
+                query = query.Where(item => item.LessonGroup.LessonGroupTeachers.Any(lgt => lgt.TeacherId == teacherId.Value))
                     .OrderByDescending(l => l.LessonGroup.LessonGroupTeachers.Any(lgt => lgt.TeacherId == teacherId.Value && lgt.IsMain));
             }
 
             if (groupId.HasValue)
             {
-                query = query.Where(item => item.LessonGroup.GroupId== groupId.Value);
+                query = query.Where(item => item.LessonGroup.GroupId == groupId.Value);
             }
 
             if (classroom.HasValue)
@@ -66,7 +66,7 @@ namespace API.Services
             {
                 return lesson;
             }
-            if(_context.Groups.Where(g => g.Id == groupId).FirstOrDefault()!=null)
+            if (_context.Groups.Where(g => g.Id == groupId).FirstOrDefault() != null)
             {
                 return new Lesson
                 {
@@ -75,12 +75,12 @@ namespace API.Services
                     LessonNumber = lessonNumber,
                     LessonGroup = new LessonGroup()
                     {
-                        GroupId = _context.Groups.Where(g => g.Id == groupId ).FirstOrDefault().Id
+                        GroupId = _context.Groups.Where(g => g.Id == groupId).FirstOrDefault().Id
                     }
                 };
             }
             return null;
-		}
+        }
 
         public int Delete(int id)
         {
@@ -143,7 +143,7 @@ namespace API.Services
                     IsMain = teacher.IsMain
                 };
                 if (!_context.LessonGroupTeachers
-                    .Any(lgt => lgt.TeacherId == lessonGroupTeacher.TeacherId 
+                    .Any(lgt => lgt.TeacherId == lessonGroupTeacher.TeacherId
                     && lgt.LessonGroup == lessonGroupTeacher.LessonGroup
                     && lgt.Subgroup == lessonGroupTeacher.Subgroup
                     && lgt.IsMain == lessonGroupTeacher.IsMain))
@@ -155,6 +155,40 @@ namespace API.Services
             _context.SaveChanges();
 
             return newLesson;
+        }
+
+        public Lesson Put(LessonDTO lesson, List<dynamic> teachers)
+        {
+            var updatedLesson = GetAllWithIncludes().FirstOrDefault(l => l.Id == lesson.Id);
+
+            updatedLesson.LessonNumber = lesson.LessonNumber;
+            updatedLesson.IsRemote = lesson.isDistantce;
+            updatedLesson.WeekOrderNumber = lesson.WeekNumber;
+            updatedLesson.ClassroomId = lesson.Audience.Id;
+
+            var lessonGroup = updatedLesson.LessonGroup;
+
+            lessonGroup.SubjectId = lesson.Subject.Id;
+
+            _context.LessonGroupTeachers.RemoveRange(lessonGroup.LessonGroupTeachers);
+
+            foreach (var teacher in teachers)
+            {
+                var lessonGroupTeacher = new LessonGroupTeacher()
+                {
+                    TeacherId = teacher.Id,
+                    LessonGroup = lessonGroup,
+                    Subgroup = (teachers.IndexOf(teacher) == 2 && teacher.IsMain) ? 2 : 1,
+                    IsMain = teacher.IsMain
+                };
+
+                _context.LessonGroupTeachers.Add(lessonGroupTeacher);
+            }
+
+            _context.Lessons.Update(updatedLesson);
+            _context.LessonGroups.Update(lessonGroup);
+            _context.SaveChanges();
+            return updatedLesson;
         }
     }
 }
