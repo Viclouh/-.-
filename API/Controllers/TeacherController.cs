@@ -17,37 +17,37 @@ namespace API.Controllers
             _teacherService = teacherService;
         }
 
-
-        // GET: api/<TeacherController>
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
         {
-            return StatusCode(200,_teacherService.GetAll());
+            return StatusCode(200, _teacherService.Get(id));
         }
 
-        // GET api/<TeacherController>/5|
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet]
+        public IActionResult Get(string? query)
         {
-            return "value";
+            return StatusCode(200, _teacherService.Get(query));
         }
 
         // POST api/<TeacherController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] Teacher value)
         {
+            return StatusCode(200, _teacherService.Post(value));
         }
 
-        // PUT api/<TeacherController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/<TeacherController>
+        [HttpPut]
+        public IActionResult Put([FromBody] Teacher teacher)
         {
+            return StatusCode(200, _teacherService.Put(teacher));
         }
 
         // DELETE api/<TeacherController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            return StatusCode(200, _teacherService.Delete(id));
         }
     }
 }

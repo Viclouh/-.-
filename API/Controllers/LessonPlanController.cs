@@ -100,5 +100,12 @@ namespace API.Controllers
 
             return StatusCode(200, _mapper.Map<LessonDTO>(newLesson));
         }
+
+        [HttpPut]
+        public IActionResult Put([FromBody](LessonDTO lesson, List<dynamic> teachers) data)
+        {
+            Lesson newLesson = _LessonService.Put(data.lesson, data.teachers);
+            return StatusCode(200, _mapper.Map<LessonDTO>(newLesson));
+        }
     }
 }
