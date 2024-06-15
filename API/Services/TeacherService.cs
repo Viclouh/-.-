@@ -30,7 +30,7 @@ namespace API.Services
 
             return _context.Teachers.Where(t => t.LastName.ToLower().Contains(query.ToLower())
             || t.FirstName.ToLower().Contains(query.ToLower())
-            || t.MiddleName.ToLower().Contains(query.ToLower())).OrderBy(t => t.Surname).ToList();
+            || t.MiddleName.ToLower().Contains(query.ToLower())).OrderBy(t => t.LastName).ToList();
         }
 
         public Teacher Put(Teacher newTeacher)
