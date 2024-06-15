@@ -70,9 +70,9 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("Search")]
-        public IActionResult Search(int? teacherId, int? groupId, int? audienceId, string formatting = "Standard")
+        public IActionResult Search(int? teacherId, int? groupId, int? audienceId, int? scheduleId, int? department, string formatting = "Standard")
         {
-            IEnumerable<Lesson> lessons = _LessonService.Search(teacherId, groupId, audienceId);
+            IEnumerable<Lesson> lessons = _LessonService.Search(teacherId, groupId, audienceId, scheduleId, department);
             switch (formatting)
             {
                 case "Standard":

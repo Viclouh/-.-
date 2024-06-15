@@ -30,10 +30,19 @@ namespace API.Services
         {
             return GetAllWithIncludes();
         }
-        public IEnumerable<Lesson> Search(int? teacherId, int? groupId, int? classroom)
+        public IEnumerable<Lesson> Search(int? teacherId, int? groupId, int? classroom, int? scheduleId, int? department)
         {
             IQueryable<Lesson> query = GetAllWithIncludes()
                 .AsNoTracking();
+            if (scheduleId.HasValue)
+            {
+                query = query.Where(item => item.ScheduleId == scheduleId);
+            }
+
+            if (department.HasValue)
+            {
+                query = query.Where(item => item.LessonGroup.Group.Department == department);
+            }
 
             if (teacherId.HasValue)
             {

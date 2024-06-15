@@ -37,10 +37,27 @@ namespace API
             Department = department;
             _context = context;
             Schedule = schedule;
-            var str = LevenshteinDistance("Введение в прф. деятельность", "Введение в проф. деятельность");
-            var str1 = LevenshteinDistance("Введение в проф. деятельность", "Введение в проф. деятельность");
-            var str2 = LevenshteinDistance("Введение в проф деятельность", "Введение в проф. деятельность");
-            var str3 = LevenshteinDistance("Ввведение в проф деятельность", "Введение в проф. деятельность");
+
+            Classrooms = context.Classrooms.ToList();
+            Groups = context.Groups.ToList();
+            Subjects = context.Subjects.ToList();
+            Teachers = context.Teachers.ToList();
+            Teacher_Subjects = context.TeacherSubjects.Include(ts => ts.Teacher).Include(ts => ts.Subject).ToList();
+            Lessons = context.Lessons.Include(l => l.LessonGroup)
+                    .ThenInclude(lg => lg.LessonGroupTeachers)
+                    .ThenInclude(lgt => lgt.Teacher)
+                .Include(l => l.LessonGroup)
+                    .ThenInclude(lg => lg.Group)
+                .Include(l => l.LessonGroup)
+                    .ThenInclude(lg => lg.Subject)
+                .Include(ls => ls.Classroom)
+                    .ThenInclude(r => r.ClassroomType).ToList();
+            LessonGroups = context.LessonGroups.Include(lg => lg.Group).Include(lg => lg.Subject).ToList();
+            LessonGroupTeachers = context.LessonGroupTeachers
+                .Include(lg => lg.Teacher)
+                .Include(lg => lg.LessonGroup)
+                .ThenInclude(lg => lg.Group)
+                .Include(lg => lg.LessonGroup).ThenInclude(lg => lg.Subject).ToList();
 
             Path = path;
             _config = new ParseConfig
@@ -54,18 +71,14 @@ namespace API
         }
 
         public string Path { get; set; }
-        public List<Classroom> Classrooms = new List<Classroom>();
-        //public List<Course> Courses = new List<Course>();
-        public List<API.Models.Group> Groups = new List<API.Models.Group>();
-        public List<Subject> Subjects = new List<Subject>();
-        public List<Teacher> Teachers = new List<Teacher>();
-        //public List<GroupTeacher> GroupTeachers = new List<GroupTeacher>();
-        public List<TeacherSubject> Teacher_Subjects = new List<TeacherSubject>();
-        public List<Lesson> Lessons = new List<Lesson>();
-        public List<LessonGroup> LessonGroups = new List<LessonGroup>();
-        public List<LessonGroupTeacher> LessonGroupTeachers = new List<LessonGroupTeacher>();
-        //public List<Main_Teacher_Lesson> Main_Teacher_Lessons = new List<Main_Teacher_Lesson>();
-        //public List<LessonTeacher> LessonTeachers = new List<LessonTeacher>();
+        public List<Classroom> Classrooms;
+        public List<API.Models.Group> Groups;
+        public List<Subject> Subjects;
+        public List<Teacher> Teachers;
+        public List<TeacherSubject> Teacher_Subjects;
+        public List<Lesson> Lessons;
+        public List<LessonGroup> LessonGroups;
+        public List<LessonGroupTeacher> LessonGroupTeachers;
         Excel.Range UsedRange = null;
         Excel.Application Application = null;
         Excel.Workbook Workbook = null;
@@ -143,16 +156,19 @@ namespace API
                 Task.WaitAll(tasks.ToArray());
                 ParseLessonGroupTeachers();
                 ParseLessons();
-                _context.Teachers.AddRange(Teachers);
-                _context.Groups.AddRange(Groups);
-                _context.Classrooms.AddRange(Classrooms);
-                _context.Subjects.AddRange(Subjects);
+                ParseTeacherSubjects();
+                _context.Teachers.AddRange(Teachers.Where(t => t.Id == 0));
+                _context.Groups.AddRange(Groups.Where(t => t.Id == 0));
+                _context.Classrooms.AddRange(Classrooms.Where(t => t.Id == 0));
+                _context.Subjects.AddRange(Subjects.Where(t => t.Id == 0));
                 _context.SaveChanges();
-                _context.LessonGroups.AddRange(LessonGroups);
+                _context.LessonGroups.AddRange(LessonGroups.Where(t => t.Id == 0));
                 _context.SaveChanges();
-                _context.Lessons.AddRange(Lessons);
+                _context.Lessons.AddRange(Lessons.Where(t => t.Id == 0));
                 _context.SaveChanges();
-                _context.LessonGroupTeachers.AddRange(LessonGroupTeachers);
+                _context.LessonGroupTeachers.AddRange(LessonGroupTeachers.Where(t => t.Id == 0));
+                _context.SaveChanges();
+                _context.TeacherSubjects.AddRange(Teacher_Subjects.Where(t => t.Id == 0));
                 _context.SaveChanges();
                 return true;
             }
@@ -174,18 +190,7 @@ namespace API
                 {
                     continue;
                 }
-                //string[] group = CellText.Split(new char[] { '-' });
-                //            if (Courses.Where(x => x.Shortname == group[0]).FirstOrDefault() == null)
-                //            {
-                //	Courses.Add(new Course
-                //	{
-                //		Id = CourseId,
-                //		Name = group[0],
-                //		Shortname = group[0]
-                //	});
-                //	CourseId++;
-                //}
-                //Course CurrentCourse = Courses.Where(x => x.Name == group[0]).FirstOrDefault();
+
                 if (!Groups.Any(g => g.Department == Department && g.GroupCode == CellText))
                 {
                     Groups.Add(new API.Models.Group
@@ -486,15 +491,18 @@ namespace API
                             Console.WriteLine($"{weekday} {lessonNumber} {s}");
                             Classroom cab = GetClassroom(s);
                             Subject subject = GetSubject(s);
+                            var lessonGroup = LessonGroups.FirstOrDefault(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject);
                             var weekNumber = 0;
-                            if (LessonGroups.Any(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject))
+                            if (LessonGroups.Any(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject) 
+                                && !Lessons.Any(l => l.Schedule == Schedule && l.DayOfWeek == weekday 
+                                    && l.WeekOrderNumber == weekNumber && l.LessonNumber == lessonNumber && l.LessonGroup == lessonGroup))
                             {
                                 Lessons.Add(new Lesson
                                 {
                                     Classroom = cab,
                                     IsRemote = false,
                                     Schedule = Schedule,
-                                    LessonGroup = LessonGroups.FirstOrDefault(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject),
+                                    LessonGroup = lessonGroup,
                                     LessonNumber = lessonNumber,
                                     DayOfWeek = weekday,
                                     WeekOrderNumber = weekNumber,
@@ -507,7 +515,10 @@ namespace API
                             Console.WriteLine($"{weekday} {lessonNumber} {s1}");
                             Classroom cab = GetClassroom(s1);
                             Subject subject = GetSubject(s1);
-                            if (LessonGroups.Any(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject))
+                            var lessonGroup = LessonGroups.FirstOrDefault(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject);
+                            if (LessonGroups.Any(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject)
+                                && !Lessons.Any(l => l.Schedule == Schedule && l.DayOfWeek == weekday
+                                    && l.WeekOrderNumber == 1 && l.LessonNumber == lessonNumber && l.LessonGroup == lessonGroup))
                             {
                                 Lessons.Add(new Lesson
                                 {
@@ -517,7 +528,7 @@ namespace API
                                     DayOfWeek = weekday,
                                     WeekOrderNumber = 1,
                                     Schedule = Schedule,
-                                    LessonGroup = LessonGroups.FirstOrDefault(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject)
+                                    LessonGroup = lessonGroup
                                 });
                             }
                         }
@@ -645,6 +656,21 @@ namespace API
                 }
             }
             return distance[currentRow, m];
+        }
+
+        private void ParseTeacherSubjects()
+        {
+            foreach (var lgt in LessonGroupTeachers)
+            {
+                if (!Teacher_Subjects.Any(ts => ts.TeacherId == lgt.Teacher.Id && ts.Subject.Id == lgt.LessonGroup.Subject.Id))
+                {
+                    Teacher_Subjects.Add(new TeacherSubject
+                    {
+                        Teacher = lgt.Teacher,
+                        Subject = lgt.LessonGroup.Subject
+                    });
+                }
+            }
         }
 
     }

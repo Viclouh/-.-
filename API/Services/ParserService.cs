@@ -15,13 +15,21 @@ namespace API.Services
         {
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "file.xls");
             File.WriteAllBytes(path, Convert.FromBase64String(base64));
-            var schedule = new Schedule
+            Schedule schedule;
+            if (!_context.Schedules.Any(s => s.AcademicYear == year && s.Semester == semester && s.ScheduleStatusId == statusId))
             {
-                AcademicYear = year,
-                Semester = semester,
-                ScheduleStatusId = statusId,
-            };
-            _context.Schedules.Add(schedule);
+                schedule = new Schedule
+                {
+                    AcademicYear = year,
+                    Semester = semester,
+                    ScheduleStatusId = statusId,
+                };
+                _context.Schedules.Add(schedule);
+            }
+            else
+            {
+                schedule = _context.Schedules.FirstOrDefault(s => s.AcademicYear == year && s.Semester == semester && s.ScheduleStatusId == statusId);
+            }
             Parsing parsing = new Parsing(path, department, schedule, _context);
             var result = parsing.ParseAllDataAsync();
             parsing.CloseApp();
