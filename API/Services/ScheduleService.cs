@@ -13,7 +13,7 @@ namespace API.Services
 
         public IEnumerable<Schedule> Get()
         {
-            return _context.Schedules.Include(s => s.ScheduleStatus);
+            return _context.Schedules.Include(s => s.ScheduleStatus).Include(s => s.Lessons);
         }
     }
 }
