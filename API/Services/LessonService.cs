@@ -179,32 +179,32 @@ namespace API.Services
             return newLesson;
         }
 
-        public Lesson Put(LessonDTO lesson, List<dynamic> teachers)
+        public Lesson Put(LessonWithTeachersDTO lesson)
         {
-            var updatedLesson = GetAllWithIncludes().FirstOrDefault(l => l.Id == lesson.Id);
+            var updatedLesson = GetAllWithIncludes().FirstOrDefault(l => l.Id == lesson.Lesson.Id);
 
             if (updatedLesson == null)
             {
                 throw new Exception("Lesson not found");
             }
 
-            updatedLesson.LessonNumber = lesson.LessonNumber;
-            updatedLesson.IsRemote = lesson.isDistantce;
-            updatedLesson.WeekOrderNumber = lesson.WeekNumber;
-            updatedLesson.ClassroomId = lesson.Audience.Id;
+            updatedLesson.LessonNumber = lesson.Lesson.LessonNumber;
+            updatedLesson.IsRemote = lesson.Lesson.isDistantce;
+            updatedLesson.WeekOrderNumber = lesson.Lesson.WeekNumber;
+            updatedLesson.ClassroomId = lesson.Lesson.Audience.Id;
 
             var lessonGroup = updatedLesson.LessonGroup;
-            lessonGroup.SubjectId = lesson.Subject.Id;
+            lessonGroup.SubjectId = lesson.Lesson.Subject.Id;
 
             _context.LessonGroupTeachers.RemoveRange(lessonGroup.LessonGroupTeachers);
 
-            foreach (var teacher in teachers)
+            foreach (var teacher in lesson.Teachers)
             {
                 var lessonGroupTeacher = new LessonGroupTeacher()
                 {
                     TeacherId = teacher.Id,
                     LessonGroup = lessonGroup,
-                    Subgroup = (teachers.IndexOf(teacher) == 2 && teacher.IsMain) ? 2 : 1,
+                    Subgroup = (lesson.Teachers.IndexOf(teacher) == 2 && teacher.IsMain) ? 2 : 1,
                     IsMain = teacher.IsMain
                 };
 
@@ -216,13 +216,13 @@ namespace API.Services
             _context.SaveChanges();
 
             // Создание сообщения об изменениях
-            string changeMessage = _notificationService.GetScheduleChangeMessage(lesson.WeekNumber, lesson.Weekday);
+            string changeMessage = _notificationService.GetScheduleChangeMessage(lesson.Lesson.WeekNumber+1, lesson.Lesson.Weekday);
 
             // Отправка уведомлений для группы
-            _notificationService.SendNotificationAsync(changeMessage, "group", lessonGroup.Id.ToString());
+            _notificationService.SendNotificationAsync(changeMessage, "group", lessonGroup.Group.GroupCode);
 
             // Отправка уведомлений для каждого преподавателя
-            foreach (var teacher in teachers)
+            foreach (var teacher in lesson.Teachers)
             {
                 _notificationService.SendNotificationAsync(changeMessage, "teacher", teacher.Id.ToString());
             }

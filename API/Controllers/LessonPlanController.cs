@@ -102,9 +102,9 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody](LessonDTO lesson, List<dynamic> teachers) data)
+        public IActionResult Put([FromBody]LessonWithTeachersDTO lesson)
         {
-            Lesson newLesson = _LessonService.Put(data.lesson, data.teachers);
+            Lesson newLesson = _LessonService.Put(lesson);
             return StatusCode(200, _mapper.Map<LessonDTO>(newLesson));
         }
 
