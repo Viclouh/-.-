@@ -1,4 +1,6 @@
-﻿using API.Services;
+﻿using API.Models;
+using API.DTO;
+using API.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -14,10 +16,26 @@ namespace API.Controllers
             _groupTeacherService = groupTeacherService;
         }
 
-        [HttpGet("{groupId}")]
-        public IActionResult Get(int groupId)
+        [HttpGet]
+        public IActionResult Get(int? groupId, int? teacherId)
         {
-            return StatusCode(200, _groupTeacherService.Get(groupId).ToList());
+            return StatusCode(200, _groupTeacherService.Get(groupId, teacherId).ToList());
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            if (_groupTeacherService.Delete(id))
+            {
+                return StatusCode(200, id);
+            }
+            return StatusCode(400);
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody]GroupTeacherDTO groupTeacher)
+        {
+            return StatusCode(200, _groupTeacherService.Post(groupTeacher));
         }
     }
 }
