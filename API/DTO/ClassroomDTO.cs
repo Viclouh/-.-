@@ -2,10 +2,10 @@
 
 namespace API.DTO
 {
-    public class AudienceDTO
+    public class ClassroomDTO
     {
         public int Id { get; set; }
         public string Number { get; set; }
-        public AudienceType? AudienceType { get; set; }
+        public string Type { get; set; }
     }
 }

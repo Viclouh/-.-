@@ -12,12 +12,16 @@
 
   <ItemGroup>
     <Compile Remove="DTO\Новая папка\**" />
+    <Compile Remove="Helpers\**" />
     <Compile Remove="Repository\**" />
     <Content Remove="DTO\Новая папка\**" />
+    <Content Remove="Helpers\**" />
     <Content Remove="Repository\**" />
     <EmbeddedResource Remove="DTO\Новая папка\**" />
+    <EmbeddedResource Remove="Helpers\**" />
     <EmbeddedResource Remove="Repository\**" />
     <None Remove="DTO\Новая папка\**" />
+    <None Remove="Helpers\**" />
     <None Remove="Repository\**" />
   </ItemGroup>
 
@@ -28,7 +32,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageReference Include="iTextSharp" Version="5.5.13.3" />
+    <PackageReference Include="itext7" Version="8.0.4" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.13" />
@@ -41,14 +46,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.4" />
+    <PackageReference Include="MicrosoftOfficeCore" Version="15.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\Auth\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

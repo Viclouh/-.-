@@ -13,7 +13,7 @@ namespace API.Services
 
         public List<Subject> GetAll()
         {
-            return _context.Subject.ToList();
+            return _context.Subjects.ToList();
         }
     }
 }

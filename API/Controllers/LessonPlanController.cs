@@ -13,14 +13,14 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LessonPlanController : ControllerBase
+    public class LessonController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly LessonPlanService _lessonPlanService;
+        private readonly LessonService _LessonService;
 
-        public LessonPlanController(LessonPlanService lessonPlanService, IMapper mapper)
+        public LessonController(LessonService LessonService, IMapper mapper)
         {
-            _lessonPlanService = lessonPlanService;
+            _LessonService = LessonService;
             _mapper = mapper;
         }
 
@@ -31,19 +31,19 @@ namespace API.Controllers
             {
                 case "Standard":
                     {
-                        List<LessonPlanDTO> lessons = new List<LessonPlanDTO>();
-                        foreach (var item in _lessonPlanService.GetAll())
+                        List<LessonDTO> lessons = new List<LessonDTO>();
+                        foreach (var item in _LessonService.GetAll())
                         {
-                            lessons.Add(_mapper.Map<LessonPlanDTO>(item));
+                            lessons.Add(_mapper.Map<LessonDTO>(item));
                         }
                         return StatusCode(200, lessons);
                     }
                 case "MobileApp":
                     {
-                        List<LessonPlanForMobileDTO> lessons = new List<LessonPlanForMobileDTO>();
-                        foreach (var item in _lessonPlanService.GetAll())
+                        List<LessonForMobileDTO> lessons = new List<LessonForMobileDTO>();
+                        foreach (var item in _LessonService.GetAll())
                         {
-                            lessons.Add(_mapper.Map<LessonPlanForMobileDTO>(item));
+                            lessons.Add(_mapper.Map<LessonForMobileDTO>(item));
                         }
                         return StatusCode(200, lessons);
                     }
@@ -68,12 +68,12 @@ namespace API.Controllers
         [HttpGet("WithParams")]
         public IActionResult GetByParameters(
             [FromQuery][Required] int weekday,
-            [FromQuery][Required] int groupId,
-            [FromQuery][Required] int weekNumber,
-            [FromQuery][Required] int lessonNumber)
-        {
-            LessonPlanDTO lesson = _mapper.Map<LessonPlanDTO>(_lessonPlanService.GetByParameters(weekday, groupId, weekNumber, lessonNumber));
-            if (lesson == null || weekday < 1 || weekday > 7 || lessonNumber < 1 || lessonNumber > 6 || weekNumber > 1 || weekNumber < 0)
+			[FromQuery][Required] int groupId,
+			[FromQuery][Required] int weekNumber,
+			[FromQuery][Required] int lessonNumber)
+		{
+            LessonDTO lesson = _mapper.Map<LessonDTO>(_LessonService.GetByParameters(weekday, groupId, weekNumber, lessonNumber));
+            if(lesson == null || weekday<1 || weekday>7 ||lessonNumber < 1||lessonNumber>6 || weekNumber > 1 || weekNumber < 0)
             {
                 return StatusCode(400);
             }
@@ -83,16 +83,16 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("Search")]
-        public IActionResult Search(int? teacherId, int? groupId, int? audienceId, string formatting = "Standard")
+        public IActionResult Search(int? teacherId, int? groupId, int? audienceId, int? scheduleId, int? department, string formatting = "Standard")
         {
-            IEnumerable<LessonPlan> lessons = _lessonPlanService.Search(teacherId, groupId, audienceId);
+            IEnumerable<Lesson> lessons = _LessonService.Search(teacherId, groupId, audienceId, scheduleId, department);
             switch (formatting)
             {
                 case "Standard":
-                    return StatusCode(200, lessons.Select(item => _mapper.Map<LessonPlanDTO>(item)));
+                    return StatusCode(200, lessons.Select(item => _mapper.Map<LessonDTO>(item)));
 
                 case "MobileApp":
-                    return StatusCode(200, lessons.Select(item => _mapper.Map<LessonPlanForMobileDTO>(item)));
+                    return StatusCode(200, lessons.Select(item => _mapper.Map<LessonForMobileDTO>(item)));
             }
             return StatusCode(400, "could not find format mode");
         }
@@ -100,27 +100,39 @@ namespace API.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            if (_lessonPlanService.Delete(id))
+            if (_LessonService.Delete(id) != 0)
                 return StatusCode(200, id);
             else
-                return StatusCode(400);
+                return StatusCode(400, 0);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] LessonPlanDTO lesson)
+        public IActionResult Post([FromBody](LessonDTO lesson, Schedule schedule, List<dynamic> teachers) data)
         {
-            LessonPlan newLesson = _lessonPlanService.Post(lesson);
+            Lesson newLesson = _LessonService.Post(data.lesson, data.schedule, data.teachers);
 
-
-            return StatusCode(200, _mapper.Map<LessonPlanDTO>(newLesson));
+            return StatusCode(200, _mapper.Map<LessonDTO>(newLesson));
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] LessonPlanDTO lesson)
+        public IActionResult Put([FromBody]LessonWithTeachersDTO lesson)
         {
-            LessonPlan newLesson = _lessonPlanService.Put(lesson);
+            Lesson newLesson = _LessonService.Put(lesson);
+            return StatusCode(200, _mapper.Map<LessonDTO>(newLesson));
+        }
 
-            return StatusCode(200, _mapper.Map<LessonPlanDTO>(newLesson));
+        [HttpGet("Pdf")]
+        public IActionResult GetLessonPlanPdf(int? teacherId, int? groupId)
+        {
+            try
+            {
+                return StatusCode(200, _LessonService.GetPDF(teacherId, groupId));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message + "\n" + ex.StackTrace.ToString());
+            }
+
         }
     }
 }
