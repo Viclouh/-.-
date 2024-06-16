@@ -22,7 +22,6 @@ namespace API
             builder.Services.AddDbContext<Database.Context>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetSection("Database").GetConnectionString("DefaultConnection"));
-                //options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }, ServiceLifetime.Transient);
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -63,6 +62,12 @@ namespace API
             builder.Services.AddScoped<ScheduleService>();
             builder.Services.AddScoped<SubjectService>();
             builder.Services.AddScoped<TeacherSubjectService>();
+            builder.Services.AddScoped<LessonGroupService>();
+
+            builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
 
             builder.Services.AddCors(options =>
             {
