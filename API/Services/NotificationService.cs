@@ -16,7 +16,7 @@ namespace API.Services
             client.DefaultRequestHeaders.Add("Authorization", "Basic NjkzM2ViNWUtMGViNC00MWUxLWI1YjItMzViOGZhZjMyYzE4");
         }
 
-        public async Task<HttpResponseMessage> SendNotificationAsync(string message, string tagKey, string tagValue)
+        public async Task<HttpResponseMessage> SendNotificationAsync(string message, string tagKey, int tagValue)
         {
             var notificationContent = new
             {
@@ -34,7 +34,7 @@ namespace API.Services
             if (date.HasValue)
             {
                 // Формируем сообщение с использованием даты
-                return $"У вас изменение в расписании на {date.Value:dd.MM.yyyy}.";
+                return $"У вас временное изменение в расписании на {date.Value:dd.MM.yyyy}.";
             }
 
             // Словарь для соответствия номера дня недели его названию на русском языке
@@ -58,7 +58,7 @@ namespace API.Services
             string dayName = dayNames[weekday];
 
             // Формируем сообщение
-            return $"У вас изменение в расписании. В {dayName} {weekNumber} недели.";
+            return $"У вас изменение в расписании в {dayName} {weekNumber} недели.";
         }
     }
 }

@@ -219,12 +219,12 @@ namespace API.Services
             string changeMessage = _notificationService.GetScheduleChangeMessage(lesson.Lesson.WeekNumber+1, lesson.Lesson.Weekday);
 
             // Отправка уведомлений для группы
-            _notificationService.SendNotificationAsync(changeMessage, "group", lessonGroup.Group.GroupCode);
+            _notificationService.SendNotificationAsync(changeMessage, "group", lessonGroup.Group.Id);
 
             // Отправка уведомлений для каждого преподавателя
             foreach (var teacher in lesson.Teachers)
             {
-                _notificationService.SendNotificationAsync(changeMessage, "teacher", teacher.Id.ToString());
+                _notificationService.SendNotificationAsync(changeMessage, "teacher", teacher.Id);
             }
 
             return updatedLesson;

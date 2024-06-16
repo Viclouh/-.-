@@ -5,6 +5,6 @@
         public string CustomKey { get; set; }
         public string Message { get; set; }
         public string TagKey { get; set; }
-        public string TagValue { get; set; }
+        public int TagValue { get; set; }
     }
 }
