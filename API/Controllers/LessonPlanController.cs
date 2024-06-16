@@ -107,5 +107,19 @@ namespace API.Controllers
             Lesson newLesson = _LessonService.Put(data.lesson, data.teachers);
             return StatusCode(200, _mapper.Map<LessonDTO>(newLesson));
         }
+
+        [HttpGet("Pdf")]
+        public IActionResult GetLessonPlanPdf(int? teacherId, int? groupId)
+        {
+            try
+            {
+                return StatusCode(200, _LessonService.GetPDF(teacherId, groupId));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message + "\n" + ex.StackTrace.ToString());
+            }
+
+        }
     }
 }

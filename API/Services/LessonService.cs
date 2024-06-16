@@ -2,6 +2,16 @@
 using API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Office.Interop.Excel;
+using System.Reflection.Metadata;
+using System.Text;
+using System.Xml.Linq;
+
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+
+using Document = iTextSharp.text.Document;
+
 
 namespace API.Services
 {
@@ -198,6 +208,152 @@ namespace API.Services
             _context.LessonGroups.Update(lessonGroup);
             _context.SaveChanges();
             return updatedLesson;
+        }
+        public string GetPDF(int? teacherId, int? groupId)
+        {
+
+            iTextSharp.text.Document document = new Document();
+
+            // Используем относительный путь для выходного PDF
+
+            string desktopPath = AppDomain.CurrentDomain.BaseDirectory;
+            string outputPath = Path.Combine(desktopPath, "example_table.pdf");
+
+            PdfWriter.GetInstance(document, new FileStream(outputPath, FileMode.Create));
+            document.Open();
+
+            // Register the code pages encoding provider
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+
+            // Use the abstract path for the font file
+            string fontPath = Path.Combine(Directory.GetCurrentDirectory(), "Fonts", "arial.ttf");
+            BaseFont baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            iTextSharp.text.Font font = new (baseFont);
+
+
+
+            PdfPTable table = new PdfPTable(3);
+            float[] widths = new float[] { 0.5f, 2f, 2f }; // Первая колонка уже остальных
+
+            table.SetWidths(widths);
+            string[] week = { "ПОНЕДЕЛЬНИК", "ВТОРНИК", "СРЕДА", "ЧЕТВЕРГ", "ПЯТНИЦА", "СУББОТА" };
+            string[] paras = {
+                "1-2 (8:30-9:15;9:20-10:05)",
+                "3-4 (10:15-11:00; 11:05-11:50)",
+                "5-6 (12:00-12:45; 12:50-13:35)",
+                "7-8 (14:05-14:50; 14:55-15:40)",
+            "9-10 (15:45-16:30; 16:40-17:25)",
+            "11-12 (17:35-18:20; 18:25-19:10)"
+            };
+
+            string ss = "";
+
+            switch (teacherId, groupId)
+            {
+                case (null, not null):
+                    var group = _context.Groups
+                        .FirstOrDefault(x => x.Id == groupId);
+                    ss = $"{group.GroupCode}";
+                    break;
+
+                case (not null, null):
+                    var teacher = _context.Teachers.FirstOrDefault(t => t.Id == teacherId);
+                    ss = $"{teacher.FirstName} {teacher.MiddleName[0]}. {teacher.LastName[0]}.";
+                    break;
+            }
+
+
+            Paragraph title = new Paragraph(ss, font);
+            title.Alignment = Element.ALIGN_CENTER;
+            title.SpacingAfter = 20; // Отступ после заголовка
+            document.Add(title);
+
+            table.AddCell(new Phrase("Дни недели", font));
+            table.AddCell(new Phrase("Часы", font));
+            table.AddCell(new Phrase("Предметы", font));
+
+            // Добавление нескольких строк с данными
+            for (int i = 0; i < 6; i++)
+            {
+                //ячейка с днем недели
+                PdfPCell cell = new PdfPCell(new Phrase(week[i], font));
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                cell.Rowspan = 12;
+                cell.Rotation = 90;
+                table.AddCell(cell);
+                for (int j = 0; j < 6; j++)
+                {
+                    //ячейка с часами
+                    PdfPCell hoursCell = new PdfPCell(new Phrase(paras[j], font));
+                    hoursCell.Rowspan = 2;
+                    hoursCell.VerticalAlignment = Element.ALIGN_MIDDLE;
+                    table.AddCell(hoursCell);
+
+                    Lesson lesson = new Lesson();
+                    Lesson lesson1 = new Lesson();
+
+                    switch (teacherId, groupId)
+                    {
+                        case (null, not null):
+                            lesson = Search(null, groupId, null, null, null)
+                                .FirstOrDefault(lp => lp.DayOfWeek == i + 1 && lp.LessonNumber == j + 1 && lp.WeekOrderNumber == 0);
+                            lesson1 = Search(null, groupId, null, null, null)
+                                .FirstOrDefault(lp => lp.DayOfWeek == i + 1 && lp.LessonNumber == j + 1 && lp.WeekOrderNumber == 1);
+                            break;
+                        case (not null, null):
+                            lesson = Search(teacherId, null, null,null, null)
+                                .FirstOrDefault(lp => lp.DayOfWeek == i + 1 && lp.LessonNumber == j + 1 && lp.WeekOrderNumber == 0);
+                            lesson1 = Search(teacherId, null, null, null, null)
+                                .FirstOrDefault(lp => lp.DayOfWeek == i + 1 && lp.LessonNumber == j + 1 && lp.WeekOrderNumber == 1);
+                            break;
+                    }
+
+                    switch ((lesson, lesson1))
+                    {
+                        case (not null, not null):
+                            table.AddCell(new PdfPCell(new Phrase(groupId != null ? lesson.LessonGroup.Subject.Name : $"{lesson.LessonGroup.Group.GroupCode} {lesson.LessonGroup.Subject.Name}", font)));
+                            table.AddCell(new PdfPCell(new Phrase(groupId != null ? lesson.LessonGroup.Subject.Name : $"{lesson1.LessonGroup.Group.GroupCode}   {lesson1.LessonGroup.Subject.Name}", font)));
+                            break;
+
+                        case (not null, null):
+                            PdfPCell cell1 = new PdfPCell(new Phrase(groupId != null ? lesson.LessonGroup.Subject.Name : $"{lesson.LessonGroup.Group.GroupCode} {lesson.LessonGroup.Subject.Name}", font));
+                            cell1.Rowspan = 2;
+                            table.AddCell(cell1);
+                            break;
+
+                        case (null, not null):
+                            table.AddCell("  ");
+                            table.AddCell(new PdfPCell(new Phrase(groupId != null ? lesson1.LessonGroup.Subject.Name : $"{lesson1.LessonGroup.Group.GroupCode} {lesson1.LessonGroup.Subject.Name}", font)));
+                            break;
+
+                        case (null, null):
+                            PdfPCell cellEmpty = new PdfPCell(new Phrase("  ", font));
+                            cellEmpty.Rowspan = 2;
+                            table.AddCell(cellEmpty);
+                            break;
+                    }
+                }
+            }
+
+            // Добавление таблицы в документ
+            document.Add(table);
+
+            // Закрытие документа
+            document.Close();
+
+
+            byte[] pdfBytes = File.ReadAllBytes(outputPath);
+
+            // Преобразование массива байтов в строку Base64
+            string base64String = Convert.ToBase64String(pdfBytes);
+
+
+            return base64String;
+
+
+            Console.WriteLine("PDF файл с таблицей создан: " + outputPath);
         }
     }
 }
