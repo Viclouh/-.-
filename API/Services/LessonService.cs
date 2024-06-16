@@ -84,6 +84,8 @@ namespace API.Services
                 && l.WeekOrderNumber == weekNumber
                 && l.LessonNumber == lessonNumber)
                 .FirstOrDefault();
+
+           
             if (lesson != null)
             {
                 return lesson;
@@ -107,6 +109,13 @@ namespace API.Services
         public int Delete(int id)
         {
             var item = _context.Lessons.FirstOrDefault(l => l.Id == id);
+
+            List<Teacher> teachers = _context.LessonGroupTeachers
+       .Where(lgt => lgt.LessonGroupId == item.LessonGroupId)
+       .Select(lgt => lgt.Teacher)
+       .ToList();
+
+
             if (item == null)
             {
                 return 0;
@@ -114,6 +123,19 @@ namespace API.Services
 
             _context.Lessons.Remove(item);
             _context.SaveChanges();
+
+            // Создание сообщения об изменениях
+            string changeMessage = _notificationService.GetScheduleChangeMessage(item.WeekOrderNumber + 1, item.DayOfWeek);
+
+            // Отправка уведомлений для группы
+            _notificationService.SendNotificationAsync(changeMessage, "group", item.LessonGroup.Group.Id);
+
+            // Отправка уведомлений для каждого преподавателя
+            foreach (Teacher teacher in teachers)
+            {
+                _notificationService.SendNotificationAsync(changeMessage, "teacher", teacher.Id);
+            }
+
             return id;
         }
 
