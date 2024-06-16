@@ -11,6 +11,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 
 using Document = iTextSharp.text.Document;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace API.Services
@@ -18,8 +19,10 @@ namespace API.Services
     public class LessonService
     {
         private Database.Context _context;
-        public LessonService(Database.Context context)
+        private readonly NotificationService _notificationService;
+        public LessonService(NotificationService notificationService, Database.Context context)
         {
+            _notificationService = notificationService;
             _context = context;
         }
         private IQueryable<Lesson> GetAllWithIncludes()
@@ -180,13 +183,17 @@ namespace API.Services
         {
             var updatedLesson = GetAllWithIncludes().FirstOrDefault(l => l.Id == lesson.Id);
 
+            if (updatedLesson == null)
+            {
+                throw new Exception("Lesson not found");
+            }
+
             updatedLesson.LessonNumber = lesson.LessonNumber;
             updatedLesson.IsRemote = lesson.isDistantce;
             updatedLesson.WeekOrderNumber = lesson.WeekNumber;
             updatedLesson.ClassroomId = lesson.Audience.Id;
 
             var lessonGroup = updatedLesson.LessonGroup;
-
             lessonGroup.SubjectId = lesson.Subject.Id;
 
             _context.LessonGroupTeachers.RemoveRange(lessonGroup.LessonGroupTeachers);
@@ -204,12 +211,26 @@ namespace API.Services
                 _context.LessonGroupTeachers.Add(lessonGroupTeacher);
             }
 
-            _context.Lessons.Update(updatedLesson);
             _context.LessonGroups.Update(lessonGroup);
+            _context.Lessons.Update(updatedLesson);
             _context.SaveChanges();
+
+            // Создание сообщения об изменениях
+            string changeMessage = _notificationService.GetScheduleChangeMessage(lesson.WeekNumber, lesson.Weekday);
+
+            // Отправка уведомлений для группы
+            _notificationService.SendNotificationAsync(changeMessage, "group", lessonGroup.Id.ToString());
+
+            // Отправка уведомлений для каждого преподавателя
+            foreach (var teacher in teachers)
+            {
+                _notificationService.SendNotificationAsync(changeMessage, "teacher", teacher.Id.ToString());
+            }
+
             return updatedLesson;
         }
-        public string GetPDF(int? teacherId, int? groupId)
+    
+    public string GetPDF(int? teacherId, int? groupId)
         {
 
             iTextSharp.text.Document document = new Document();
