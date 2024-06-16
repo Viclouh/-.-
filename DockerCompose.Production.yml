@@ -13,15 +13,15 @@ services:
     container_name: AKVT.Raspisanie-API-prod
     restart: always
 
-  AKVT.Raspisanie-WEB-prod:
-    image: yomaya/akvt.raspisanie.web:prod
-    build: ./Web
-    environment:
-      - ASPNETCORE_URLS=http://+:80
-      - ASPNETCORE_ENVIRONMENT=Production
-    ports:
-      - '9091:80'
-      - '9098:443'
-    container_name: AKVT.Raspisanie-WEB-prod
-    restart: always
+  # AKVT.Raspisanie-WEB-prod:
+  #   image: yomaya/akvt.raspisanie.web:prod
+  #   build: ./Web
+  #   environment:
+  #     - ASPNETCORE_URLS=http://+:80
+  #     - ASPNETCORE_ENVIRONMENT=Production
+  #   ports:
+  #     - '9091:80'
+  #     - '9098:443'
+  #   container_name: AKVT.Raspisanie-WEB-prod
+  #   restart: always
 

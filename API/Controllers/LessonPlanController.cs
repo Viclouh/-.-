@@ -6,6 +6,7 @@ using AutoMapper;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers
@@ -24,7 +25,8 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll(string formatting = "Standard") {
+        public IActionResult GetAll(string formatting = "Standard")
+        {
             switch (formatting)
             {
                 case "Standard":
@@ -35,7 +37,6 @@ namespace API.Controllers
                             lessons.Add(_mapper.Map<LessonDTO>(item));
                         }
                         return StatusCode(200, lessons);
-                        break;
                     }
                 case "MobileApp":
                     {
@@ -45,15 +46,27 @@ namespace API.Controllers
                             lessons.Add(_mapper.Map<LessonForMobileDTO>(item));
                         }
                         return StatusCode(200, lessons);
-                        break;
                     }
             }
             return StatusCode(400);
-            
+
+        }
+        [HttpGet("{groupId}")]
+        public IActionResult GetLessonPlanByGroup(int? teacherId, int? groupId, int? audienceId)
+        {
+            try
+            {
+                return StatusCode(200, _lessonPlanService.GetPDF( teacherId, groupId, audienceId));
+            }
+            catch (Exception ex )
+            {
+                return StatusCode(500,ex.Message+"\n"+ex.StackTrace.ToString());
+            }
+
         }
 
-		[HttpGet("WithParams")]
-		public IActionResult GetByParameters(
+        [HttpGet("WithParams")]
+        public IActionResult GetByParameters(
             [FromQuery][Required] int weekday,
 			[FromQuery][Required] int groupId,
 			[FromQuery][Required] int weekNumber,
@@ -65,8 +78,8 @@ namespace API.Controllers
                 return StatusCode(400);
             }
             return StatusCode(200, lesson);
-		}
-	
+        }
+
 
         [HttpGet]
         [Route("Search")]

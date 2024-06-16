@@ -2,39 +2,69 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class LessonCard extends StatefulWidget {
-  int num_lesson;
-  DateTime start;
-  DateTime end;
-  String lesson;
-  String prepod;
-  int num_class;
+import '../DB/DB.dart';
 
-  LessonCard(
-      {super.key,
-      required this.num_lesson,
-      required this.start,
-      required this.end,
-      required this.lesson,
-      required this.num_class,
-      required this.prepod});
+class LessonCard extends StatefulWidget {
+
+
+  ParaDB paraDB;
+  LessonCard({super.key, required this.paraDB});
 
   @override
-  State<LessonCard> createState() => _LessonCardState(this.num_lesson,
-      this.start, this.end, this.lesson, this.num_class, this.prepod);
+  State<LessonCard> createState() => _LessonCardState(this.paraDB);
 }
 
 class _LessonCardState extends State<LessonCard> {
-  int num_lesson;
+  ParaDB paraDB;
 
-  DateTime start;
-  DateTime end;
-  String lesson;
-  String prepod;
-  int num_class;
+  _LessonCardState(this.paraDB){
+    FillTeachers();
+    SwitchNumLesson(paraDB.lessonNumber);
+    print(paraDB.audience.toString());
+  }
 
-  _LessonCardState(this.num_lesson, this.start, this.end, this.lesson,
-      this.num_class, this.prepod);
+  DateTime start = DateTime(1);
+  DateTime end = DateTime(1);
+  void SwitchNumLesson(num){
+    switch (num){
+      case 1:
+        start = DateTime.utc(1,1,1,8,30,0,0,0);
+        end = DateTime.utc(1,1,1,10,5,0,0,0);
+        break;
+      case 2:
+        start = DateTime.utc(1,1,1,10,15,0,0,0);
+        end = DateTime.utc(1,1,1,11,50,0,0,0);
+        break;
+      case 3:
+        start = DateTime.utc(1,1,1,12,20,0,0,0);
+        end = DateTime.utc(1,1,1,13,55,0,0,0);
+        break;
+      case 4:
+        start = DateTime.utc(1,1,1,14,10,0,0,0);
+        end = DateTime.utc(1,1,1,15,45,0,0,0);
+        break;
+      case 5:
+        start = DateTime.utc(1,1,1,15,55,0,0,0);
+        end = DateTime.utc(1,1,1,17,30,0,0,0);
+        break;
+      case 6:
+        start = DateTime.utc(1,1,1,17,40,0,0,0);
+        end = DateTime.utc(1,1,1,19,15,0,0,0);
+        break;
+      default:
+        start = DateTime.utc(1,1,1,0,0,0,0,0);
+        end = DateTime.utc(1,1,1,0,0,0,0,0);
+    }
+
+  }
+  List<String> teachers = [];
+  // String teachers = '';
+
+  void FillTeachers (){
+    paraDB.teachers?.forEach((element) {
+      teachers.add("${element.surname} ${element.name}.${element.patronymic}. ");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +98,7 @@ class _LessonCardState extends State<LessonCard> {
                               Center(
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                                    child: Text('$num_lesson',
+                                    child: Text(paraDB.lessonNumber.toString(),
                                         style: const TextStyle(
                                             fontSize: 16.0,
                                             fontFamily: 'Inter',
@@ -105,7 +135,7 @@ class _LessonCardState extends State<LessonCard> {
                     child: Padding(
                         padding: const EdgeInsets.fromLTRB(17, 16, 0, 0),
                         child: Expanded(
-                          child: Text('$lesson',
+                          child: Text(paraDB.subjectName.toString(),
                               style: const TextStyle(
                                   fontSize: 16.0,
                                   fontFamily: 'Ubuntu',
@@ -115,7 +145,7 @@ class _LessonCardState extends State<LessonCard> {
                 Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(17, 16, 0, 16),
+                      padding: const EdgeInsets.fromLTRB(12, 16, 0, 16),
                       child: Wrap(
                         spacing: 8.0,
                         runSpacing: 8.0,
@@ -133,28 +163,41 @@ class _LessonCardState extends State<LessonCard> {
                                   children: [
                                     Center(
                                         child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                                           child: SvgPicture.asset(
-                                            'lib/res/icons/user.svg',
-                                            color: const Color.fromRGBO(51, 51, 51, 1),
-                                            width: 24.0,
-                                            height: 24.0),
-                                      )
-                                    ),
-                                    Center(
-                                        child: Padding(
+                                              'lib/res/icons/user.svg',
+                                              color:  const Color.fromRGBO(51, 51, 51, 1),
+                                              width: 24.0,
+                                              height: 24.0),
+                                        )),
+                                    Padding(
                                           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                                          child: Text('$prepod',
-                                              style: const TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontFamily: 'Ubuntu',
-                                                  color: Color.fromRGBO(51, 51, 51, 1),
-                                                  fontWeight: FontWeight.normal)
-                                          ),
-                                      )
-                                    ),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              if(paraDB.teachers!.isNotEmpty)
+                                                for (String teacher in teachers) Text( teacher ,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontFamily: 'Ubuntu',
+                                                        color: Color.fromRGBO(51, 51, 51, 1),
+                                                        fontWeight: FontWeight.normal)
+                                                )
+                                              else const Text( 'Нет преподователя' ,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      fontFamily: 'Ubuntu',
+                                                      color: Color.fromRGBO(51, 51, 51, 1),
+                                                      fontWeight: FontWeight.normal)
+                                              )
+                                            ],
+                                          )
+                                    )
                                   ],
-                                )),
+                                )
+                            ),
                           ),
                           UnconstrainedBox(
                             child: Container(
@@ -179,12 +222,12 @@ class _LessonCardState extends State<LessonCard> {
                                     Center(
                                         child: Padding(
                                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                                      child: Text('$num_class',
-                                          style: const TextStyle(
-                                              fontSize: 16.0,
-                                              fontFamily: 'Ubuntu',
-                                              color:  Color.fromRGBO(51, 51, 51, 1),
-                                              fontWeight: FontWeight.normal)),
+                                          child: Text(paraDB.audience.toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontFamily: 'Ubuntu',
+                                                  color:  Color.fromRGBO(51, 51, 51, 1),
+                                                  fontWeight: FontWeight.normal)),
                                     )),
                                   ],
                                 )),
@@ -214,4 +257,6 @@ class _LessonCardState extends State<LessonCard> {
               ],
             )));
   }
+
+
 }

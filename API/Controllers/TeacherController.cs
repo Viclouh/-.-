@@ -33,21 +33,29 @@ namespace API.Controllers
         // POST api/<TeacherController>
         [HttpPost]
         public IActionResult Post([FromBody] Teacher value)
+        public IActionResult Post([FromBody] Teacher value)
         {
+            return StatusCode(200, _teacherService.Post(value));
             return StatusCode(200, _teacherService.Post(value));
         }
 
         // PUT api/<TeacherController>
         [HttpPut]
         public IActionResult Put([FromBody] Teacher teacher)
+        // PUT api/<TeacherController>
+        [HttpPut]
+        public IActionResult Put([FromBody] Teacher teacher)
         {
+            return StatusCode(200, _teacherService.Put(teacher));
             return StatusCode(200, _teacherService.Put(teacher));
         }
 
         // DELETE api/<TeacherController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
+            return StatusCode(200, _teacherService.Delete(id));
             return StatusCode(200, _teacherService.Delete(id));
         }
     }

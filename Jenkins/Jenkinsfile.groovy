@@ -2,11 +2,17 @@ def getProjEnv(branch){
     if(branch=='main'){
         return 'Production'
     }
+    if(branch=='test'){
+        return 'Test'
+    }
     return 'Development'
 }
 def getDockerVer(branch){
     if(branch=='main'){
         return 'prod'
+    }
+    if(branch=='test'){
+        return 'test'
     }
     return 'dev'
 }
@@ -40,16 +46,16 @@ pipeline {
             }
         }
 
-        stage('Build WEB') {
-            steps {
-                script {
-                    // ���� ��� ������ ������� WEB
-                    dir("${PROJECT_WEB}") {
-                        sh 'docker build -t ${dockerImageName_WEB} .'
-                    }
-                }
-            }
-        }
+        // stage('Build WEB') {
+        //     steps {
+        //         script {
+        //             // ���� ��� ������ ������� WEB
+        //             dir("${PROJECT_WEB}") {
+        //                 sh 'docker build -t ${dockerImageName_WEB} .'
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Clean and Start Docker Compose') {
             steps {
