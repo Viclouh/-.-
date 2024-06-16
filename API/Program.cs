@@ -57,7 +57,6 @@ namespace API
             builder.Services.AddScoped<TeacherService>();
             builder.Services.AddScoped<AudienceService>();
             builder.Services.AddScoped<WeekService>();
-            builder.Services.AddScoped<GroupTeacherService>();
             builder.Services.AddScoped<ParserService>();
             builder.Services.AddScoped<ScheduleService>();
             builder.Services.AddScoped<SubjectService>();
