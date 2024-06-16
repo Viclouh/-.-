@@ -6,7 +6,6 @@ using AutoMapper;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers
@@ -37,6 +36,7 @@ namespace API.Controllers
                             lessons.Add(_mapper.Map<LessonDTO>(item));
                         }
                         return StatusCode(200, lessons);
+                        break;
                     }
                 case "MobileApp":
                     {
@@ -46,34 +46,22 @@ namespace API.Controllers
                             lessons.Add(_mapper.Map<LessonForMobileDTO>(item));
                         }
                         return StatusCode(200, lessons);
+                        break;
                     }
             }
             return StatusCode(400);
-
-        }
-        [HttpGet("{groupId}")]
-        public IActionResult GetLessonPlanByGroup(int? teacherId, int? groupId, int? audienceId)
-        {
-            try
-            {
-                return StatusCode(200, _lessonPlanService.GetPDF( teacherId, groupId, audienceId));
-            }
-            catch (Exception ex )
-            {
-                return StatusCode(500,ex.Message+"\n"+ex.StackTrace.ToString());
-            }
 
         }
 
         [HttpGet("WithParams")]
         public IActionResult GetByParameters(
             [FromQuery][Required] int weekday,
-			[FromQuery][Required] int groupId,
-			[FromQuery][Required] int weekNumber,
-			[FromQuery][Required] int lessonNumber)
-		{
+            [FromQuery][Required] int groupId,
+            [FromQuery][Required] int weekNumber,
+            [FromQuery][Required] int lessonNumber)
+        {
             LessonDTO lesson = _mapper.Map<LessonDTO>(_LessonService.GetByParameters(weekday, groupId, weekNumber, lessonNumber));
-            if(lesson == null || weekday<1 || weekday>7 ||lessonNumber < 1||lessonNumber>6 || weekNumber > 1 || weekNumber < 0)
+            if (lesson == null || weekday < 1 || weekday > 7 || lessonNumber < 1 || lessonNumber > 6 || weekNumber > 1 || weekNumber < 0)
             {
                 return StatusCode(400);
             }
@@ -107,7 +95,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody](LessonDTO lesson, Schedule schedule, List<dynamic> teachers) data)
+        public IActionResult Post([FromBody] (LessonDTO lesson, Schedule schedule, List<dynamic> teachers) data)
         {
             Lesson newLesson = _LessonService.Post(data.lesson, data.schedule, data.teachers);
 
@@ -115,7 +103,7 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody]LessonWithTeachersDTO lesson)
+        public IActionResult Put([FromBody] LessonWithTeachersDTO lesson)
         {
             Lesson newLesson = _LessonService.Put(lesson);
             return StatusCode(200, _mapper.Map<LessonDTO>(newLesson));

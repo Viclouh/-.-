@@ -26,25 +26,25 @@ namespace API
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            
+
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        // ���������, ����� �� �������������� �������� ��� ��������� ������
+                        // указывает, будет ли валидироваться издатель при валидации токена
                         ValidateIssuer = true,
-                        // ������, �������������� ��������
+                        // строка, представляющая издателя
                         ValidIssuer = AuthOptions.ISSUER,
-                        // ����� �� �������������� ����������� ������
+                        // будет ли валидироваться потребитель токена
                         ValidateAudience = true,
-                        // ��������� ����������� ������
+                        // установка потребителя токена
                         ValidAudience = AuthOptions.AUDIENCE,
-                        // ����� �� �������������� ����� �������������
+                        // будет ли валидироваться время существования
                         ValidateLifetime = true,
-                        // ��������� ����� ������������
+                        // установка ключа безопасности
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        // ��������� ����� ������������
+                        // валидация ключа безопасности
                         ValidateIssuerSigningKey = true,
                     };
                 });
@@ -100,7 +100,7 @@ namespace API
                 });
 
 
-                // �������� ������������
+                // политика безопасности
                 c.OperationFilter<AuthorizationOperationFilter>();
             });
 
@@ -109,7 +109,7 @@ namespace API
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                
+
             }
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -129,9 +129,9 @@ namespace API
 
     public class AuthOptions
     {
-        public const string ISSUER = "AKVT.Raspisanie API"; // �������� ������
-        public const string AUDIENCE = "AKVT.Raspisanie Client"; // ����������� ������
-        const string KEY = "mysupersecret_secretkey!1233";   // ���� ��� ��������
+        public const string ISSUER = "AKVT.Raspisanie API"; // издатель токена
+        public const string AUDIENCE = "AKVT.Raspisanie Client"; // потребитель токена
+        const string KEY = "mysupersecret_secretkey!1233";   // ключ для шифрации
         public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
     }
