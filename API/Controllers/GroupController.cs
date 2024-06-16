@@ -18,10 +18,10 @@ namespace API.Controllers
 			_mapper= mapper;
 		}
 
-        [HttpGet]
-        public IActionResult Get(string? query)
-        {
-            return StatusCode(200, _groupService.Get(query));
-        }
-    }
+		[HttpGet]
+		public IActionResult GetAll()
+		{
+			return StatusCode(200, _groupService.GetAll().ToList());
+		}
+	}
 }

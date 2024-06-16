@@ -22,7 +22,7 @@ namespace API.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("API.Models.Change", b =>
+            modelBuilder.Entity("API.Models.Audience", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,42 +30,7 @@ namespace API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClassroomId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsCanceled")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsRemote")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("LessonGroupId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LessonNumber")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassroomId");
-
-                    b.HasIndex("LessonGroupId");
-
-                    b.ToTable("Changes");
-                });
-
-            modelBuilder.Entity("API.Models.Classroom", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClassroomTypeId")
+                    b.Property<int?>("AudienceTypeId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Number")
@@ -74,12 +39,12 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassroomTypeId");
+                    b.HasIndex("AudienceTypeId");
 
-                    b.ToTable("Classrooms");
+                    b.ToTable("Audience");
                 });
 
-            modelBuilder.Entity("API.Models.ClassroomType", b =>
+            modelBuilder.Entity("API.Models.AudienceType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,7 +58,7 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ClassroomTypes");
+                    b.ToTable("AudienceType");
                 });
 
             modelBuilder.Entity("API.Models.Group", b =>
@@ -104,62 +69,21 @@ namespace API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Department")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("GroupCode")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Groups");
-                });
-
-            modelBuilder.Entity("API.Models.Lesson", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClassroomId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsRemote")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("LessonGroupId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LessonNumber")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RnnId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ScheduleId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("WeekOrderNumber")
+                    b.Property<int>("SpecialityId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassroomId");
+                    b.HasIndex("SpecialityId");
 
-                    b.HasIndex("LessonGroupId");
-
-                    b.HasIndex("ScheduleId");
-
-                    b.ToTable("Lessons");
+                    b.ToTable("Group");
                 });
 
-            modelBuilder.Entity("API.Models.LessonGroup", b =>
+            modelBuilder.Entity("API.Models.GroupTeacher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -170,11 +94,13 @@ namespace API.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ScheduleType")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<bool>("IsGeneral")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("SubjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TeacherId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -183,32 +109,75 @@ namespace API.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.ToTable("LessonGroups");
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("GroupTeacher");
                 });
 
-            modelBuilder.Entity("API.Models.LessonGroupTeacher", b =>
+            modelBuilder.Entity("API.Models.LessonPlan", b =>
                 {
-                    b.Property<int>("LessonGroupId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AudienceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("LessonNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("WeekNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Weekday")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("isDistantce")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AudienceId");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("lesson_plan");
+                });
+
+            modelBuilder.Entity("API.Models.LessonTeacher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsGeneral")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("LessonId")
                         .HasColumnType("integer");
 
                     b.Property<int>("TeacherId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
+                    b.HasKey("Id");
 
-                    b.Property<bool>("IsMain")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Subgroup")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("LessonGroupId", "TeacherId");
+                    b.HasIndex("LessonId");
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("LessonGroupTeachers");
+                    b.ToTable("LessonTeacher");
                 });
 
             modelBuilder.Entity("API.Models.Role", b =>
@@ -228,7 +197,7 @@ namespace API.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("API.Models.Schedule", b =>
+            modelBuilder.Entity("API.Models.Speciality", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -236,37 +205,20 @@ namespace API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AcademicYear")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ScheduleStatusId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Semester")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ScheduleStatusId");
-
-                    b.ToTable("Schedules");
-                });
-
-            modelBuilder.Entity("API.Models.ScheduleStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<string>("Code")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Shortname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
-                    b.ToTable("ScheduleStatuses");
+                    b.ToTable("Speciality");
                 });
 
             modelBuilder.Entity("API.Models.Subject", b =>
@@ -281,13 +233,13 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ShortName")
+                    b.Property<string>("Shortname")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subjects");
+                    b.ToTable("Subject");
                 });
 
             modelBuilder.Entity("API.Models.Teacher", b =>
@@ -298,39 +250,44 @@ namespace API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Patronymic")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("MiddleName")
+                    b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Teachers");
+                    b.ToTable("Teacher");
                 });
 
             modelBuilder.Entity("API.Models.TeacherSubject", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
                     b.Property<int>("SubjectId")
                         .HasColumnType("integer");
 
                     b.Property<int>("TeacherId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
+                    b.HasKey("Id");
 
-                    b.HasKey("SubjectId", "TeacherId");
+                    b.HasIndex("SubjectId");
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("TeacherSubjects");
+                    b.ToTable("TeacherSubject");
                 });
 
             modelBuilder.Entity("API.Models.User", b =>
@@ -383,138 +340,107 @@ namespace API.Migrations
                     b.ToTable("UserAuthData");
                 });
 
-            modelBuilder.Entity("API.Models.YearBegin", b =>
+            modelBuilder.Entity("API.Models.Audience", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DateStart")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("YearBegin");
-                });
-
-            modelBuilder.Entity("API.Models.Change", b =>
-                {
-                    b.HasOne("API.Models.Classroom", "Classroom")
-                        .WithMany("Changes")
-                        .HasForeignKey("ClassroomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Models.LessonGroup", "LessonGroup")
+                    b.HasOne("API.Models.AudienceType", "AudienceType")
                         .WithMany()
-                        .HasForeignKey("LessonGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AudienceTypeId");
 
-                    b.Navigation("Classroom");
-
-                    b.Navigation("LessonGroup");
+                    b.Navigation("AudienceType");
                 });
 
-            modelBuilder.Entity("API.Models.Classroom", b =>
+            modelBuilder.Entity("API.Models.Group", b =>
                 {
-                    b.HasOne("API.Models.ClassroomType", "ClassroomType")
-                        .WithMany("Classrooms")
-                        .HasForeignKey("ClassroomTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ClassroomType");
-                });
-
-            modelBuilder.Entity("API.Models.Lesson", b =>
-                {
-                    b.HasOne("API.Models.Classroom", "Classroom")
-                        .WithMany("Lessons")
-                        .HasForeignKey("ClassroomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Models.LessonGroup", "LessonGroup")
+                    b.HasOne("API.Models.Speciality", "Speciality")
                         .WithMany()
-                        .HasForeignKey("LessonGroupId")
+                        .HasForeignKey("SpecialityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Models.Schedule", "Schedule")
-                        .WithMany("Lessons")
-                        .HasForeignKey("ScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Classroom");
-
-                    b.Navigation("LessonGroup");
-
-                    b.Navigation("Schedule");
+                    b.Navigation("Speciality");
                 });
 
-            modelBuilder.Entity("API.Models.LessonGroup", b =>
+            modelBuilder.Entity("API.Models.GroupTeacher", b =>
                 {
                     b.HasOne("API.Models.Group", "Group")
-                        .WithMany("LessonGroups")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("API.Models.Subject", "Subject")
-                        .WithMany("LessonGroups")
+                        .WithMany()
                         .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Models.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Group");
 
                     b.Navigation("Subject");
-                });
-
-            modelBuilder.Entity("API.Models.LessonGroupTeacher", b =>
-                {
-                    b.HasOne("API.Models.LessonGroup", "LessonGroup")
-                        .WithMany("LessonGroupTeachers")
-                        .HasForeignKey("LessonGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Models.Teacher", "Teacher")
-                        .WithMany("LessonGroupTeachers")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LessonGroup");
 
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("API.Models.Schedule", b =>
+            modelBuilder.Entity("API.Models.LessonPlan", b =>
                 {
-                    b.HasOne("API.Models.ScheduleStatus", "ScheduleStatus")
-                        .WithMany("Schedules")
-                        .HasForeignKey("ScheduleStatusId")
+                    b.HasOne("API.Models.Audience", "Audience")
+                        .WithMany()
+                        .HasForeignKey("AudienceId");
+
+                    b.HasOne("API.Models.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ScheduleStatus");
+                    b.HasOne("API.Models.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Audience");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("API.Models.LessonTeacher", b =>
+                {
+                    b.HasOne("API.Models.LessonPlan", "Lesson")
+                        .WithMany("LessonTeachers")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Models.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("API.Models.TeacherSubject", b =>
                 {
                     b.HasOne("API.Models.Subject", "Subject")
-                        .WithMany("TeacherSubjects")
+                        .WithMany()
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("API.Models.Teacher", "Teacher")
-                        .WithMany("TeacherSubjects")
+                        .WithMany()
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -541,50 +467,9 @@ namespace API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("API.Models.Classroom", b =>
+            modelBuilder.Entity("API.Models.LessonPlan", b =>
                 {
-                    b.Navigation("Changes");
-
-                    b.Navigation("Lessons");
-                });
-
-            modelBuilder.Entity("API.Models.ClassroomType", b =>
-                {
-                    b.Navigation("Classrooms");
-                });
-
-            modelBuilder.Entity("API.Models.Group", b =>
-                {
-                    b.Navigation("LessonGroups");
-                });
-
-            modelBuilder.Entity("API.Models.LessonGroup", b =>
-                {
-                    b.Navigation("LessonGroupTeachers");
-                });
-
-            modelBuilder.Entity("API.Models.Schedule", b =>
-                {
-                    b.Navigation("Lessons");
-                });
-
-            modelBuilder.Entity("API.Models.ScheduleStatus", b =>
-                {
-                    b.Navigation("Schedules");
-                });
-
-            modelBuilder.Entity("API.Models.Subject", b =>
-                {
-                    b.Navigation("LessonGroups");
-
-                    b.Navigation("TeacherSubjects");
-                });
-
-            modelBuilder.Entity("API.Models.Teacher", b =>
-                {
-                    b.Navigation("LessonGroupTeachers");
-
-                    b.Navigation("TeacherSubjects");
+                    b.Navigation("LessonTeachers");
                 });
 #pragma warning restore 612, 618
         }

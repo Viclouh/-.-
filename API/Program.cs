@@ -22,7 +22,7 @@ namespace API
             builder.Services.AddDbContext<Database.Context>(options =>
             {
                 options.UseNpgsql(builder.Configuration.GetSection("Database").GetConnectionString("DefaultConnection"));
-            }, ServiceLifetime.Transient);
+            });
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -32,43 +32,34 @@ namespace API
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+                        // указывает, будет ли валидироваться издатель при валидации токена
                         ValidateIssuer = true,
-                        // пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                        // строка, представляющая издателя
                         ValidIssuer = AuthOptions.ISSUER,
-                        // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+                        // будет ли валидироваться потребитель токена
                         ValidateAudience = true,
-                        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+                        // установка потребителя токена
                         ValidAudience = AuthOptions.AUDIENCE,
-                        // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                        // будет ли валидироваться время существования
                         ValidateLifetime = true,
-                        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                        // установка ключа безопасности
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                        // валидация ключа безопасности
                         ValidateIssuerSigningKey = true,
                     };
                 });
 
 
             builder.Services.AddControllers();
-            builder.Services.AddScoped<LessonService>();
+            builder.Services.AddScoped<LessonPlanService>();
+            builder.Services.AddScoped<SpecialityService>();
             builder.Services.AddScoped<GroupService>();
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddScoped<TeacherService>();
             builder.Services.AddScoped<AudienceService>();
             builder.Services.AddScoped<WeekService>();
             builder.Services.AddScoped<GroupTeacherService>();
-            builder.Services.AddScoped<ParserService>();
-            builder.Services.AddScoped<ScheduleService>();
             builder.Services.AddScoped<SubjectService>();
-            builder.Services.AddScoped<TeacherSubjectService>();
-            builder.Services.AddScoped<LessonGroupService>();
-            builder.Services.AddScoped<NotificationService>();
-
-            builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            });
 
             builder.Services.AddCors(options =>
             {
@@ -100,7 +91,7 @@ namespace API
                 });
 
 
-                // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                // политика безопасности
                 c.OperationFilter<AuthorizationOperationFilter>();
             });
 
@@ -129,9 +120,9 @@ namespace API
 
     public class AuthOptions
     {
-        public const string ISSUER = "AKVT.Raspisanie API"; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
-        public const string AUDIENCE = "AKVT.Raspisanie Client"; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
-        const string KEY = "mysupersecret_secretkey!1233";   // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        public const string ISSUER = "AKVT.Raspisanie API"; // издатель токена
+        public const string AUDIENCE = "AKVT.Raspisanie Client"; // потребитель токена
+        const string KEY = "mysupersecret_secretkey!1233";   // ключ для шифрации
         public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
     }

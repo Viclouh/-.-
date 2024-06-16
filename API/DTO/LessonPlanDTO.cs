@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.DTO
 {
-    public class LessonDTO: ILessonDTO
+    public class LessonPlanDTO: ILessonPlanDTO
     {
         public int Id { get; set; }
         public int LessonNumber { get; set; }
@@ -12,7 +12,7 @@ namespace API.DTO
         public bool isDistantce { get; set; }
         public IEnumerable<Teacher> Teachers { get; set; }
         public Subject Subject { get; set; }
-        public Classroom? Audience { get; set; }
+        public AudienceDTO? Audience { get; set; }
         public Group Group { get; set; }
     }
 }

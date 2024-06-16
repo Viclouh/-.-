@@ -2,7 +2,7 @@
 
 namespace API.DTO
 {
-    public interface ILessonDTO
+    public interface ILessonPlanDTO
     {
         public int Id { get; set; }
         public int LessonNumber { get; set; }

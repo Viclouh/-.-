@@ -5,24 +5,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Database
 {
-    public class Context : DbContext
-    {
-        public DbSet<ScheduleStatus> ScheduleStatuses { get; set; }
-        public DbSet<Schedule> Schedules { get; set; }
-        public DbSet<Lesson> Lessons { get; set; }
-        public DbSet<Change> Changes { get; set; }
-        public DbSet<Classroom> Classrooms { get; set; }
-        public DbSet<ClassroomType> ClassroomTypes { get; set; }
-        public DbSet<LessonGroup> LessonGroups { get; set; }
-        public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<TeacherSubject> TeacherSubjects { get; set; }
-        public DbSet<LessonGroupTeacher> LessonGroupTeachers { get; set; }
-        public DbSet<Subject> Subjects { get; set; }
-        public DbSet<Group> Groups { get; set; }
+	public class Context : DbContext
+	{
+        public DbSet<AudienceType> AudienceType { get; set; }
+        public DbSet<Audience> Audience { get; set; }
 
+        public DbSet<Subject> Subject { get; set; }
 
+        public DbSet<Speciality> Speciality { get; set; }
+        public DbSet<Group> Group { get; set; }
+
+        public DbSet<Teacher> Teacher { get; set; }
+        public DbSet<TeacherSubject> TeacherSubject { get; set; }
+        public DbSet<GroupTeacher> GroupTeacher { get; set; }
+
+        public DbSet<LessonPlan> LessonPlan { get; set; }
+        public DbSet<LessonTeacher> LessonTeacher { get; set; }
 
         public DbSet<YearBegin> YearBegin { get; set; }
+
 
         //Auth
         public DbSet<UserAuthData> UserAuthData { get; set; }
@@ -31,19 +32,11 @@ namespace API.Database
 
         public Context(DbContextOptions<Context> options) : base(options)
         {
-            //Database.EnsureDeleted();
             //Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<LessonGroupTeacher>()
-            .HasKey(lgt => new { lgt.LessonGroupId, lgt.TeacherId });
-
-            modelBuilder.Entity<TeacherSubject>()
-                .HasKey(ts => new { ts.SubjectId, ts.TeacherId });
-
-            base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<Speciality>().HasData(
             //    new Speciality[]
             //    {
@@ -58,13 +51,6 @@ namespace API.Database
             //        new Speciality{Id = 9, Name="08.01.18"},
             //        new Speciality{Id = 10, Name="15.01.31"},
             //    });
-            modelBuilder.Entity<ScheduleStatus>().HasData(
-                new ScheduleStatus[]
-                    {
-                        new ScheduleStatus{Id=1, Name="Завершенное"},
-                        new ScheduleStatus{Id=2, Name="Черновик"}
-                    }
-                );
         }
     }
 }

@@ -117,7 +117,7 @@ namespace API.Migrations
                     b.ToTable("GroupTeacher");
                 });
 
-            modelBuilder.Entity("API.Models.Lesson", b =>
+            modelBuilder.Entity("API.Models.LessonPlan", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -390,7 +390,7 @@ namespace API.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("API.Models.Lesson", b =>
+            modelBuilder.Entity("API.Models.LessonPlan", b =>
                 {
                     b.HasOne("API.Models.Audience", "Audience")
                         .WithMany()
@@ -417,7 +417,7 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.LessonTeacher", b =>
                 {
-                    b.HasOne("API.Models.Lesson", "Lesson")
+                    b.HasOne("API.Models.LessonPlan", "Lesson")
                         .WithMany("LessonTeachers")
                         .HasForeignKey("LessonId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -472,7 +472,7 @@ namespace API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("API.Models.Lesson", b =>
+            modelBuilder.Entity("API.Models.LessonPlan", b =>
                 {
                     b.Navigation("LessonTeachers");
                 });

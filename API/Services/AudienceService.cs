@@ -11,9 +11,9 @@ namespace API.Services
             _context = context;
         }
 
-        public List<Classroom> GetAll()
+        public List<Audience> GetAll()
         {
-            return _context.Classrooms.ToList();
+            return _context.Audience.ToList();
         }
     }
 }

@@ -13,14 +13,14 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LessonController : ControllerBase
+    public class LessonPlanController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly LessonService _LessonService;
+        private readonly LessonPlanService _lessonPlanService;
 
-        public LessonController(LessonService LessonService, IMapper mapper)
+        public LessonPlanController(LessonPlanService lessonPlanService, IMapper mapper)
         {
-            _LessonService = LessonService;
+            _lessonPlanService = lessonPlanService;
             _mapper = mapper;
         }
 
@@ -31,19 +31,19 @@ namespace API.Controllers
             {
                 case "Standard":
                     {
-                        List<LessonDTO> lessons = new List<LessonDTO>();
-                        foreach (var item in _LessonService.GetAll())
+                        List<LessonPlanDTO> lessons = new List<LessonPlanDTO>();
+                        foreach (var item in _lessonPlanService.GetAll())
                         {
-                            lessons.Add(_mapper.Map<LessonDTO>(item));
+                            lessons.Add(_mapper.Map<LessonPlanDTO>(item));
                         }
                         return StatusCode(200, lessons);
                     }
                 case "MobileApp":
                     {
-                        List<LessonForMobileDTO> lessons = new List<LessonForMobileDTO>();
-                        foreach (var item in _LessonService.GetAll())
+                        List<LessonPlanForMobileDTO> lessons = new List<LessonPlanForMobileDTO>();
+                        foreach (var item in _lessonPlanService.GetAll())
                         {
-                            lessons.Add(_mapper.Map<LessonForMobileDTO>(item));
+                            lessons.Add(_mapper.Map<LessonPlanForMobileDTO>(item));
                         }
                         return StatusCode(200, lessons);
                     }
@@ -68,12 +68,12 @@ namespace API.Controllers
         [HttpGet("WithParams")]
         public IActionResult GetByParameters(
             [FromQuery][Required] int weekday,
-			[FromQuery][Required] int groupId,
-			[FromQuery][Required] int weekNumber,
-			[FromQuery][Required] int lessonNumber)
-		{
-            LessonDTO lesson = _mapper.Map<LessonDTO>(_LessonService.GetByParameters(weekday, groupId, weekNumber, lessonNumber));
-            if(lesson == null || weekday<1 || weekday>7 ||lessonNumber < 1||lessonNumber>6 || weekNumber > 1 || weekNumber < 0)
+            [FromQuery][Required] int groupId,
+            [FromQuery][Required] int weekNumber,
+            [FromQuery][Required] int lessonNumber)
+        {
+            LessonPlanDTO lesson = _mapper.Map<LessonPlanDTO>(_lessonPlanService.GetByParameters(weekday, groupId, weekNumber, lessonNumber));
+            if (lesson == null || weekday < 1 || weekday > 7 || lessonNumber < 1 || lessonNumber > 6 || weekNumber > 1 || weekNumber < 0)
             {
                 return StatusCode(400);
             }
@@ -83,16 +83,16 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("Search")]
-        public IActionResult Search(int? teacherId, int? groupId, int? audienceId, int? scheduleId, int? department, string formatting = "Standard")
+        public IActionResult Search(int? teacherId, int? groupId, int? audienceId, string formatting = "Standard")
         {
-            IEnumerable<Lesson> lessons = _LessonService.Search(teacherId, groupId, audienceId, scheduleId, department);
+            IEnumerable<LessonPlan> lessons = _lessonPlanService.Search(teacherId, groupId, audienceId);
             switch (formatting)
             {
                 case "Standard":
-                    return StatusCode(200, lessons.Select(item => _mapper.Map<LessonDTO>(item)));
+                    return StatusCode(200, lessons.Select(item => _mapper.Map<LessonPlanDTO>(item)));
 
                 case "MobileApp":
-                    return StatusCode(200, lessons.Select(item => _mapper.Map<LessonForMobileDTO>(item)));
+                    return StatusCode(200, lessons.Select(item => _mapper.Map<LessonPlanForMobileDTO>(item)));
             }
             return StatusCode(400, "could not find format mode");
         }
@@ -100,39 +100,27 @@ namespace API.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            if (_LessonService.Delete(id) != 0)
+            if (_lessonPlanService.Delete(id))
                 return StatusCode(200, id);
             else
-                return StatusCode(400, 0);
+                return StatusCode(400);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody](LessonDTO lesson, Schedule schedule, List<dynamic> teachers) data)
+        public IActionResult Post([FromBody] LessonPlanDTO lesson)
         {
-            Lesson newLesson = _LessonService.Post(data.lesson, data.schedule, data.teachers);
+            LessonPlan newLesson = _lessonPlanService.Post(lesson);
 
-            return StatusCode(200, _mapper.Map<LessonDTO>(newLesson));
+
+            return StatusCode(200, _mapper.Map<LessonPlanDTO>(newLesson));
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody]LessonWithTeachersDTO lesson)
+        public IActionResult Put([FromBody] LessonPlanDTO lesson)
         {
-            Lesson newLesson = _LessonService.Put(lesson);
-            return StatusCode(200, _mapper.Map<LessonDTO>(newLesson));
-        }
+            LessonPlan newLesson = _lessonPlanService.Put(lesson);
 
-        [HttpGet("Pdf")]
-        public IActionResult GetLessonPlanPdf(int? teacherId, int? groupId)
-        {
-            try
-            {
-                return StatusCode(200, _LessonService.GetPDF(teacherId, groupId));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message + "\n" + ex.StackTrace.ToString());
-            }
-
+            return StatusCode(200, _mapper.Map<LessonPlanDTO>(newLesson));
         }
     }
 }
