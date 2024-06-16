@@ -23,6 +23,7 @@ namespace API.Controllers
             return StatusCode(200, _teacherService.Get(id));
         }
 
+
         [HttpGet]
         public IActionResult Get(string? query)
         {
