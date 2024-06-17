@@ -108,7 +108,7 @@ namespace API.Services
 
         public int Delete(int id)
         {
-            var item = _context.Lessons.FirstOrDefault(l => l.Id == id);
+            var item = GetAllWithIncludes().FirstOrDefault(l => l.Id == id);
 
             List<Teacher> teachers = _context.LessonGroupTeachers
        .Where(lgt => lgt.LessonGroupId == item.LessonGroupId)
@@ -250,7 +250,10 @@ namespace API.Services
             // Отправка уведомлений для каждого преподавателя
             foreach (var teacher in lesson.Teachers)
             {
-                _notificationService.SendNotificationAsync(changeMessage, "teacher", teacher.Id);
+                if (teacher != null)
+                {
+                    _notificationService.SendNotificationAsync(changeMessage, "teacher", teacher.Id);
+                }
             }
 
             return updatedLesson;
