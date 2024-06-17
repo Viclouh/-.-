@@ -222,6 +222,10 @@ namespace API.Services
 
             foreach (var teacher in lesson.Teachers)
             {
+                if (teacher == null)
+                {
+                    continue;
+                }
                 var lessonGroupTeacher = new LessonGroupTeacher()
                 {
                     TeacherId = teacher.Id,
