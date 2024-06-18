@@ -92,7 +92,16 @@ namespace API.Services
             }
             return null;
 		}
+        //public async void Notification(LessonPlan newLesson) 
+        //{
+        //        var notificationMessage = _notificationService.GetScheduleChangeMessage((int)newLesson.WeekNumber, newLesson.Weekday);
+        //        await _notificationService.SendNotificationAsync(notificationMessage, "group", newLesson.GroupId);
 
+        //        foreach (var teacher in newLesson.LessonTeachers)
+        //        {
+        //            await _notificationService.SendNotificationAsync(notificationMessage, "teacher", teacher.Id);
+        //        }
+        //}
         public bool Delete(int id)
         {
             var item  = _context.LessonPlan.Where(lp => lp.Id == id).FirstOrDefault();
@@ -101,13 +110,13 @@ namespace API.Services
             {
                 return false;
             }
-
+            
             _context.LessonPlan.Remove(item);
             _context.SaveChanges();
             return true;
         }
 
-        public async Task<LessonPlan> Post(LessonPlanDTO lesson)
+        public LessonPlan Post(LessonPlanDTO lesson)
         {
 
             var newLesson = new LessonPlan
@@ -148,17 +157,8 @@ namespace API.Services
             }
 
             _context.SaveChanges();
-            if (newLesson.WeekNumber != null)
-            {
-                var notificationMessage = _notificationService.GetScheduleChangeMessage((int)newLesson.WeekNumber, newLesson.Weekday);
-                await _notificationService.SendNotificationAsync(notificationMessage, "group", newLesson.GroupId);
 
-                foreach (var teacher in lesson.Teachers)
-                {
-                    await _notificationService.SendNotificationAsync(notificationMessage, "teacher", teacher.Id);
-                }
-
-            }
+           
             
             return GetByParameters(lesson.Weekday, lesson.Group.Id, lesson.WeekNumber, lesson.LessonNumber);
         }

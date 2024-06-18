@@ -17,11 +17,14 @@ namespace API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly LessonPlanService _lessonPlanService;
+        private readonly NotificationService _notificationService;
 
-        public LessonPlanController(LessonPlanService lessonPlanService, IMapper mapper)
+        public LessonPlanController(LessonPlanService lessonPlanService, IMapper mapper, NotificationService notificationService)
         {
             _lessonPlanService = lessonPlanService;
             _mapper = mapper;
+            _notificationService = notificationService;
+
         }
 
         [HttpGet]
@@ -107,10 +110,20 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] LessonPlanDTO lesson)
+        public async Task<IActionResult> Post([FromBody] LessonPlanDTO lesson)
         {
             LessonPlan newLesson = _lessonPlanService.Post(lesson);
 
+            if (newLesson.WeekNumber != null)
+            {
+                var notificationMessage = _notificationService.GetScheduleChangeMessage((int)newLesson.WeekNumber, newLesson.Weekday);
+                await _notificationService.SendNotificationAsync(notificationMessage, "group", newLesson.GroupId);
+
+                foreach (var teacher in lesson.Teachers)
+                {
+                    await _notificationService.SendNotificationAsync(notificationMessage, "teacher", teacher.Id);
+                }
+            }
 
             return StatusCode(200, _mapper.Map<LessonPlanDTO>(newLesson));
         }
