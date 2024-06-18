@@ -43,7 +43,7 @@ namespace API.Services
 
         public int Delete(int id)
         {
-            _context.LessonGroups.Remove(_context.LessonGroups.First(lg => lg.Id == id);
+            _context.LessonGroups.Remove(_context.LessonGroups.First(lg => lg.Id == id));
             return id;
         }
     }
