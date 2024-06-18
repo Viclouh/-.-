@@ -21,9 +21,12 @@ namespace API.Services
     public class LessonPlanService 
     {
         private Database.Context _context;
-        public LessonPlanService(Database.Context context)
+        private readonly NotificationService _notificationService;
+        public LessonPlanService(Database.Context context, NotificationService notificationService)
         {
+
             _context = context;
+            _notificationService = notificationService;
         }
         public IEnumerable<LessonPlan> GetAll()
         {
@@ -68,7 +71,6 @@ namespace API.Services
 
             return query.ToList();
         }
-
         public LessonPlan GetByParameters(int weekday, int groupId, int weekNumber, int lessonNumber)
         {
             LessonPlan lesson = _context.LessonPlan
@@ -105,7 +107,7 @@ namespace API.Services
             return true;
         }
 
-        public LessonPlan Post(LessonPlanDTO lesson)
+        public async Task<LessonPlan> Post(LessonPlanDTO lesson)
         {
 
             var newLesson = new LessonPlan
@@ -146,7 +148,18 @@ namespace API.Services
             }
 
             _context.SaveChanges();
+            if (newLesson.WeekNumber != null)
+            {
+                var notificationMessage = _notificationService.GetScheduleChangeMessage((int)newLesson.WeekNumber, newLesson.Weekday);
+                await _notificationService.SendNotificationAsync(notificationMessage, "group", newLesson.GroupId);
 
+                foreach (var teacher in lesson.Teachers)
+                {
+                    await _notificationService.SendNotificationAsync(notificationMessage, "teacher", teacher.Id);
+                }
+
+            }
+            
             return GetByParameters(lesson.Weekday, lesson.Group.Id, lesson.WeekNumber, lesson.LessonNumber);
         }
 
