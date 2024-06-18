@@ -104,6 +104,28 @@ namespace API.Services
                 _notificationService.SendNotificationAsync(changeMessage, "teacher", teacher.Id);
             }
         }
+        private void SendNotificationsOnDelete(int id)
+        {
+            // Получаем урок, включая связанные сущности LessonTeacher и Group
+            var lesson = _context.LessonPlan
+                                 .Include(lp => lp.LessonTeachers)
+                                 .Include(lp => lp.Group)
+                                 .FirstOrDefault(lp => lp.Id == id);
+
+            if (lesson != null)
+            {
+                string changeMessage = _notificationService.GetScheduleChangeMessage((int)lesson.WeekNumber + 1, lesson.Weekday);
+
+                _notificationService.SendNotificationAsync(changeMessage, "group", lesson.GroupId);
+
+                var lessonTeachers = lesson.LessonTeachers.Select(lt => lt.TeacherId).Distinct().ToList();
+
+                foreach (var teacherId in lessonTeachers)
+                {
+                    _notificationService.SendNotificationAsync(changeMessage, "teachers", teacherId);
+                }
+            }
+        }
 
         public bool Delete(int id)
         {
@@ -116,6 +138,8 @@ namespace API.Services
             
             _context.LessonPlan.Remove(item);
             _context.SaveChanges();
+
+            SendNotificationsOnDelete(id);
             return true;
         }
 
