@@ -42,12 +42,11 @@ namespace API.Services
             return query;
         }
 
-        public bool Delete(int subjectId, int teacherId)
+        public int Delete(int id)
         {
-            _context.LessonGroupTeachers.RemoveRange(GetWithIncludes()
-                .Where(lgt => lgt.Teacher.Id == teacherId && lgt.LessonGroup.Subject.Id == subjectId));
+            _context.LessonGroupTeachers.Remove(_context.LessonGroupTeachers.First(lg => lg.Id == id));
             _context.SaveChanges();
-            return true;
+            return id;
         }
     }
 }
