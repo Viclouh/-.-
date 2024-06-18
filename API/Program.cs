@@ -61,6 +61,7 @@ namespace API
             builder.Services.AddScoped<WeekService>();
             builder.Services.AddScoped<GroupTeacherService>();
             builder.Services.AddScoped<SubjectService>();
+            builder.Services.AddScoped<NotificationService>();
 
             builder.Services.AddCors(options =>
             {

@@ -110,20 +110,9 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] LessonPlanDTO lesson)
+        public IActionResult Post([FromBody] LessonPlanDTO lesson)
         {
             LessonPlan newLesson = _lessonPlanService.Post(lesson);
-
-            if (newLesson.WeekNumber != null)
-            {
-                var notificationMessage = _notificationService.GetScheduleChangeMessage((int)newLesson.WeekNumber, newLesson.Weekday);
-                await _notificationService.SendNotificationAsync(notificationMessage, "group", newLesson.GroupId);
-
-                foreach (var teacher in lesson.Teachers)
-                {
-                    await _notificationService.SendNotificationAsync(notificationMessage, "teacher", teacher.Id);
-                }
-            }
 
             return StatusCode(200, _mapper.Map<LessonPlanDTO>(newLesson));
         }
