@@ -5,6 +5,7 @@ import 'package:akvt_raspisanie/DB/DB.dart';
 import 'package:akvt_raspisanie/models/Para.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../models/Group.dart';
 
@@ -42,6 +43,7 @@ class Lessons extends ChangeNotifier{
     await isar.writeTxn(() async {
       await isar.itemDBs.put(ItemDB.Full(1, item.id, item.item, item.type));
     });
+    OneSignal.User.removeTag(_group.type);
     _group = item;
     EditGroup().then((value) => notifyListeners());
   }

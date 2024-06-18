@@ -34,14 +34,23 @@ class _NotesState extends State<Notes> {
   late Color _secondButtonColor = Color.fromRGBO(227, 228, 232, 1);
   late Color _firstTextColor = Colors.white;
   late Color _secondTextColor = Colors.black87;
+  bool _isCompleted = false;
+
 
   Future<void> FillOrgerByIsCompleted (bool b) async{
     final isar = await AppDB.isar;
       notes = await isar.notes.filter().isCompletedEqualTo(b).findAll();
+      setState(() {});
+  }
+  void _onNoteDeleted() {
+    FillOrgerByIsCompleted (_isCompleted);
   }
 
+  void _onNoteUpdated() {
+    FillOrgerByIsCompleted (_isCompleted);
+  }
   _NotesState() {
-    FillOrgerByIsCompleted(false).then((value) => setState(() {}));
+    FillOrgerByIsCompleted(_isCompleted).then((value) => setState(() {}));
   }
 
   @override
@@ -55,19 +64,21 @@ class _NotesState extends State<Notes> {
                 padding: EdgeInsets.fromLTRB(18, 30, 0, 0),
                 child: CustomTitle(text: 'Заметки', isVisible: false),
               )),
-            Padding(
-            padding: EdgeInsets.fromLTRB(8, 10, 8, 0),
-            child: SearchBox(),
-          ),
+          //   Padding(
+          //   padding: EdgeInsets.fromLTRB(8, 10, 8, 0),
+          //   child: SearchBox(),
+          // ),
           Padding(
             padding: const EdgeInsets.fromLTRB(8, 10, 8, 0),
             child:ButtonBar(
+              mainAxisSize: MainAxisSize.min,
               alignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
                     onPressed:() {
 
-                      FillOrgerByIsCompleted(false).then((value) => setState(() {}));
+                      _isCompleted = false;
+                      FillOrgerByIsCompleted(_isCompleted).then((value) => setState(() {}));
                       print(notes.length);
 
                       _firstButtonColor = Color.fromRGBO(173, 38, 185, 1);
@@ -78,6 +89,7 @@ class _NotesState extends State<Notes> {
                       setState(() {});
                     },
                     style: ButtonStyle(
+
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0)
                       )),
@@ -92,14 +104,15 @@ class _NotesState extends State<Notes> {
                       )
                     ),
                     child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 14.0,horizontal: 24.0),
+                      padding: EdgeInsets.symmetric(vertical: 14.0,horizontal: 0.0),
                       child: Text("В процессе"),
                     )
                 ),
                 ElevatedButton(
                     onPressed:(){
+                      _isCompleted = true;
 
-                      FillOrgerByIsCompleted(true).then((value) => setState(() {}));
+                      FillOrgerByIsCompleted(_isCompleted).then((value) => setState(() {}));
                       print(notes.length);
 
                       _secondButtonColor = Color.fromRGBO(173, 38, 185, 1);
@@ -123,7 +136,7 @@ class _NotesState extends State<Notes> {
                         )
                     ),
                     child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 14.0,horizontal: 6.0),
+                      padding: EdgeInsets.symmetric(vertical: 14.0,horizontal: 0.0),
                       child: Text("Выполненные"),
                     )
                 ),
@@ -136,7 +149,7 @@ class _NotesState extends State<Notes> {
               key:  Key(notes.hashCode.toString()),
               itemCount: notes.length,
               itemBuilder: (BuildContext context, int index) {
-                return NoteCard(note: notes[index]);
+                return NoteCard(note: notes[index],onDelete: _onNoteDeleted, onUpdate:_onNoteUpdated);
             },
           ),
           ),
@@ -149,6 +162,6 @@ class _NotesState extends State<Notes> {
 
         ],
       ),
-    );;
+    );
   }
 }

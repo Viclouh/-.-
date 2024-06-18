@@ -18,7 +18,33 @@ void main() {
     providers:[
       ChangeNotifierProvider(create:(context) =>  Lessons())
     ],
-    child: MaterialApp(
+    child: MyApp()
+      // home:SplashScreen(),
+    ),
+  );
+
+  // OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+
+  // OneSignal.initialize("915cc389-bc1e-403d-8f15-86d7dbc0463e");
+  // OneSignal.Notifications.requestPermission(true);
+  // String TagKey = Lessons().GetGroup().type;
+  // String TagValue = Lessons().GetGroup().item;
+  // OneSignal.User.addTagWithKey(TagKey,TagValue);
+
+
+}
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+
+    OneSignal.initialize("915cc389-bc1e-403d-8f15-86d7dbc0463e");
+    OneSignal.Notifications.requestPermission(true);
+
+    String TagKey = Provider.of<Lessons>(context).GetGroup().type;
+    int TagValue = Provider.of<Lessons>(context).GetGroup().id;
+    OneSignal.User.addTagWithKey(TagKey,TagValue);
+
+    return MaterialApp(
       theme: ThemeData(
           primaryColor: Colors.white
       ),
@@ -32,23 +58,13 @@ void main() {
       debugShowCheckedModeBanner: false,
       initialRoute: '/navigation',
       routes: {
-        '/':(context)=> SplashScreen(),
+        // '/':(context)=> SplashScreen(),
         '/navigation':(context) => Navigation(),
         '/editNote':(context) => EditNote(),
 
       },
-    )
-      // home:SplashScreen(),
-    ),
-  );
-
-  // OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-  OneSignal.initialize("915cc389-bc1e-403d-8f15-86d7dbc0463e");
-  OneSignal.Notifications.requestPermission(true);
-  // String TagKey = Provider.of<Lessons>(context).GetItem().type;
-  // String TagValue = Provider.of<Lessons>(context).GetItem().item;
-  OneSignal.User.addTagWithKey("группы","ПБ - 41");
-
+    );
+  }
 }
 
 

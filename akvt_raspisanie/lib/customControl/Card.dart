@@ -314,12 +314,12 @@ class _LessonCardState extends State<LessonCard> {
                                         child: Padding(
                                       padding:
                                           const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                                      child: Text(paraDB.audience.toString(),
+                                      child: Text(null != paraDB.audience ? paraDB.audience.toString() : "",
                                           style: const TextStyle(
                                               fontSize: 16.0,
                                               fontFamily: 'Ubuntu',
                                               color:
-                                                  Color.fromRGBO(51, 51, 51, 1),
+                                              Color.fromRGBO(51, 51, 51, 1),
                                               fontWeight: FontWeight.normal)),
                                     )),
                                   ],
@@ -338,12 +338,17 @@ class _LessonCardState extends State<LessonCard> {
                                     child: Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                                  child: SvgPicture.asset(
-                                      'lib/res/icons/bookmark_add.svg',
-                                      color:
-                                          const Color.fromRGBO(51, 51, 51, 1),
-                                      width: 24.0,
-                                      height: 24.0),
+                                  child: IconButton(
+                                    icon: SvgPicture.asset(
+                                        'lib/res/icons/bookmark_add.svg',
+                                        color:
+                                        const Color.fromRGBO(51, 51, 51, 1),
+                                        width: 24.0,
+                                        height: 24.0),
+                                    onPressed: (){
+                                      Navigator.pushNamed(context, '/editNote');
+                                    },
+                                  ),
                                 ))),
                           ),
                         ],

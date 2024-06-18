@@ -5,8 +5,10 @@ import '../DB/DB.dart';
 
 class NoteCard extends StatefulWidget {
   Note note;
+  final VoidCallback onDelete;
+  final VoidCallback onUpdate;
 
-  NoteCard({super.key,required this.note,});
+  NoteCard({super.key,required this.note,required this.onDelete,required this.onUpdate});
 
   @override
   State<NoteCard> createState() => _NoteCardState(this.note);
@@ -24,13 +26,44 @@ class _NoteCardState extends State<NoteCard> {
     await isar.writeTxn(() async {
       isar.notes.put(note);
     });
+    widget.onUpdate();
   }
   Future<void> DeleteNote() async{
     final isar = await AppDB.isar;
     await isar.writeTxn(() async {
       isar.notes.delete(note.id);
     });
+    widget.onDelete();
   }
+  Future<void> _showDeleteConfirmationDialog() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Подтверждение удаления'),
+          content: Text('Вы действительно хотите удалить эту заметку?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Отмена'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Удалить'),
+              onPressed: () {
+                DeleteNote().then((value) {
+                  Navigator.of(context).pop();
+                  setState(() {});
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +124,8 @@ class _NoteCardState extends State<NoteCard> {
                     ),
                   IconButton(
                           onPressed: (){
-                            DeleteNote().then((value) => setState(() {}));
+                            // DeleteNote().then((value) => setState(() {}));
+                            _showDeleteConfirmationDialog();
                           },
                           icon: const Icon(Icons.delete)
                   )
