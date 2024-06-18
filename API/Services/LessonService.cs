@@ -213,7 +213,7 @@ namespace API.Services
             updatedLesson.LessonNumber = lesson.Lesson.LessonNumber;
             updatedLesson.IsRemote = lesson.Lesson.isDistantce;
             updatedLesson.WeekOrderNumber = lesson.Lesson.WeekNumber;
-            updatedLesson.ClassroomId = lesson.Lesson.Audience.Id;
+            updatedLesson.ClassroomId = lesson.Lesson.Audience != null ? lesson.Lesson.Audience.Id : null;
 
             var lessonGroup = updatedLesson.LessonGroup;
             lessonGroup.SubjectId = lesson.Lesson.Subject.Id;
