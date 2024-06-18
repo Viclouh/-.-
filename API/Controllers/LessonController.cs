@@ -95,9 +95,9 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] (LessonDTO lesson, Schedule schedule, List<dynamic> teachers) data)
+        public IActionResult Post([FromBody] LessonWithTeachersDTO lesson, int scheduleId)
         {
-            Lesson newLesson = _LessonService.Post(data.lesson, data.schedule, data.teachers);
+            Lesson newLesson = _LessonService.Post(lesson, scheduleId);
 
             return StatusCode(200, _mapper.Map<LessonDTO>(newLesson));
         }
