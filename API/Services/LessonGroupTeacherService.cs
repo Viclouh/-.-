@@ -1,6 +1,7 @@
 ﻿using API.Database;
 using API.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace API.Services
 {
@@ -39,6 +40,14 @@ namespace API.Services
                 query = query.Where(lgt => lgt.Teacher.Id == teacherId).ToList();
             }
             return query;
+        }
+
+        public bool Delete(int subjectId, int teacherId)
+        {
+            _context.LessonGroupTeachers.RemoveRange(GetWithIncludes()
+                .Where(lgt => lgt.Teacher.Id == teacherId && lgt.LessonGroup.Subject.Id == subjectId));
+            _context.SaveChanges();
+            return true;
         }
     }
 }

@@ -17,6 +17,10 @@ namespace API.Controllers
         {
             return StatusCode(200, _lessonGroupTeacherService.Get(groupId, subjectId, teacherId));
         }
-
+        [HttpDelete]
+        public IActionResult Delete(int subjectId, int teacherId)
+        {
+            return StatusCode(200, _lessonGroupTeacherService.Delete(subjectId, teacherId));
+        }
     }
 }
