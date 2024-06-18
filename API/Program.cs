@@ -63,6 +63,7 @@ namespace API
             builder.Services.AddScoped<TeacherSubjectService>();
             builder.Services.AddScoped<LessonGroupService>();
             builder.Services.AddScoped<NotificationService>();
+            builder.Services.AddScoped<LessonGroupTeacherService>();
 
             builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
             {
