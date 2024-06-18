@@ -69,7 +69,7 @@ namespace API
             {
                 StartColumn = 2,
                 StartRow = 9,
-                EndColumn = 35,
+                EndColumn = 32,
                 SkipRows = new[] { 33, 58, 83, 108, 133 },
                 CountRows = 159
             };
@@ -147,7 +147,7 @@ namespace API
         {
             int CourseId = 1;
             int lastColumn = _config.EndColumn;
-            for (int i = 3; i <= lastColumn; i++)
+            for (int i = _config.StartColumn; i <= lastColumn; i++)
             {
                 ICell cell = GetCell(8,i);
                 //string CellText = (cell == null || cell.StringCellValue == null) ? null : cell.StringCellValue;
@@ -217,9 +217,9 @@ namespace API
         {
             int cabinetId = 1;
             Regex regex = new Regex(@"ауд\.\s*\d+");
-            for (int x = 3; x < 36; x++)
+            for (int x = _config.StartColumn; x < 36; x++)
             {
-                for (int y = 10; y < 159; y++)
+                for (int y = _config.StartRow+1; y < _config.StartRow+_config.CountRows; y++)
                 {
                     ICell cell = GetCell(y, x);
                     //string CellText = (cell == null || cell.StringCellValue == null) ? null : cell.StringCellValue;
@@ -255,7 +255,7 @@ namespace API
         {
             Regex regCab = new Regex(@"ауд\.\s*\d+");
             Regex regTeacher = new Regex(@"[А-ЯЁа-яё\-]+ [А-ЯЁ]\.\s*[А-ЯЁ]\.*");
-            for (int x = 3; x < 36; x++)
+            for (int x = _config.StartColumn; x < 36; x++)
             {
                 for (int y = 10; y < 159; y += 2)
                 {
@@ -327,7 +327,7 @@ namespace API
 
         public async void ParseLessonGroupTeachers()
         {
-            for (int x = 3; x < 36; x++)
+            for (int x = _config.StartColumn; x < 36; x++)
             {
                 ICell cell = GetCell(8, x);
                 string cellValue = cell == null ? "" : cell.ToString();
@@ -425,9 +425,6 @@ namespace API
 
                         }
                     }
-                    else{
-                        y++;
-                    }
                 }
             }
         }
@@ -451,7 +448,7 @@ namespace API
             Regex regTeacher = new Regex(@"[А-ЯЁа-яё\-]+ [А-ЯЁ]\.\s*[А-ЯЁ]\.*");
             int id = 1;
             int lessonNumber = 1;
-            for (int x = 3; x < 36; x++)
+            for (int x = _config.StartColumn; x < _config.EndColumn; x++)
             {
                 ICell groupCell = GetCell(8, x);
                 if (groupCell == null) continue;
@@ -459,7 +456,7 @@ namespace API
                 API.Models.Group group = GetGroup(string.IsNullOrEmpty(groupCellValue) ? "" : groupCellValue);
 
                 int weekday = 1;
-                for (int y = 10; y < 159;)
+                for (int y = _config.StartRow+1; y < _config.StartRow +_config.CountRows;)
                 {
                     string s = "";
                     string s1 = "";
