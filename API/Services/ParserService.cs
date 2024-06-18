@@ -25,6 +25,7 @@ namespace API.Services
                     ScheduleStatusId = statusId,
                 };
                 _context.Schedules.Add(schedule);
+                _context.SaveChanges();
             }
             else
             {
@@ -32,7 +33,6 @@ namespace API.Services
             }
             Parsing parsing = new Parsing(path, department, schedule, _context);
             var result = parsing.ParseAllDataAsync();
-            parsing.CloseApp();
             return result;
         }
     }

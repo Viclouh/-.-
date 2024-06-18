@@ -14,6 +14,11 @@ using System.Runtime.CompilerServices;
 using System.Net.Http.Headers;
 using System.Diagnostics;
 using Range = Microsoft.Office.Interop.Excel.Range;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using NPOI.HSSF.UserModel;
+using iText.Layout.Element;
+using API.Parser;
 
 namespace API
 {
@@ -62,10 +67,10 @@ namespace API
             Path = path;
             _config = new ParseConfig
             {
-                StartColumn = 3,
-                StartRow = 10,
-                EndColumn = 36,
-                SkipRows = new[] { 34, 59, 84, 109, 134 },
+                StartColumn = 2,
+                StartRow = 9,
+                EndColumn = 35,
+                SkipRows = new[] { 33, 58, 83, 108, 133 },
                 CountRows = 159
             };
         }
@@ -79,113 +84,74 @@ namespace API
         public List<Lesson> Lessons;
         public List<LessonGroup> LessonGroups;
         public List<LessonGroupTeacher> LessonGroupTeachers;
-        Excel.Range UsedRange = null;
-        Excel.Application Application = null;
-        Excel.Workbook Workbook = null;
+        //Excel.Range UsedRange = null;
+        //Excel.Application Application = null;
+        //Excel.Workbook Workbook = null;
 
-        public void CloseApp()
-        {
-            Process[] excelProcsOld = Process.GetProcessesByName("EXCEL");
-            Excel.Application myExcelApp = null;
-            Excel.Workbooks excelWorkbookTemplate = null;
-            Excel.Workbook excelWorkbook = null;
-            try
-            {
-                //DO sth using myExcelApp , excelWorkbookTemplate, excelWorkbook
-            }
-            catch (Exception ex)
-            {
-            }
-            finally
-            {
-                //Compare the EXCEL ID and Kill it 
-                Process[] excelProcsNew = Process.GetProcessesByName("EXCEL.EXE");
-                foreach (Process procNew in excelProcsNew)
-                {
-                    int exist = 0;
-                    foreach (Process procOld in excelProcsOld)
-                    {
-                        if (procNew.Id == procOld.Id)
-                        {
-                            exist++;
-                        }
-                    }
-                    if (exist == 0)
-                    {
-                        procNew.Kill();
-                    }
-                }
-            }
-            //Workbook.Close(true);
-            //Application.Quit();
-            //System.Runtime.InteropServices.Marshal.ReleaseComObject(Application);
-        }
-        //парсинг всей информации
+        IWorkbook Workbook = null;
+        ISheet UsedSheet = null;
+
         public bool ParseAllDataAsync()
         {
-            object rOnly = true;
-            object SaveChanges = false;
-            object MissingObj = System.Reflection.Missing.Value;
-
-            Application = new Excel.Application();
-            Excel.Workbooks workbooks = Application.Workbooks;
-            Workbook = workbooks.Open(Path, MissingObj, rOnly, MissingObj, MissingObj,
-                                        MissingObj, MissingObj, MissingObj, MissingObj, MissingObj,
-                                        MissingObj, MissingObj, MissingObj, MissingObj, MissingObj);
-
-            // Получение всех страниц докуента
-            Excel.Sheets sheets = Workbook.Sheets;
-
-
-
-            foreach (Excel.Worksheet worksheet in sheets)
+            using (FileStream file = new FileStream(Path, FileMode.Open, FileAccess.Read))
             {
-                UsedRange = worksheet.UsedRange;
+                //Stream xlsx = new XlsToXlsxConverter().Convert(file);
+                //xlsx.
+                //xlsx.Position = 0;
+                Workbook = new HSSFWorkbook(file);
 
-                List<Task> tasks = new List<Task>()
-                {
-                    new Task(ParseGroups),
-                    new Task(ParseTeachers),
-                    new Task(ParseCabinets),
-                    new Task(ParseSubjects),
-                };
-                foreach (Task task in tasks)
-                {
-                    task.Start();
+                for (int i = 0; i < Workbook.NumberOfSheets; i++)
+                {                    
+                    ISheet sheet = Workbook.GetSheet("Лист1");
+                    UsedSheet = sheet;
+
+                    List<Task> tasks = new List<Task>()
+                    {
+                        new Task(ParseGroups),
+                        new Task(ParseTeachers),
+                        new Task(ParseCabinets),
+                        new Task(ParseSubjects),
+                    };
+
+                    foreach (Task task in tasks)
+                    {
+                        task.Start();
+                    }
+
+                    Task.WaitAll(tasks.ToArray());
+                    ParseLessonGroupTeachers();
+                    ParseLessons();
+                    ParseTeacherSubjects();
+                    _context.Teachers.AddRange(Teachers.Where(t => t.Id == 0));
+                    _context.Groups.AddRange(Groups.Where(t => t.Id == 0));
+                    _context.Classrooms.AddRange(Classrooms.Where(t => t.Id == 0));
+                    _context.Subjects.AddRange(Subjects.Where(t => t.Id == 0));
+                    _context.SaveChanges();
+                    _context.LessonGroups.AddRange(LessonGroups.Where(t => t.Id == 0));
+                    _context.SaveChanges();
+                    _context.Lessons.AddRange(Lessons.Where(t => t.Id == 0));
+                    _context.SaveChanges();
+                    _context.LessonGroupTeachers.AddRange(LessonGroupTeachers.Where(t => t.Id == 0));
+                    _context.SaveChanges();
+                    //_context.TeacherSubjects.AddRange(Teacher_Subjects.Where(t => t.Id == 0));
+                    //_context.SaveChanges();
+                    return true;
                 }
-                Task.WaitAll(tasks.ToArray());
-                ParseLessonGroupTeachers();
-                ParseLessons();
-                ParseTeacherSubjects();
-                _context.Teachers.AddRange(Teachers.Where(t => t.Id == 0));
-                _context.Groups.AddRange(Groups.Where(t => t.Id == 0));
-                _context.Classrooms.AddRange(Classrooms.Where(t => t.Id == 0));
-                _context.Subjects.AddRange(Subjects.Where(t => t.Id == 0));
-                _context.SaveChanges();
-                _context.LessonGroups.AddRange(LessonGroups.Where(t => t.Id == 0));
-                _context.SaveChanges();
-                _context.Lessons.AddRange(Lessons.Where(t => t.Id == 0));
-                _context.SaveChanges();
-                _context.LessonGroupTeachers.AddRange(LessonGroupTeachers.Where(t => t.Id == 0));
-                _context.SaveChanges();
-                _context.TeacherSubjects.AddRange(Teacher_Subjects.Where(t => t.Id == 0));
-                _context.SaveChanges();
-                return true;
             }
 
             return false;
-
         }
+        
 
         public async void ParseGroups()
         {
             int CourseId = 1;
-            int lastRow = _config.StartRow + _config.CountRows;
-            for (int i = 3; i <= lastRow; i++)
+            int lastColumn = _config.EndColumn;
+            for (int i = 3; i <= lastColumn; i++)
             {
-                Range CellRange = UsedRange[9, i] as Range;
-                string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
-                    (CellRange as Excel.Range).Value2.ToString();
+                ICell cell = GetCell(8,i);
+                //string CellText = (cell == null || cell.StringCellValue == null) ? null : cell.StringCellValue;
+                string CellText = cell == null ? null : GetCellValue(cell).ToString();
                 if (CellText == null)
                 {
                     continue;
@@ -213,13 +179,11 @@ namespace API
             {
                 for (int y = _config.StartRow; y < _config.CountRows; y++)
                 {
-                    Range CellRange = UsedRange.Cells[y, x] as Range;
-                    string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
-                        (CellRange).Value2.ToString();
-                    if (CellText == null)
-                    {
-                        continue;
-                    }
+
+                    ICell cell =GetCell(y,x);
+                    //string CellText = (cell == null || cell.StringCellValue == null) ? null : cell.StringCellValue;
+
+                    string CellText = cell == null ? "" : GetCellValue(cell).ToString();
 
                     MatchCollection matches = regex.Matches(CellText);
 
@@ -257,9 +221,10 @@ namespace API
             {
                 for (int y = 10; y < 159; y++)
                 {
-                    Range CellRange = UsedRange.Cells[y, x] as Range;
-                    string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
-                        (CellRange as Excel.Range).Value2.ToString();
+                    ICell cell = GetCell(y, x);
+                    //string CellText = (cell == null || cell.StringCellValue == null) ? null : cell.StringCellValue;
+                    string CellText = cell == null ? null : cell.ToString();
+
                     if (CellText == null)
                     {
                         continue;
@@ -296,23 +261,31 @@ namespace API
                 {
                     if (_config.SkipRows.Contains(y))
                         y++;
-                    Range cellRange = UsedRange.Cells[y, x] as Range;
-                    Range CellRange = UsedRange.Cells[y, x] as Range;
-                    Range NextCellRange = UsedRange.Cells[y + 1, x] as Range;
 
-                    string CellText = (CellRange == null || CellRange.Value2 == null) ? null :
-                        (CellRange as Excel.Range).Value2.ToString();
+                    ICell cell = GetCell(y, x);
+                    ICell nextCell = GetCell(y + 1, x);
 
-                    string NextCellText = (NextCellRange == null || NextCellRange.Value2 == null) ? null :
-                        (NextCellRange as Excel.Range).Value2.ToString();
+                    //string CellText = (cell == null || cell.StringCellValue == null) ? null : cell.StringCellValue;
+                    string CellText = cell == null ? null : cell.ToString();
+                    //string NextCellText = (nextCell == null || nextCell.StringCellValue == null) ? null : nextCell.StringCellValue;
+                    string NextCellText = nextCell == null ? null : nextCell.ToString();
+
 
                     string s = String.Concat(CellText, " ", NextCellText);
 
                     MatchCollection cabMatches = regCab.Matches(s);
                     MatchCollection teacherMatches = regTeacher.Matches(s);
-                    if ((Int32)CellRange.Borders[Excel.XlBordersIndex.xlEdgeTop].Weight == 2)
+
+                    if (cell!= null)
                     {
-                        continue;
+                        ICellStyle cellStyle = cell.CellStyle;
+
+                        // Проверка верхней границы ячейки
+                        if (cellStyle.BorderTop == BorderStyle.Thick)
+                        {
+                            // Пропуск итерации, если верхняя граница толстая
+                            continue;
+                        }
                     }
 
                     foreach (Match m in cabMatches)
@@ -342,11 +315,23 @@ namespace API
 
         }
 
+
+        private string GetCellValue(ISheet sheet, int rowIndex, int colIndex)
+        {
+            IRow row = sheet.GetRow(rowIndex);
+            if (row == null) return "";
+            ICell cell = row.GetCell(colIndex);
+            if (cell == null) return "";
+            return cell.ToString();
+        }
+
         public async void ParseLessonGroupTeachers()
         {
             for (int x = 3; x < 36; x++)
             {
-                API.Models.Group group = GetGroup((UsedRange.Cells[9, x] as Range).Value2 == null ? "" : (UsedRange.Cells[9, x] as Range).Value2.ToString());
+                ICell cell = GetCell(8, x);
+                string cellValue = cell == null ? "" : cell.ToString();
+                API.Models.Group group = GetGroup(string.IsNullOrEmpty(cellValue) ? "" : cellValue);
                 for (int y = 10; y < 159;)
                 {
                     string s = "";
@@ -355,16 +340,17 @@ namespace API
                     for (int i = 0; i < 4; i++)
                     {
                         isOne = true;
-                        Range CellRange = UsedRange.Cells[y, x] as Range;
+                        ICell currentCell = GetCell(y, x);;
                         //-4138
-                        s += CellRange.Value2 == null ? "" : CellRange.Value2.ToString() + " ";
-                        if (i == 1)
+                        s += currentCell == null ? "" : currentCell.ToString() + " ";
+                        if (i == 1 && currentCell!=null)
                         {
-                            if ((Int32)CellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].Weight == -4138)
+                            ICellStyle cellStyle = currentCell.CellStyle;
+                            if (cellStyle.BorderBottom == BorderStyle.Medium)
                             {
                                 isOne = false;
-                                s1 += (UsedRange.Cells[y + 1, x] as Range).Value2 == null ? "" : (UsedRange.Cells[y + 1, x] as Range).Value2.ToString() + " ";
-                                s1 += (UsedRange.Cells[y + 2, x] as Range).Value2 == null ? "" : (UsedRange.Cells[y + 2, x] as Range).Value2.ToString() + " ";
+                                s1 += GetCellValue(UsedSheet, y + 1, x) + " ";
+                                s1 += GetCellValue(UsedSheet, y + 2, x) + " ";
                                 y += 3;
                                 break;
                             }
@@ -420,7 +406,7 @@ namespace API
                                 LessonGroups.Add(lessonGroup);
 
                                 var teachers = GetTeacher(s1);
-                                foreach(var teacher in teachers)
+                                foreach (var teacher in teachers)
                                 {
                                     var lessonGroupTeacher = new LessonGroupTeacher
                                     {
@@ -439,6 +425,9 @@ namespace API
 
                         }
                     }
+                    else{
+                        y++;
+                    }
                 }
             }
         }
@@ -448,7 +437,13 @@ namespace API
 
 
 
-
+        private ICell GetCell(int rowIndex, int colIndex)
+        {
+            IRow row = UsedSheet.GetRow(rowIndex);
+            if (row == null) return null;
+            ICell cell = row.GetCell(colIndex);
+            return cell;
+        }
 
         public void ParseLessons()
         {
@@ -458,7 +453,11 @@ namespace API
             int lessonNumber = 1;
             for (int x = 3; x < 36; x++)
             {
-                API.Models.Group group = GetGroup((UsedRange.Cells[9, x] as Range).Value2 == null ? "" : (UsedRange.Cells[9, x] as Range).Value2.ToString());
+                ICell groupCell = GetCell(8, x);
+                if (groupCell == null) continue;
+                string groupCellValue = GetCellValue(groupCell).ToString();
+                API.Models.Group group = GetGroup(string.IsNullOrEmpty(groupCellValue) ? "" : groupCellValue);
+
                 int weekday = 1;
                 for (int y = 10; y < 159;)
                 {
@@ -468,16 +467,22 @@ namespace API
                     for (int i = 0; i < 4; i++)
                     {
                         isOne = true;
-                        Range CellRange = UsedRange.Cells[y, x] as Range;
-                        //-4138
-                        s += CellRange.Value2 == null ? "" : CellRange.Value2.ToString() + " ";
-                        if (i == 1)
+                        ICell currentCell = GetCell(y, x);
+                        if (currentCell == null)
                         {
-                            if ((Int32)CellRange.Borders[Excel.XlBordersIndex.xlEdgeBottom].Weight == -4138)
+                            continue;
+                        }
+                        s += GetCellValue(currentCell) + " ";
+                        if (i == 1 && currentCell!=null)
+                        {
+                            ICellStyle cellStyle = currentCell.CellStyle;
+                            if (cellStyle.BorderBottom == BorderStyle.Thin)
                             {
                                 isOne = false;
-                                s1 += (UsedRange.Cells[y + 1, x] as Range).Value2 == null ? "" : (UsedRange.Cells[y + 1, x] as Range).Value2.ToString() + " ";
-                                s1 += (UsedRange.Cells[y + 2, x] as Range).Value2 == null ? "" : (UsedRange.Cells[y + 2, x] as Range).Value2.ToString() + " ";
+                                ICell nextCell1 = GetCell(y + 1, x);
+                                ICell nextCell2 = GetCell(y + 2, x);
+                                s1 += nextCell1 == null ? "" : GetCellValue(nextCell1) + " ";
+                                s1 += nextCell2 == null ? "" : GetCellValue(nextCell2) + " ";
                                 y += 3;
                                 break;
                             }
@@ -493,8 +498,8 @@ namespace API
                             Subject subject = GetSubject(s);
                             var lessonGroup = LessonGroups.FirstOrDefault(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject);
                             var weekNumber = 0;
-                            if (LessonGroups.Any(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject) 
-                                && !Lessons.Any(l => l.Schedule == Schedule && l.DayOfWeek == weekday 
+                            if (LessonGroups.Any(lg => lg.Group == group && lg.ScheduleType == "1" && lg.Subject == subject)
+                                && !Lessons.Any(l => l.Schedule == Schedule && l.DayOfWeek == weekday
                                     && l.WeekOrderNumber == weekNumber && l.LessonNumber == lessonNumber && l.LessonGroup == lessonGroup))
                             {
                                 Lessons.Add(new Lesson
@@ -672,6 +677,32 @@ namespace API
                 }
             }
         }
+        private object GetCellValue(ICell cell)
+        {
+            object cValue = string.Empty;
+            switch (cell.CellType)
+            {
 
+                case (CellType.Unknown | CellType.Formula | CellType.Blank):
+                    cValue = "";
+                    break;
+                case CellType.Numeric:
+                    cValue = cell.NumericCellValue;
+                    break;
+                case CellType.String:
+                    cValue = cell.StringCellValue;
+                    break;
+                case CellType.Boolean:
+                    cValue = cell.BooleanCellValue;
+                    break;
+                case CellType.Error:
+                    cValue = cell.ErrorCellValue;
+                    break;
+                default:
+                    cValue = string.Empty;
+                    break;
+            }
+            return cValue;
+        }
     }
 }
