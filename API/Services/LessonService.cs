@@ -139,25 +139,25 @@ namespace API.Services
             return id;
         }
 
-        public Lesson Post(LessonDTO lesson, Schedule schedule, List<dynamic> teachers)
+        public Lesson Post(LessonWithTeachersDTO lesson, int scheduleId)
         {
             LessonGroup lessonGroup;
             if (_context.LessonGroups
                 .Include(lg => lg.Group)
                 .Include(lg => lg.Subject)
-                .Any(lg => lg.SubjectId == lesson.Subject.Id && lg.Group.Id == lesson.Group.Id && lg.ScheduleType == "1"))
+                .Any(lg => lg.SubjectId == lesson.Lesson.Subject.Id && lg.Group.Id == lesson.Lesson.Group.Id && lg.ScheduleType == "1"))
             {
                 lessonGroup = _context.LessonGroups
                 .Include(lg => lg.Group)
                 .Include(lg => lg.Subject)
-                .FirstOrDefault(lg => lg.SubjectId == lesson.Subject.Id && lg.Group.Id == lesson.Group.Id && lg.ScheduleType == "1");
+                .FirstOrDefault(lg => lg.SubjectId == lesson.Lesson.Subject.Id && lg.Group.Id == lesson.Lesson.Group.Id && lg.ScheduleType == "1");
             }
             else
             {
                 lessonGroup = new LessonGroup()
                 {
-                    GroupId = lesson.Group.Id,
-                    SubjectId = lesson.Subject.Id,
+                    GroupId = lesson.Lesson.Group.Id,
+                    SubjectId = lesson.Lesson.Subject.Id,
                     ScheduleType = "1"
                 };
                 _context.LessonGroups.Add(lessonGroup);
@@ -166,24 +166,28 @@ namespace API.Services
 
             var newLesson = new Lesson
             {
-                LessonNumber = lesson.LessonNumber,
-                DayOfWeek = lesson.Weekday,
-                IsRemote = lesson.isDistantce,
-                WeekOrderNumber = lesson.WeekNumber,
-                ClassroomId = lesson.Audience != null ? lesson.Audience.Id : null,
-                ScheduleId = schedule.Id,
+                LessonNumber = lesson.Lesson.LessonNumber,
+                DayOfWeek = lesson.Lesson.Weekday,
+                IsRemote = lesson.Lesson.isDistantce,
+                WeekOrderNumber = lesson.Lesson.WeekNumber,
+                ClassroomId = lesson.Lesson.Audience != null ? lesson.Lesson.Audience.Id : null,
+                ScheduleId = scheduleId,
                 LessonGroup = lessonGroup
             };
 
             _context.Lessons.Add(newLesson);
 
-            foreach (var teacher in teachers)
+            foreach (var teacher in lesson.Teachers)
             {
+                if (teacher == null)
+                {
+                    continue;
+                }
                 var lessonGroupTeacher = new LessonGroupTeacher()
                 {
                     TeacherId = teacher.Id,
                     LessonGroup = lessonGroup,
-                    Subgroup = (teachers.IndexOf(teacher) == 2 && teacher.IsMain) ? 2 : 1,
+                    Subgroup = (lesson.Teachers.IndexOf(teacher) == 2 && teacher.IsMain) ? 2 : 1,
                     IsMain = teacher.IsMain
                 };
                 if (!_context.LessonGroupTeachers
