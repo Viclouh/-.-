@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class LessonGroupTeacherController : ControllerBase
     {
         private readonly LessonGroupTeacherService _lessonGroupTeacherService;

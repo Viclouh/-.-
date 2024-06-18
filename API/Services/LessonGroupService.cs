@@ -40,5 +40,11 @@ namespace API.Services
 
             return GetWithIncludes().ToList();
         }
+
+        public int Delete(int id)
+        {
+            _context.LessonGroups.Remove(_context.LessonGroups.First(lg => lg.Id == id);
+            return id;
+        }
     }
 }
