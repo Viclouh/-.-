@@ -48,5 +48,18 @@ namespace API.Services
             _context.SaveChanges();
             return id;
         }
+
+        public LessonGroupTeacher Post(int teacherId, int lessonGroupId)
+        {
+            var newLGT = new LessonGroupTeacher
+            {
+                TeacherId = teacherId,
+                LessonGroupId = lessonGroupId,
+                IsMain = true
+            };
+            _context.LessonGroupTeachers.Add(newLGT);
+            _context.SaveChanges();
+            return GetWithIncludes().First(g => g.Id == newLGT.Id);
+        }
     }
 }
