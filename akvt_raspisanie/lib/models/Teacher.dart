@@ -22,7 +22,7 @@ class Teacher{
   Map<String, dynamic> toJson() => _$TeacherToJson(this);
 
   static Item ConvertorToItem (Teacher teacher){
-    return Item(teacher.id,'${teacher.surname} ${teacher.name}.${teacher.patronymic}.', 'teacher');
+    return Item(teacher.id,'${teacher.surname} ${teacher.name?[0]}.${teacher.patronymic?[0]}.', 'teacher');
   }
 }
 

@@ -32,14 +32,68 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
   // int getHashCode(DateTime key) {
   //   return key.day * 1000000 + key.month * 10000 + key.year;
   // }
+  int weeksBetween() {
+    DateTime from = _selectedDay;
+    DateTime to = DateTime(from.year, 1, 1);
+    return ((to.difference(from).inDays / 7).ceil()) % 2;
+  }
+  List<Para> getLessonsForSelectedDay(List<Para> lessons) {
+    List<Para> firstWeekLessons = lessons.where((lesson) => lesson.weekNumber == 0).toList();
+    List<Para> secondWeekLessons = lessons.where((lesson) => lesson.weekNumber == 1).toList();
+
+    int currentWeek = weeksBetween();
+    if (currentWeek == 1) {
+      // Заменяем занятия первой недели на второй, кроме тех, которые относятся ко второй неделе
+      firstWeekLessons.removeWhere((lesson) => secondWeekLessons.any((secondLesson) => secondLesson.lessonNumber == lesson.lessonNumber && secondLesson.weekday == lesson.weekday));
+      secondWeekLessons.addAll(firstWeekLessons);
+      secondWeekLessons.sort((a, b) => a.lessonNumber.compareTo(b.lessonNumber));
+      return secondWeekLessons.where((lesson) => lesson.weekday == _selectedDay.weekday).toList();
+    }
+
+    return firstWeekLessons.where((lesson) => lesson.weekday == _selectedDay.weekday).toList();
+  }
+  void updateEventsListTest(List<Para> lessons) {
+    List<Para> firstWeekLessons = lessons.where((lesson) => lesson.weekNumber == 0).toList();
+    List<Para> secondWeekLessons = lessons.where((lesson) => lesson.weekNumber == 1).toList();
+
+    Map<int, List<Para>> eventsList = {};
+
+    for (var lesson in lessons) {
+      int key = (lesson.weekNumber * 10) + lesson.weekday;
+      if (eventsList[key] == null) {
+        eventsList[key] = [];
+      }
+      eventsList[key]?.add(lesson);
+    }
+
+    // Handle the swapping logic for the second week
+    int currentWeek = weeksBetween();
+    if (currentWeek == 1) {
+      for (var lesson in firstWeekLessons) {
+        bool isOverlapping = secondWeekLessons.any((secondLesson) => secondLesson.lessonNumber == lesson.lessonNumber && secondLesson.weekday == lesson.weekday);
+        if (!isOverlapping) {
+          int key = (1 * 10) + lesson.weekday;
+          if (eventsList[key] == null) {
+            eventsList[key] = [];
+          }
+          eventsList[key]?.add(lesson);
+        }
+      }
+    }
+
+    setState(() {
+      _eventsListTest = eventsList;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     List<Para> temp = Provider.of<Lessons>(context).GetLessons2();
-    List<Para> lessons = temp.where((element) => element.weekday==_selectedDay.weekday).toList();
+    // List<Para> lessons = temp.where((element) => element.weekday==_selectedDay.weekday && element.weekNumber == weeksBetween()).toList();
+    List<Para> lessons = getLessonsForSelectedDay(temp);
 
     // _eventsList = groupBy(temp, (Para para) => DateTime(2024,3,4).add(Duration(days: para.weekday-1)));
-    _eventsListTest = groupBy(temp, (Para para) => para.weekday);
+
     //
     // print(_eventsList);
     //
@@ -56,9 +110,21 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
     //   return _events[day] ?? [];
     // }
 
-    List getEventSample(DateTime day){
-      return _eventsListTest[day.weekday]??[];
+    _eventsListTest = groupBy(temp, (Para para) => (para.weekNumber * 10) + para.weekday);
+
+
+    updateEventsListTest(temp);
+
+    List getEventSample(DateTime day) {
+      int currentWeek = weeksBetween();
+      int key = (currentWeek * 10) + day.weekday;
+      return _eventsListTest[key] ?? [];
     }
+
+    // _eventsListTest = groupBy(temp, (Para para) => para.weekday );
+    // List getEventSample(DateTime day){
+    //   return _eventsListTest[day.weekday]??[];
+    // }
 
     return Column(children: [
       TableCalendar(

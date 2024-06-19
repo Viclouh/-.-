@@ -64,10 +64,10 @@ class Lessons extends ChangeNotifier{
   Future<void> FillLessons2 () async {
     switch(_item.type){
       case 'group':
-          final response = await http.get(Uri.parse('http://hnt8.ru:1149/api/LessonPlan/Search/?groupId=${_item.id}&formatting=MobileApp'));
-          Iterable iterable = jsonDecode(response.body);
-          lessons2 =  iterable.map((e) => Para.fromJson(e)).toList();
-          break;
+        final response = await http.get(Uri.parse('http://hnt8.ru:1149/api/LessonPlan/Search/?groupId=${_item.id}&formatting=MobileApp'));
+        Iterable iterable = jsonDecode(response.body);
+        lessons2 =  iterable.map((e) => Para.fromJson(e)).toList();
+        break;
       case 'audience':
         final response = await http.get(Uri.parse('http://hnt8.ru:1149/api/LessonPlan/Search/?audienceId=${_item.id}&formatting=MobileApp'));
         Iterable iterable = jsonDecode(response.body);
