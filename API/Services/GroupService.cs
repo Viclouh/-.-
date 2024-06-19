@@ -26,5 +26,18 @@ namespace API.Services
             return GetAll().Where(g => g.GroupCode.ToLower().Contains(query.ToLower()))
                 .ToList();
         }
+
+		public Group Post(Group group)
+		{
+			_context.Groups.Add(group);
+			_context.SaveChanges();
+			return group;
+		}
+
+		public int Delete(int id)
+		{
+			_context.Groups.Remove(_context.Groups.First(g => g.Id == id));
+			return id;
+		}
     }
 }
