@@ -26,6 +26,7 @@ namespace API.Services
             {
                 throw new InvalidDataException("Расписание не найдено");
             }
+            activating.ScheduleStatusId = 3;
             _context.SaveChanges();
         }
         public void ChangeStatus(int scheduleId, int statusId)
@@ -58,7 +59,7 @@ namespace API.Services
             }
             changing.LastChange = DateTime.Now;
 
-            if (changing.ScheduleStatusId == 3)
+            if (changing.ScheduleStatusId != 4 || changing.ScheduleStatusId != 5)
             {
                 return;
             }
