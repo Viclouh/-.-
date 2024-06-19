@@ -37,7 +37,15 @@ namespace API.Services
 		public int Delete(int id)
 		{
 			_context.Groups.Remove(_context.Groups.First(g => g.Id == id));
+			_context.SaveChanges();
 			return id;
 		}
+
+        public Group Put(Group group)
+        {
+            _context.Groups.Update(group);
+            _context.SaveChanges();
+            return group;
+        }
     }
 }

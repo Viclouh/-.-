@@ -34,5 +34,10 @@ namespace API.Controllers
         {
             return StatusCode(200, _groupService.Delete(id));
         }
+        [HttpPut]
+        public IActionResult Put(Group group)
+        {
+            return StatusCode(200, _groupService.Put(group));
+        }
     }
 }
