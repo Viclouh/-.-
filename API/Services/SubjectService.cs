@@ -43,6 +43,15 @@ namespace API.Services
             return subject;
         }
 
+        public int Delete(int id)
+        {
+            _context.Subjects.Remove(_context.Subjects.First(s => s.Id == id));
+
+            _context.SaveChanges();
+
+            return id;
+        }
+
 
     }
 }
