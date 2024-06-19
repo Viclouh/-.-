@@ -32,11 +32,13 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
   // int getHashCode(DateTime key) {
   //   return key.day * 1000000 + key.month * 10000 + key.year;
   // }
+
   int weeksBetween() {
     DateTime from = _selectedDay;
     DateTime to = DateTime(from.year, 1, 1);
     return ((to.difference(from).inDays / 7).ceil()) % 2;
   }
+
   List<Para> getLessonsForSelectedDay(List<Para> lessons) {
     List<Para> firstWeekLessons = lessons.where((lesson) => lesson.weekNumber == 0).toList();
     List<Para> secondWeekLessons = lessons.where((lesson) => lesson.weekNumber == 1).toList();
