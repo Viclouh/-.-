@@ -25,7 +25,7 @@ namespace API.Controllers
             return StatusCode(200, _groupService.Get(query));
         }
         [HttpPost]
-        public IActionResult Post(Group group)
+        public IActionResult Post([FromBody]Group group)
 		{
             return StatusCode(200, _groupService.Post(group));
         }
@@ -35,7 +35,7 @@ namespace API.Controllers
             return StatusCode(200, _groupService.Delete(id));
         }
         [HttpPut]
-        public IActionResult Put(Group group)
+        public IActionResult Put([FromBody] Group group)
         {
             return StatusCode(200, _groupService.Put(group));
         }

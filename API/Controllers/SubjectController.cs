@@ -29,9 +29,15 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put(Subject subject)
+        public IActionResult Put([FromBody]Subject subject)
         {
             return StatusCode(200, _subjectService.Put(subject));
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            return StatusCode(200, _subjectService.Delete(id));
         }
 
     }
