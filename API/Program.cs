@@ -64,6 +64,7 @@ namespace API
             builder.Services.AddScoped<LessonGroupService>();
             builder.Services.AddScoped<NotificationService>();
             builder.Services.AddScoped<LessonGroupTeacherService>();
+            builder.Services.AddScoped<GeneratorService>();
 
             builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
             {
@@ -103,6 +104,8 @@ namespace API
                 // политика безопасности
                 c.OperationFilter<AuthorizationOperationFilter>();
             });
+
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             var app = builder.Build();
 

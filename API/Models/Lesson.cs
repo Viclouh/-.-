@@ -17,5 +17,19 @@ namespace API.Models
         public Schedule Schedule { get; set; }
         public Classroom? Classroom { get; set; }
         public LessonGroup LessonGroup { get; set; }
+
+        public Lesson Clone()
+        {
+            return new Lesson
+            {
+                LessonNumber = this.LessonNumber,
+                DayOfWeek = this.DayOfWeek,
+                WeekOrderNumber = this.WeekOrderNumber,
+                IsRemote = this.IsRemote,
+                Schedule = this.Schedule,
+                Classroom = this.Classroom,
+                LessonGroup = this.LessonGroup
+            };
+        }
     }
 }

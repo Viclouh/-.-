@@ -57,10 +57,17 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Fonts\arial.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Generator\message.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -16,11 +16,13 @@ namespace API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly LessonService _LessonService;
+        private readonly GeneratorService _generatorService;
 
-        public LessonController(LessonService LessonService, IMapper mapper)
+        public LessonController(LessonService LessonService, GeneratorService generatorService, IMapper mapper)
         {
             _LessonService = LessonService;
             _mapper = mapper;
+            _generatorService = generatorService;
         }
 
         [HttpGet]
@@ -71,7 +73,13 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("Search")]
-        public IActionResult Search(int? teacherId, int? groupId, int? audienceId, int? scheduleId, int? department, string formatting = "Standard")
+        public IActionResult Search(
+            [FromQuery] int[] teacherId,
+            [FromQuery] int[] groupId,
+            [FromQuery] int[] audienceId,
+            [FromQuery] int? scheduleId,
+            [FromQuery] int? department,
+            [FromQuery] string formatting = "Standard")
         {
             IEnumerable<Lesson> lessons = _LessonService.Search(teacherId, groupId, audienceId, scheduleId, department);
             switch (formatting)
@@ -121,6 +129,13 @@ namespace API.Controllers
                 return StatusCode(500, ex.Message + "\n" + ex.StackTrace.ToString());
             }
 
+        }
+
+        [HttpPost("generated")]
+        public IActionResult Generate([FromBody] GenerationParams generationParams)
+        {
+            _generatorService.RunGenerating(generationParams.population, generationParams.generations, generationParams.year, generationParams.semestr);
+            return StatusCode(200);
         }
     }
 }

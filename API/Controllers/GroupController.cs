@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using API.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace API.Controllers
 {
@@ -22,6 +23,21 @@ namespace API.Controllers
         public IActionResult Get(string? query)
         {
             return StatusCode(200, _groupService.Get(query));
+        }
+        [HttpPost]
+        public IActionResult Post([FromBody]Group group)
+		{
+            return StatusCode(200, _groupService.Post(group));
+        }
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            return StatusCode(200, _groupService.Delete(id));
+        }
+        [HttpPut]
+        public IActionResult Put([FromBody] Group group)
+        {
+            return StatusCode(200, _groupService.Put(group));
         }
     }
 }

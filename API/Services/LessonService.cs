@@ -12,6 +12,7 @@ using iTextSharp.text.pdf;
 
 using Document = iTextSharp.text.Document;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using static iTextSharp.text.pdf.AcroFields;
 
 
 namespace API.Services
@@ -20,9 +21,11 @@ namespace API.Services
     {
         private Database.Context _context;
         private readonly NotificationService _notificationService;
-        public LessonService(NotificationService notificationService, Database.Context context)
+        private readonly ScheduleService _scheduleService;
+        public LessonService(NotificationService notificationService, ScheduleService scheduleService, Database.Context context)
         {
             _notificationService = notificationService;
+            _scheduleService = scheduleService;
             _context = context;
         }
         private IQueryable<Lesson> GetAllWithIncludes()
@@ -43,13 +46,27 @@ namespace API.Services
         {
             return GetAllWithIncludes();
         }
-        public IEnumerable<Lesson> Search(int? teacherId, int? groupId, int? classroom, int? scheduleId, int? department)
+        public IEnumerable<Lesson> Search(int[] teacherId, int[] groupId, int[] classroom, int? scheduleId, int? department)
         {
+            if (!_context.Schedules.Any())
+            {
+                return Enumerable.Empty<Lesson>();
+            }
+
             IQueryable<Lesson> query = GetAllWithIncludes()
                 .AsNoTracking();
             if (scheduleId.HasValue)
             {
                 query = query.Where(item => item.ScheduleId == scheduleId);
+            }
+            else
+            {
+                Schedule? schedule = _context.Schedules.Where(sch=> sch.ScheduleStatusId == 3).FirstOrDefault();
+                if (schedule == null)
+                {
+                    schedule = _context.Schedules.OrderByDescending(sch=>sch.LastChange).First();
+                }                
+                query = query.Where(item => item.ScheduleId == schedule.Id);
             }
 
             if (department.HasValue)
@@ -57,20 +74,20 @@ namespace API.Services
                 query = query.Where(item => item.LessonGroup.Group.Department == department);
             }
 
-            if (teacherId.HasValue)
+            if (!teacherId.IsNullOrEmpty())
             {
-                query = query.Where(item => item.LessonGroup.LessonGroupTeachers.Any(lgt => lgt.TeacherId == teacherId.Value))
-                    .OrderByDescending(l => l.LessonGroup.LessonGroupTeachers.Any(lgt => lgt.TeacherId == teacherId.Value && lgt.IsMain));
+                query = query.Where(item => item.LessonGroup.LessonGroupTeachers.Any(lgt => teacherId.Any(t => t == lgt.TeacherId)))
+                    .OrderByDescending(l => l.LessonGroup.LessonGroupTeachers.Any(lgt => lgt.IsMain));
             }
 
-            if (groupId.HasValue)
+            if (!groupId.IsNullOrEmpty())
             {
-                query = query.Where(item => item.LessonGroup.GroupId == groupId.Value);
+                query = query.Where(item => groupId.Any(gid => item.LessonGroup.GroupId == gid));
             }
 
-            if (classroom.HasValue)
+            if (!classroom.IsNullOrEmpty())
             {
-                query = query.Where(item => item.ClassroomId == classroom.Value);
+                query = query.Where(item => classroom.Any(cid => cid == item.ClassroomId.Value));
             }
 
             return query.ToList();
@@ -124,6 +141,7 @@ namespace API.Services
             _context.Lessons.Remove(item);
             _context.SaveChanges();
 
+            _scheduleService.HandleChange(item.ScheduleId);
             // Создание сообщения об изменениях
             string changeMessage = _notificationService.GetScheduleChangeMessage(item.WeekOrderNumber + 1, item.DayOfWeek);
 
@@ -201,6 +219,7 @@ namespace API.Services
             }
 
             _context.SaveChanges();
+            _scheduleService.HandleChange(newLesson.ScheduleId);
 
             return newLesson;
         }
@@ -244,6 +263,9 @@ namespace API.Services
             _context.LessonGroups.Update(lessonGroup);
             _context.Lessons.Update(updatedLesson);
             _context.SaveChanges();
+
+            _scheduleService.HandleChange(updatedLesson.ScheduleId);
+
 
             // Создание сообщения об изменениях
             string changeMessage = _notificationService.GetScheduleChangeMessage(lesson.Lesson.WeekNumber+1, lesson.Lesson.Weekday);
@@ -351,15 +373,15 @@ namespace API.Services
                     switch (teacherId, groupId)
                     {
                         case (null, not null):
-                            lesson = Search(null, groupId, null, null, null)
+                            lesson = Search(null, new int[1] { groupId.GetValueOrDefault() }, null, null, null)
                                 .FirstOrDefault(lp => lp.DayOfWeek == i + 1 && lp.LessonNumber == j + 1 && lp.WeekOrderNumber == 0);
-                            lesson1 = Search(null, groupId, null, null, null)
+                            lesson1 = Search(null, new int[1] { groupId.GetValueOrDefault() }, null, null, null)
                                 .FirstOrDefault(lp => lp.DayOfWeek == i + 1 && lp.LessonNumber == j + 1 && lp.WeekOrderNumber == 1);
                             break;
                         case (not null, null):
-                            lesson = Search(teacherId, null, null,null, null)
+                            lesson = Search( new int[1] {teacherId.GetValueOrDefault()}, null, null,null, null)
                                 .FirstOrDefault(lp => lp.DayOfWeek == i + 1 && lp.LessonNumber == j + 1 && lp.WeekOrderNumber == 0);
-                            lesson1 = Search(teacherId, null, null, null, null)
+                            lesson1 = Search(new int[1] { teacherId.GetValueOrDefault() }, null, null, null, null)
                                 .FirstOrDefault(lp => lp.DayOfWeek == i + 1 && lp.LessonNumber == j + 1 && lp.WeekOrderNumber == 1);
                             break;
                     }

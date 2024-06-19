@@ -1,5 +1,7 @@
-﻿using API.Services;
+﻿using API.Models;
+using API.Services;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace API.Controllers
 {
@@ -15,9 +17,28 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(string? query)
         {
-            return StatusCode(200, _subjectService.GetAll());
+            return StatusCode(200, _subjectService.Get(query));
         }
+
+        [HttpPost]
+        public IActionResult Post(string name)
+        {
+            return StatusCode(200, _subjectService.Post(name));
+        }
+
+        [HttpPut]
+        public IActionResult Put([FromBody]Subject subject)
+        {
+            return StatusCode(200, _subjectService.Put(subject));
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            return StatusCode(200, _subjectService.Delete(id));
+        }
+
     }
 }
