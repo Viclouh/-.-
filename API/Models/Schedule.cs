@@ -9,6 +9,7 @@ namespace API.Models
         public int AcademicYear { get; set; }
         public int Semester { get; set; }
         public int ScheduleStatusId { get; set; }
+        public DateTime? LastChange { get; set; }
 
         public ScheduleStatus ScheduleStatus { get; set; }
         public ICollection<Lesson> Lessons { get; set; }

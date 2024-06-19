@@ -32,7 +32,29 @@ namespace API.Database
         public Context(DbContextOptions<Context> options) : base(options)
         {
             //Database.EnsureDeleted();
-            //Database.EnsureCreated();
+            Database.EnsureCreated();
+
+            ScheduleStatus[] statuses = new ScheduleStatus[]
+            {
+                new ScheduleStatus{Id=1, Name="Завершенное"},
+                new ScheduleStatus{Id=2, Name="Черновик"},
+                new ScheduleStatus{Id=3, Name="Активное"},
+                new ScheduleStatus{Id=4, Name="Сгенерированное"},
+                new ScheduleStatus{Id=5, Name="Экспортированное"},
+            };
+            foreach (var status in statuses)
+            {
+                var existingStatus = ScheduleStatuses.Find(status.Id);
+                if (existingStatus == null)
+                {
+                    ScheduleStatuses.Add(status);
+                }
+                else
+                {
+                    existingStatus.Name = status.Name;
+                }
+            }
+            SaveChanges();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,28 +65,18 @@ namespace API.Database
             modelBuilder.Entity<TeacherSubject>()
                 .HasKey(ts => new { ts.SubjectId, ts.TeacherId });
 
-            base.OnModelCreating(modelBuilder);
-            //modelBuilder.Entity<Speciality>().HasData(
-            //    new Speciality[]
-            //    {
-            //        new Speciality{Id = 1, Name="09.02.07"},
-            //        new Speciality{Id = 2, Name="09.02.01"},
-            //        new Speciality{Id = 3, Name="09.02.06"},
-            //        new Speciality{Id = 4, Name="09.02.07"},
-            //        new Speciality{Id = 5, Name="10.02.05"},
-            //        new Speciality{Id = 6, Name="13.02.11"},
-            //        new Speciality{Id = 7, Name="15.02.14"},
-            //        new Speciality{Id = 8, Name="15.01.17"},
-            //        new Speciality{Id = 9, Name="08.01.18"},
-            //        new Speciality{Id = 10, Name="15.01.31"},
-            //    });
+            
             modelBuilder.Entity<ScheduleStatus>().HasData(
                 new ScheduleStatus[]
                     {
                         new ScheduleStatus{Id=1, Name="Завершенное"},
-                        new ScheduleStatus{Id=2, Name="Черновик"}
+                        new ScheduleStatus{Id=2, Name="Черновик"},
+                        new ScheduleStatus{Id=3, Name="Активное"},
+                        new ScheduleStatus{Id=4, Name="Сгенерированное"},
+                        new ScheduleStatus{Id=5, Name="Экспортированное"},
                     }
                 );
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

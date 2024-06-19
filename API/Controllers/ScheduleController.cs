@@ -21,5 +21,20 @@ namespace API.Controllers
         { 
             return StatusCode(200, _ScheduleService.Get().ToList());
         }
+
+        [HttpPost("active")]
+        public IActionResult SetActive(int scheduleId)
+        {
+            try
+            {
+                _ScheduleService.ActivateSchedule(scheduleId);
+                return StatusCode(200);
+            }
+            catch (InvalidDataException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            
+        }
     }
 }
