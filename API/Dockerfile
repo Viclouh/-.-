@@ -19,4 +19,6 @@ RUN dotnet publish "./API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:Use
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
+RUN apt-get update
+RUN apt-get install libgdiplus -y
 ENTRYPOINT ["dotnet", "API.dll"]
